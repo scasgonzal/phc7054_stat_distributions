@@ -1,0 +1,111 @@
+---
+title: "The Bernoulli Distribution"
+author: "Gabriel J. Odom"
+date: last-modified
+format:
+  html:
+    embed-resources: true
+    code-fold: true
+knitr:
+  opts_chunk:        ########## set global options ############
+    collapse: true   # keep code from blocks together (if shown)
+    echo: true       # show code
+    message: true    # show messages
+    warning: true    # show warnings
+    error: true      # show error messages
+    comment: ""      # don't show ## with printed output
+    dpi: 100         # image resolution (typically 300 for publication)
+    fig-width: 6.5   # figure width
+    fig-height: 4.0  # figure height
+    R.options:    
+      digits: 3    # round to three digits
+editor: source
+---
+
+```{r, tidyverse-tidymodels}
+#| echo: false
+
+library(conflicted)
+suppressPackageStartupMessages(library(tidymodels))
+tidymodels_prefer()
+suppressPackageStartupMessages(library(tidyverse))
+
+# suppress "`summarise()` has grouped output by " messages
+options(dplyr.summarise.inform = FALSE)
+```
+
+
+
+## Deriving the Distribution
+
+
+-------------------------------------------------------------------------------
+
+
+
+## Example Random Samples
+
+```{r, random-sample}
+set.seed(20150516)
+
+x <- rbinom(n = 100, size = 1, prob = 0.5)
+samples_ls <- list(
+  n5   = x[1:5],
+  n15  = x[1:15],
+  n30  = x[1:30],
+  n100 = x
+)
+
+rm(x)
+```
+
+```{r}
+#| label: random-sample-hist
+#| fig-show: "hold"
+
+par(mfrow = c(2, 2))
+
+hist(samples_ls$n5)
+hist(samples_ls$n15)
+hist(samples_ls$n30)
+hist(samples_ls$n100)
+
+par(mfrow = c(1, 1))
+```
+
+
+-------------------------------------------------------------------------------
+
+
+
+## Show that this is a Distribution
+
+
+-------------------------------------------------------------------------------
+
+
+
+## Derive the Moment Generating Function
+
+
+-------------------------------------------------------------------------------
+
+
+
+## Method of Moments Estimators
+
+
+-------------------------------------------------------------------------------
+
+
+
+## Maximum Likelihood Estimators
+
+
+-------------------------------------------------------------------------------
+
+
+
+## Exercises
+
+

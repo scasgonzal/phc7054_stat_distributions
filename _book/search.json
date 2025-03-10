@@ -20,13 +20,213 @@
     ]
   },
   {
-    "objectID": "summary.html",
-    "href": "summary.html",
-    "title": "2  Summary",
+    "objectID": "chapters/bernoulli_20250310.html",
+    "href": "chapters/bernoulli_20250310.html",
+    "title": "2  The Bernoulli Distribution",
     "section": "",
-    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "text": "2.1 Deriving the Distribution",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Summary</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/bernoulli_20250310.html#example-random-samples",
+    "href": "chapters/bernoulli_20250310.html#example-random-samples",
+    "title": "2  The Bernoulli Distribution",
+    "section": "2.2 Example Random Samples",
+    "text": "2.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nx &lt;- rbinom(n = 100, size = 1, prob = 0.5)\nsamples_ls &lt;- list(\n  n5   = x[1:5],\n  n15  = x[1:15],\n  n30  = x[1:30],\n  n100 = x\n)\n\nrm(x)\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nhist(samples_ls$n5)\nhist(samples_ls$n15)\nhist(samples_ls$n30)\nhist(samples_ls$n100)\n\npar(mfrow = c(1, 1))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/bernoulli_20250310.html#show-that-this-is-a-distribution",
+    "href": "chapters/bernoulli_20250310.html#show-that-this-is-a-distribution",
+    "title": "2  The Bernoulli Distribution",
+    "section": "2.3 Show that this is a Distribution",
+    "text": "2.3 Show that this is a Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/bernoulli_20250310.html#derive-the-moment-generating-function",
+    "href": "chapters/bernoulli_20250310.html#derive-the-moment-generating-function",
+    "title": "2  The Bernoulli Distribution",
+    "section": "2.4 Derive the Moment Generating Function",
+    "text": "2.4 Derive the Moment Generating Function",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/bernoulli_20250310.html#method-of-moments-estimators",
+    "href": "chapters/bernoulli_20250310.html#method-of-moments-estimators",
+    "title": "2  The Bernoulli Distribution",
+    "section": "2.5 Method of Moments Estimators",
+    "text": "2.5 Method of Moments Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/bernoulli_20250310.html#maximum-likelihood-estimators",
+    "href": "chapters/bernoulli_20250310.html#maximum-likelihood-estimators",
+    "title": "2  The Bernoulli Distribution",
+    "section": "2.6 Maximum Likelihood Estimators",
+    "text": "2.6 Maximum Likelihood Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/bernoulli_20250310.html#exercises",
+    "href": "chapters/bernoulli_20250310.html#exercises",
+    "title": "2  The Bernoulli Distribution",
+    "section": "2.7 Exercises",
+    "text": "2.7 Exercises",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/binomial_20250310.html",
+    "href": "chapters/binomial_20250310.html",
+    "title": "3  The Binomial Distribution",
+    "section": "",
+    "text": "3.1 Deriving the Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>The Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/binomial_20250310.html#example-random-samples",
+    "href": "chapters/binomial_20250310.html#example-random-samples",
+    "title": "3  The Binomial Distribution",
+    "section": "3.2 Example Random Samples",
+    "text": "3.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nN &lt;- 10\nbins_int &lt;- seq.int(from = -1, to = N, by = 1)\n\nxSymm &lt;- rbinom(n = 100, size = N, prob = 0.5)\nsamplesSymm_ls &lt;- list(\n  n5   = xSymm[1:5],\n  n15  = xSymm[1:15],\n  n30  = xSymm[1:30],\n  n100 = xSymm\n)\n\nxSkew &lt;- rbinom(n = 100, size = N, prob = 0.2)\nsamplesSkew_ls &lt;- list(\n  n5   = xSkew[1:5],\n  n15  = xSkew[1:15],\n  n30  = xSkew[1:30],\n  n100 = xSkew\n)\n\nrm(xSymm, xSkew)\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nhist(samplesSymm_ls$n5, breaks = bins_int)\nhist(samplesSymm_ls$n15, breaks = bins_int)\nhist(samplesSymm_ls$n30, breaks = bins_int)\nhist(samplesSymm_ls$n100, breaks = bins_int)\n\npar(mfrow = c(1, 1))\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nhist(samplesSkew_ls$n5, breaks = bins_int)\nhist(samplesSkew_ls$n15, breaks = bins_int)\nhist(samplesSkew_ls$n30, breaks = bins_int)\nhist(samplesSkew_ls$n100, breaks = bins_int)\n\npar(mfrow = c(1, 1))",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>The Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/binomial_20250310.html#show-that-this-is-a-distribution",
+    "href": "chapters/binomial_20250310.html#show-that-this-is-a-distribution",
+    "title": "3  The Binomial Distribution",
+    "section": "3.3 Show that this is a Distribution",
+    "text": "3.3 Show that this is a Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>The Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/binomial_20250310.html#derive-the-moment-generating-function",
+    "href": "chapters/binomial_20250310.html#derive-the-moment-generating-function",
+    "title": "3  The Binomial Distribution",
+    "section": "3.4 Derive the Moment Generating Function",
+    "text": "3.4 Derive the Moment Generating Function",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>The Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/binomial_20250310.html#method-of-moments-estimators",
+    "href": "chapters/binomial_20250310.html#method-of-moments-estimators",
+    "title": "3  The Binomial Distribution",
+    "section": "3.5 Method of Moments Estimators",
+    "text": "3.5 Method of Moments Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>The Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/binomial_20250310.html#maximum-likelihood-estimators",
+    "href": "chapters/binomial_20250310.html#maximum-likelihood-estimators",
+    "title": "3  The Binomial Distribution",
+    "section": "3.6 Maximum Likelihood Estimators",
+    "text": "3.6 Maximum Likelihood Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>The Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/binomial_20250310.html#exercises",
+    "href": "chapters/binomial_20250310.html#exercises",
+    "title": "3  The Binomial Distribution",
+    "section": "3.7 Exercises",
+    "text": "3.7 Exercises",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>The Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/negative_binomial_20250310.html",
+    "href": "chapters/negative_binomial_20250310.html",
+    "title": "4  The Negative Binomial Distribution",
+    "section": "",
+    "text": "4.1 Deriving the Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Negative Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/negative_binomial_20250310.html#example-random-samples",
+    "href": "chapters/negative_binomial_20250310.html#example-random-samples",
+    "title": "4  The Negative Binomial Distribution",
+    "section": "4.2 Example Random Samples",
+    "text": "4.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nN &lt;- 5\n\nxSymm &lt;- rnbinom(n = 500, size = N, prob = 0.5)\nsamplesSymm_ls &lt;- list(\n  n5   = xSymm[1:5],\n  n30  = xSymm[1:30],\n  n100 = xSymm[1:100],\n  n500 = xSymm\n)\nbinsSymm_int &lt;- seq.int(from = -1, to = max(xSymm) + 1, by = 1)\n\nxSkew &lt;- rnbinom(n = 500, size = N, prob = 0.2)\nsamplesSkew_ls &lt;- list(\n  n5   = xSkew[1:5],\n  n30  = xSkew[1:30],\n  n100 = xSkew[1:100],\n  n500 = xSkew\n)\nbinsSkew_int &lt;- seq.int(from = -1, to = max(xSkew) + 1, by = 1)\n# we are drawing until we reach N successes, so the upper limit should be \n# N * (1 / min(prob)) + epsilon\n\nrm(xSymm, xSkew)\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nhist(samplesSymm_ls$n5, breaks = binsSymm_int)\nhist(samplesSymm_ls$n30, breaks = binsSymm_int)\nhist(samplesSymm_ls$n100, breaks = binsSymm_int)\nhist(samplesSymm_ls$n500, breaks = binsSymm_int)\n\npar(mfrow = c(1, 1))\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nhist(samplesSkew_ls$n5, breaks = binsSkew_int)\nhist(samplesSkew_ls$n30, breaks = binsSkew_int)\nhist(samplesSkew_ls$n100, breaks = binsSkew_int)\nhist(samplesSkew_ls$n500, breaks = binsSkew_int)\n\npar(mfrow = c(1, 1))",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Negative Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/negative_binomial_20250310.html#show-that-this-is-a-distribution",
+    "href": "chapters/negative_binomial_20250310.html#show-that-this-is-a-distribution",
+    "title": "4  The Negative Binomial Distribution",
+    "section": "4.3 Show that this is a Distribution",
+    "text": "4.3 Show that this is a Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Negative Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/negative_binomial_20250310.html#derive-the-moment-generating-function",
+    "href": "chapters/negative_binomial_20250310.html#derive-the-moment-generating-function",
+    "title": "4  The Negative Binomial Distribution",
+    "section": "4.4 Derive the Moment Generating Function",
+    "text": "4.4 Derive the Moment Generating Function",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Negative Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/negative_binomial_20250310.html#method-of-moments-estimators",
+    "href": "chapters/negative_binomial_20250310.html#method-of-moments-estimators",
+    "title": "4  The Negative Binomial Distribution",
+    "section": "4.5 Method of Moments Estimators",
+    "text": "4.5 Method of Moments Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Negative Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/negative_binomial_20250310.html#maximum-likelihood-estimators",
+    "href": "chapters/negative_binomial_20250310.html#maximum-likelihood-estimators",
+    "title": "4  The Negative Binomial Distribution",
+    "section": "4.6 Maximum Likelihood Estimators",
+    "text": "4.6 Maximum Likelihood Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Negative Binomial Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/negative_binomial_20250310.html#exercises",
+    "href": "chapters/negative_binomial_20250310.html#exercises",
+    "title": "4  The Negative Binomial Distribution",
+    "section": "4.7 Exercises",
+    "text": "4.7 Exercises",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Negative Binomial Distribution</span>"
     ]
   },
   {
