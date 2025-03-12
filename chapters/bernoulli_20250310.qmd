@@ -87,6 +87,21 @@ par(mfrow = c(1, 1))
 
 ## Derive the Moment Generating Function
 
+> **The Riemman-Stieljes Integral**
+> 
+> Let $f$ be a bounded function on the interval $\mathcal{S} = [a, b] \subset \mathbb{R}$, and let $G$ be a monotone increasing (but not necessarily continuous) function on $\mathcal{S}$. The Riemman-Stieljes integral of $f$ with respect to $G$ is denoted as
+$$
+\text{R-S}(f, G) \equiv \int_{x \in \mathcal{S}} f(x) \text{d}G(x).
+$$
+If $G$ is continuous $\forall x \in \mathcal{S}$, then this integral simplifies to 
+$$
+\int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \int_{x \in \mathcal{S}} f(x) g^{\prime}(x).
+$$
+If, however, there exists $k < m < \infty$ points of discontinuity for $G$ on $\mathcal{S}$, we define an $m$-partition of $\mathcal{S}$ as $[a = y_0, y_1), [y_1, y_2), \ldots, [y_{m - 2}, y_{m - 1}), [y_{m - 1}, b = y_m]$, where the $k$ points of discontinuity are included in the sequence $\{y_1, y_2, \ldots, y_{m - 1}\}$. Then, this integral simplifies to 
+$$
+\int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \sum\limits_{i = 1}^m f(x)\left[ G(y_i) - G(y_{i - 1}) \right].
+$$
+
 
 -------------------------------------------------------------------------------
 
