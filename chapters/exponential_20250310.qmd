@@ -48,61 +48,87 @@ options(dplyr.summarise.inform = FALSE)
 ```{r, random-sample}
 set.seed(20150516)
 
-xSymm <- rexp(n = 1000, rate = 20)
-samplesSymm_ls <- list(
-  n5   = xSymm[1:5],
-  n50  = xSymm[1:50],
-  n500 = xSymm[1:500],
-  n1000 = xSymm
+xPeaked <- rexp(n = 500, rate = 5)
+samplesPeaked_ls <- list(
+  n5   = xPeaked[1:5],
+  n50  = xPeaked[1:50],
+  n100 = xPeaked[1:100],
+  n500 = xPeaked
 )
-rangeSymm_num <- range(xSymm)
 
-xSkew <- rpois(n = 1000, lambda = 2.5)
-samplesSkew_ls <- list(
-  n5   = xSkew[1:5],
-  n30  = xSkew[1:30],
-  n100 = xSkew[1:100],
-  n500 = xSkew
+xDiffuse <- rexp(n = 500, rate = 1)
+samplesDiffuse_ls <- list(
+  n5   = xDiffuse[1:5],
+  n50  = xDiffuse[1:50],
+  n100 = xDiffuse[1:100],
+  n500 = xDiffuse
 )
-rangeSkew_num <- range(xSkew)
 
-rm(xSymm, xSkew)
+range_num <- range(c(xPeaked, xDiffuse))
+
+rm(xPeaked, xDiffuse)
 ```
 
 ```{r}
 #| label: shared-density-plotting-function
-PlotSharedDensity <- function(x, range_x) {
-  plot(
-    density(x, from = range_x[1], to = range_x[2])
+PlotSharedDensity <- function(x, range_x, bandwidth = "nrd0") {
+  
+  xDens_ls <- density(x, bw = bandwidth)
+  xHist_ls <- hist(x, plot = FALSE)
+  yLargest_num <- max(max(xDens_ls$y), max(xHist_ls$density))
+  
+  hist(
+    x, prob = TRUE,
+    xlim = range_x, ylim = c(0, yLargest_num)
   )
+  lines(xDens_ls, col = 4, lwd = 2)
+  
 }
 ```
 
 
 ```{r}
-#| label: random-sample-hist-skew
+#| label: random-sample-hist-peaked
 #| fig-show: "hold"
 
 par(mfrow = c(2, 2))
 
-PlotSharedDensity(x = samplesSymm_ls$n5, range_x = rangeSymm_num)
-PlotSharedDensity(x = samplesSymm_ls$n50, range_x = rangeSymm_num)
-PlotSharedDensity(x = samplesSymm_ls$n500, range_x = rangeSymm_num)
-PlotSharedDensity(x = samplesSymm_ls$n1000, range_x = rangeSymm_num)
+PlotSharedDensity(
+  x = samplesPeaked_ls$n5, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesPeaked_ls$n50, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesPeaked_ls$n100, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesPeaked_ls$n500, range_x = range_num
+)
 
 par(mfrow = c(1, 1))
+
+# , bandwidth = 0.005
 ```
 
 ```{r}
-#| label: random-sample-hist-symm
+#| label: random-sample-hist-diffuse
 #| fig-show: "hold"
 
 par(mfrow = c(2, 2))
 
-hist(samplesSymm_ls$n5, breaks = binsSymm_int)
-hist(samplesSymm_ls$n30, breaks = binsSymm_int)
-hist(samplesSymm_ls$n100, breaks = binsSymm_int)
-hist(samplesSymm_ls$n500, breaks = binsSymm_int)
+PlotSharedDensity(
+  x = samplesDiffuse_ls$n5, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesDiffuse_ls$n50, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesDiffuse_ls$n100, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesDiffuse_ls$n500, range_x = range_num
+)
 
 par(mfrow = c(1, 1))
 ```

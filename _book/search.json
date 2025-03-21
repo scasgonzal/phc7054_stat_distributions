@@ -30,6 +30,16 @@
     ]
   },
   {
+    "objectID": "chapters/bernoulli_20250310.html#deriving-the-distribution",
+    "href": "chapters/bernoulli_20250310.html#deriving-the-distribution",
+    "title": "2  The Bernoulli Distribution",
+    "section": "",
+    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
+    ]
+  },
+  {
     "objectID": "chapters/bernoulli_20250310.html#example-random-samples",
     "href": "chapters/bernoulli_20250310.html#example-random-samples",
     "title": "2  The Bernoulli Distribution",
@@ -85,6 +95,16 @@
     "title": "2  The Bernoulli Distribution",
     "section": "2.7 Exercises",
     "text": "2.7 Exercises",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/bernoulli_20250310.html#footnotes",
+    "href": "chapters/bernoulli_20250310.html#footnotes",
+    "title": "2  The Bernoulli Distribution",
+    "section": "",
+    "text": "https://www.usu.edu/math/schneit/StatsStuff/Probability/probability2.html↩︎\nif and only if↩︎\nNote the Telescoping Series: https://en.wikipedia.org/wiki/Telescoping_series↩︎",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
     ]
@@ -230,6 +250,146 @@
     ]
   },
   {
+    "objectID": "chapters/poisson_20250310.html",
+    "href": "chapters/poisson_20250310.html",
+    "title": "5  The Poisson Distribution",
+    "section": "",
+    "text": "5.1 Deriving the Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Poisson Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/poisson_20250310.html#example-random-samples",
+    "href": "chapters/poisson_20250310.html#example-random-samples",
+    "title": "5  The Poisson Distribution",
+    "section": "5.2 Example Random Samples",
+    "text": "5.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nN &lt;- 5\n\nxSymm &lt;- rpois(n = 500, lambda = 25)\nsamplesSymm_ls &lt;- list(\n  n5   = xSymm[1:5],\n  n30  = xSymm[1:30],\n  n100 = xSymm[1:100],\n  n500 = xSymm\n)\nbinsSymm_int &lt;- seq.int(from = -1, to = max(xSymm) + 1, by = 1)\n\nxSkew &lt;- rpois(n = 500, lambda = 2.5)\nsamplesSkew_ls &lt;- list(\n  n5   = xSkew[1:5],\n  n30  = xSkew[1:30],\n  n100 = xSkew[1:100],\n  n500 = xSkew\n)\nbinsSkew_int &lt;- seq.int(from = -1, to = max(xSkew) + 1, by = 1)\n# we are drawing until we reach N successes, so the upper limit should be \n# N * (1 / min(prob)) + epsilon\n\nrm(xSymm, xSkew)\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nhist(samplesSkew_ls$n5, breaks = binsSkew_int)\nhist(samplesSkew_ls$n30, breaks = binsSkew_int)\nhist(samplesSkew_ls$n100, breaks = binsSkew_int)\nhist(samplesSkew_ls$n500, breaks = binsSkew_int)\n\npar(mfrow = c(1, 1))\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nhist(samplesSymm_ls$n5, breaks = binsSymm_int)\nhist(samplesSymm_ls$n30, breaks = binsSymm_int)\nhist(samplesSymm_ls$n100, breaks = binsSymm_int)\nhist(samplesSymm_ls$n500, breaks = binsSymm_int)\n\npar(mfrow = c(1, 1))",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Poisson Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/poisson_20250310.html#show-that-this-is-a-distribution",
+    "href": "chapters/poisson_20250310.html#show-that-this-is-a-distribution",
+    "title": "5  The Poisson Distribution",
+    "section": "5.3 Show that this is a Distribution",
+    "text": "5.3 Show that this is a Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Poisson Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/poisson_20250310.html#derive-the-moment-generating-function",
+    "href": "chapters/poisson_20250310.html#derive-the-moment-generating-function",
+    "title": "5  The Poisson Distribution",
+    "section": "5.4 Derive the Moment Generating Function",
+    "text": "5.4 Derive the Moment Generating Function",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Poisson Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/poisson_20250310.html#method-of-moments-estimators",
+    "href": "chapters/poisson_20250310.html#method-of-moments-estimators",
+    "title": "5  The Poisson Distribution",
+    "section": "5.5 Method of Moments Estimators",
+    "text": "5.5 Method of Moments Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Poisson Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/poisson_20250310.html#maximum-likelihood-estimators",
+    "href": "chapters/poisson_20250310.html#maximum-likelihood-estimators",
+    "title": "5  The Poisson Distribution",
+    "section": "5.6 Maximum Likelihood Estimators",
+    "text": "5.6 Maximum Likelihood Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Poisson Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/poisson_20250310.html#exercises",
+    "href": "chapters/poisson_20250310.html#exercises",
+    "title": "5  The Poisson Distribution",
+    "section": "5.7 Exercises",
+    "text": "5.7 Exercises",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Poisson Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/exponential_20250310.html",
+    "href": "chapters/exponential_20250310.html",
+    "title": "6  The Exponential Distribution",
+    "section": "",
+    "text": "6.1 Deriving the Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Exponential Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/exponential_20250310.html#example-random-samples",
+    "href": "chapters/exponential_20250310.html#example-random-samples",
+    "title": "6  The Exponential Distribution",
+    "section": "6.2 Example Random Samples",
+    "text": "6.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxPeaked &lt;- rexp(n = 500, rate = 5)\nsamplesPeaked_ls &lt;- list(\n  n5   = xPeaked[1:5],\n  n50  = xPeaked[1:50],\n  n100 = xPeaked[1:100],\n  n500 = xPeaked\n)\n\nxDiffuse &lt;- rexp(n = 500, rate = 1)\nsamplesDiffuse_ls &lt;- list(\n  n5   = xDiffuse[1:5],\n  n50  = xDiffuse[1:50],\n  n100 = xDiffuse[1:100],\n  n500 = xDiffuse\n)\n\nrange_num &lt;- range(c(xPeaked, xDiffuse))\n\nrm(xPeaked, xDiffuse)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesPeaked_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesPeaked_ls$n50, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesPeaked_ls$n100, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesPeaked_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n50, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n100, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Exponential Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/exponential_20250310.html#show-that-this-is-a-distribution",
+    "href": "chapters/exponential_20250310.html#show-that-this-is-a-distribution",
+    "title": "6  The Exponential Distribution",
+    "section": "6.3 Show that this is a Distribution",
+    "text": "6.3 Show that this is a Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Exponential Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/exponential_20250310.html#derive-the-moment-generating-function",
+    "href": "chapters/exponential_20250310.html#derive-the-moment-generating-function",
+    "title": "6  The Exponential Distribution",
+    "section": "6.4 Derive the Moment Generating Function",
+    "text": "6.4 Derive the Moment Generating Function",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Exponential Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/exponential_20250310.html#method-of-moments-estimators",
+    "href": "chapters/exponential_20250310.html#method-of-moments-estimators",
+    "title": "6  The Exponential Distribution",
+    "section": "6.5 Method of Moments Estimators",
+    "text": "6.5 Method of Moments Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Exponential Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/exponential_20250310.html#maximum-likelihood-estimators",
+    "href": "chapters/exponential_20250310.html#maximum-likelihood-estimators",
+    "title": "6  The Exponential Distribution",
+    "section": "6.6 Maximum Likelihood Estimators",
+    "text": "6.6 Maximum Likelihood Estimators",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Exponential Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/exponential_20250310.html#exercises",
+    "href": "chapters/exponential_20250310.html#exercises",
+    "title": "6  The Exponential Distribution",
+    "section": "6.7 Exercises",
+    "text": "6.7 Exercises",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Exponential Distribution</span>"
+    ]
+  },
+  {
     "objectID": "references.html",
     "href": "references.html",
     "title": "References",
@@ -237,26 +397,6 @@
     "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
     "crumbs": [
       "References"
-    ]
-  },
-  {
-    "objectID": "chapters/bernoulli_20250310.html#footnotes",
-    "href": "chapters/bernoulli_20250310.html#footnotes",
-    "title": "2  The Bernoulli Distribution",
-    "section": "",
-    "text": "https://www.usu.edu/math/schneit/StatsStuff/Probability/probability2.html↩︎\nif and only if↩︎\nNote the Telescoping Series: https://en.wikipedia.org/wiki/Telescoping_series↩︎",
-    "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/bernoulli_20250310.html#deriving-the-distribution",
-    "href": "chapters/bernoulli_20250310.html#deriving-the-distribution",
-    "title": "2  The Bernoulli Distribution",
-    "section": "",
-    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.",
-    "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
     ]
   }
 ]
