@@ -11,6 +11,8 @@ book:
     - chapters/bernoulli_20250310.qmd
     - chapters/binomial_20250310.qmd
     - chapters/negative_binomial_20250310.qmd
+    - chapters/poisson_20250310.qmd
+    - chapters/exponential_20250310.qmd
     - references.qmd
 
 bibliography: references.bib
