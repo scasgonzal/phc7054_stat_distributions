@@ -1,0 +1,171 @@
+---
+title: "The Student's t Distribution"
+author: "Gabriel J. Odom"
+date: last-modified
+format:
+  html:
+    embed-resources: true
+    code-fold: true
+knitr:
+  opts_chunk:        ########## set global options ############
+    collapse: true   # keep code from blocks together (if shown)
+    echo: true       # show code
+    message: true    # show messages
+    warning: true    # show warnings
+    error: true      # show error messages
+    comment: ""      # don't show ## with printed output
+    dpi: 100         # image resolution (typically 300 for publication)
+    fig-width: 6.5   # figure width
+    fig-height: 4.0  # figure height
+    R.options:    
+      digits: 3    # round to three digits
+editor: source
+---
+
+```{r, tidyverse-tidymodels}
+#| echo: false
+
+library(conflicted)
+suppressPackageStartupMessages(library(tidymodels))
+tidymodels_prefer()
+suppressPackageStartupMessages(library(tidyverse))
+
+# suppress "`summarise()` has grouped output by " messages
+options(dplyr.summarise.inform = FALSE)
+```
+
+
+
+## Deriving the Distribution
+
+
+</br>
+
+
+
+## Example Random Samples
+
+```{r, random-sample}
+set.seed(20150516)
+
+xStd <- rt(n = 500, df = 300)
+samplesStd_ls <- list(
+  n10  = xStd[1:10],
+  n30  = xStd[1:30],
+  n60  = xStd[1:60],
+  n500 = xStd
+)
+
+xDiffuse <- rt(n = 500, df = 3)
+samplesDiffuse_ls <- list(
+  n10  = xDiffuse[1:10],
+  n30  = xDiffuse[1:30],
+  n60  = xDiffuse[1:60],
+  n500 = xDiffuse
+)
+
+range_num <- range(c(xStd, xDiffuse))
+
+rm(xStd, xDiffuse)
+```
+
+```{r}
+#| label: shared-density-plotting-function
+PlotSharedDensity <- function(x, range_x, bandwidth = "nrd0") {
+  
+  xDens_ls <- density(x, bw = bandwidth)
+  xHist_ls <- hist(x, plot = FALSE)
+  yLargest_num <- max(max(xDens_ls$y), max(xHist_ls$density))
+  
+  hist(
+    x, prob = TRUE,
+    xlim = range_x, ylim = c(0, yLargest_num)
+  )
+  lines(xDens_ls, col = 4, lwd = 2)
+  
+}
+```
+
+
+```{r}
+#| label: random-sample-hist-symm
+#| fig-show: "hold"
+
+par(mfrow = c(2, 2))
+
+PlotSharedDensity(
+  x = samplesStd_ls$n10, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesStd_ls$n30, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesStd_ls$n60, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesStd_ls$n500, range_x = range_num
+)
+
+par(mfrow = c(1, 1))
+
+# , bandwidth = 0.005
+```
+
+```{r}
+#| label: random-sample-hist-diffuse
+#| fig-show: "hold"
+
+par(mfrow = c(2, 2))
+
+PlotSharedDensity(
+  x = samplesDiffuse_ls$n10, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesDiffuse_ls$n30, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesDiffuse_ls$n60, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesDiffuse_ls$n500, range_x = range_num
+)
+
+par(mfrow = c(1, 1))
+```
+
+
+</br>
+
+
+
+## Show that this is a Distribution
+
+
+</br>
+
+
+
+## Derive the Moment Generating Function
+
+
+</br>
+
+
+
+## Method of Moments Estimators
+
+
+</br>
+
+
+
+## Maximum Likelihood Estimators
+
+
+</br>
+
+
+
+## Exercises
+
+

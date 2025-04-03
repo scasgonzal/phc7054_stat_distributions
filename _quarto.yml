@@ -13,6 +13,12 @@ book:
     - chapters/negative_binomial_20250310.qmd
     - chapters/poisson_20250310.qmd
     - chapters/exponential_20250310.qmd
+    - chapters/gamma_20250310.qmd
+    - chapters/beta_20250310.qmd
+    - chapters/normal_20250310.qmd
+    - chapters/chi_square_20250310.qmd
+    - chapters/students_t_20250310.qmd
+    - chapters/f_20250310.qmd
     - references.qmd
 
 bibliography: references.bib

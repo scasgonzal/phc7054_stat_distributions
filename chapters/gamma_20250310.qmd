@@ -1,0 +1,171 @@
+---
+title: "The Gamma Distribution"
+author: "Gabriel J. Odom"
+date: last-modified
+format:
+  html:
+    embed-resources: true
+    code-fold: true
+knitr:
+  opts_chunk:        ########## set global options ############
+    collapse: true   # keep code from blocks together (if shown)
+    echo: true       # show code
+    message: true    # show messages
+    warning: true    # show warnings
+    error: true      # show error messages
+    comment: ""      # don't show ## with printed output
+    dpi: 100         # image resolution (typically 300 for publication)
+    fig-width: 6.5   # figure width
+    fig-height: 4.0  # figure height
+    R.options:    
+      digits: 3    # round to three digits
+editor: source
+---
+
+```{r, tidyverse-tidymodels}
+#| echo: false
+
+library(conflicted)
+suppressPackageStartupMessages(library(tidymodels))
+tidymodels_prefer()
+suppressPackageStartupMessages(library(tidyverse))
+
+# suppress "`summarise()` has grouped output by " messages
+options(dplyr.summarise.inform = FALSE)
+```
+
+
+
+## Deriving the Distribution
+
+
+</br>
+
+
+
+## Example Random Samples
+
+```{r, random-sample}
+set.seed(20150516)
+
+xSymm <- rgamma(n = 500, shape = 10, scale = 1)
+samplesSymm_ls <- list(
+  n5   = xSymm[1:5],
+  n30  = xSymm[1:30],
+  n60  = xSymm[1:60],
+  n500 = xSymm
+)
+
+xSkew <- rgamma(n = 500, shape = 0.9, scale = 3)
+samplesSkew_ls <- list(
+  n5   = xSkew[1:5],
+  n30  = xSkew[1:30],
+  n60  = xSkew[1:60],
+  n500 = xSkew
+)
+
+range_num <- range(c(xSymm, xSkew))
+
+rm(xSymm, xSkew)
+```
+
+```{r}
+#| label: shared-density-plotting-function
+PlotSharedDensity <- function(x, range_x, bandwidth = "nrd0") {
+  
+  xDens_ls <- density(x, bw = bandwidth)
+  xHist_ls <- hist(x, plot = FALSE)
+  yLargest_num <- max(max(xDens_ls$y), max(xHist_ls$density))
+  
+  hist(
+    x, prob = TRUE,
+    xlim = range_x, ylim = c(0, yLargest_num)
+  )
+  lines(xDens_ls, col = 4, lwd = 2)
+  
+}
+```
+
+
+```{r}
+#| label: random-sample-hist-symm
+#| fig-show: "hold"
+
+par(mfrow = c(2, 2))
+
+PlotSharedDensity(
+  x = samplesSymm_ls$n5, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesSymm_ls$n30, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesSymm_ls$n60, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesSymm_ls$n500, range_x = range_num
+)
+
+par(mfrow = c(1, 1))
+
+# , bandwidth = 0.005
+```
+
+```{r}
+#| label: random-sample-hist-diffuse
+#| fig-show: "hold"
+
+par(mfrow = c(2, 2))
+
+PlotSharedDensity(
+  x = samplesSkew_ls$n5, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesSkew_ls$n30, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesSkew_ls$n60, range_x = range_num
+)
+PlotSharedDensity(
+  x = samplesSkew_ls$n500, range_x = range_num
+)
+
+par(mfrow = c(1, 1))
+```
+
+
+</br>
+
+
+
+## Show that this is a Distribution
+
+
+</br>
+
+
+
+## Derive the Moment Generating Function
+
+
+</br>
+
+
+
+## Method of Moments Estimators
+
+
+</br>
+
+
+
+## Maximum Likelihood Estimators
+
+
+</br>
+
+
+
+## Exercises
+
+
