@@ -37,7 +37,7 @@ options(dplyr.summarise.inform = FALSE)
 
 
 ## Deriving the Distribution
-In the mid-1600s, mathematicians like Pascal and Fermat were obsessed with games of chance.^[<https://www.usu.edu/math/schneit/StatsStuff/Probability/probability2.html>] The simplest such game is flipping a single coin. Let $P[A]$ denote the probability of event $A$ occurring. Because flipping a coin has only two outcomes (heads or tails; we ignore the microscopic possibility of a coin landing on its edge for practical gambling scenarios), we can define $p \equiv P[\text{head}]$, which necessarily implies that $1 - p = P[\text{tails}]$. For ease of notation, we let $k\in\{0,1\} = 1$ when the coin hands on heads and $k = 0$ for tails. Thus, we define a **Bernoulli Trial** as one random value drawn from the following distribution:
+In the mid-1600s, mathematicians like Pascal and Fermat were obsessed with games of chance.^[<https://www.usu.edu/math/schneit/StatsStuff/Probability/probability2.html>] The simplest such game is flipping a single coin. Let $P[A]$ denote the probability of event $A$ occurring. Because flipping a coin has only two outcomes (heads or tails; we ignore the microscopic possibility of a coin landing on its edge for practical gambling scenarios), we can define $p \equiv P[\text{head}]$, which necessarily implies that $1 - p = P[\text{tails}]$. For ease of notation, we let $k\in\{0,1\} = 1$ when the coin hands on leads and $k = 0$ for tails. Thus, we define a **Bernoulli Trial** as one random value drawn from the following distribution:
 $$
 f_{\text{Bern}}(k|p) = p^k(1-p)^{1-k},\ k\in\{0,1\},\ p \in (0,1) \subset \mathbb{R}.
 $$
@@ -87,6 +87,8 @@ par(mfrow = c(1, 1))
 
 
 ## Show that this is a Distribution
+
+### Review: Properties of Distributions
 Let $x$ be an observed value $\in \mathcal{A}$, and let $\boldsymbol\theta$ be a vector of parameters in a parameter space $\boldsymbol\Theta \subseteq \mathbb{R}^q$. Consider a function $f(\textbf{x}|\boldsymbol\theta)$ with anti-derivative $F$, and note that $f$ need not be continuous. This $f$ represents a **probability distribution** iff^[if and only if]
 
 1. $\forall x \in \mathcal{S}$, $\forall \boldsymbol\theta \in \boldsymbol\Theta$, $f(x|\boldsymbol\theta) \ge 0$.
@@ -102,14 +104,14 @@ If $G$ is continuous $\forall x \in \mathcal{S}$, then this integral simplifies 
 $$
 \int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \int_{x \in \mathcal{S}} f(x) G^{\prime}(x).
 $$
-If, however, there exists $k < m < \infty$ points of discontinuity for $G$ on $\mathcal{S}$, we define an $m$-partition of $\mathcal{S}$ as $[a = y_0, y_1), [y_1, y_2), \ldots, [y_{m - 2}, y_{m - 1}), [y_{m - 1}, b = y_m]$, where the $k$ points of discontinuity are included in the sequence $\{y_1, y_2, \ldots, y_{m - 1}\}$. Then, this integral simplifies to 
+If, however, there exists $k < m < \infty$ points of discontinuity for $G$ on $\mathcal{S}$, we define an $m$-partition of $\mathcal{S}$ as $\{[y_0, y_1), [y_1, y_2), \ldots, [y_{m - 2}, y_{m - 1}), [y_{m - 1}, y_m]\}$, where $\{a = y_0, b = y_m\}$ and the $k$ points of discontinuity are included in the sequence $\{y_1, y_2, \ldots, y_{m - 1}\}$. Then, this integral simplifies to 
 $$
 \int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \sum\limits_{i = 1}^m f(x)\left[ G(y_i) - G(y_{i - 1}) \right].
 $$
 
-As long as (1) holds above, then $F$ will be monotone increasing (because the anti-derivative of a non-negative function will always increase). The probability density/mass functions for all statistical distributions share these two properties above. Because of the flexibility of the Riemann-Stieltjes integral, we don't have to make the distinction between probability density functions and probability mass functions any longer. This is because 
+As long as (1) holds above, then $F$ will be monotone increasing (because the anti-derivative of a non-negative function will always be flat or increasing). The probability density/mass functions for all statistical distributions share these two properties above. Because of the flexibility of the Riemann-Stieltjes integral, we don't have to make the distinction between probability density functions and probability mass functions any longer. This is because 
 
-1. If $\mathcal{S}$ is a discrete set with **cardinality** $|\mathcal{S}| = n$, $f$ is commonly referred to as a probability "mass" function. Then, because (1) holds, $\exists$ some ordering of the elements of $\mathcal{S} \ni 0 \le F(x^{(1)}) \le F(x^{(2)}) \le \cdots \le F(x^{(n)}) \le 1$. We know that the total probability of all events is 1, and the total probability of no events is 0, so, by convention, we let $F(x^{(n)}) = 1$ and $F(x^{(0)}) = 0$. Thus^[Note the *Telescoping Series*: <https://en.wikipedia.org/wiki/Telescoping_series>]
+1. If $\mathcal{S}$ is a discrete set with **cardinality** $|\mathcal{S}| = n$, $f$ is commonly referred to as a probability "mass" function. Then, because (1) holds, $\exists$ some ordering of the elements of $\mathcal{S} \ni 0 \le F(x^{(1)}) \le F(x^{(2)}) \le \cdots \le F(x^{(n)}) \le 1$. We know that the total probability of all events is 1, and the total probability of no events is 0, so, by convention, we let $F(x^{(n)}) = 1$ and $F(x^{(0)}) = 0$. Thus, noticing the **Telescoping Series**^[(https://en.wikipedia.org/wiki/Telescoping_series)], 
 $$
 \int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = \sum\limits_{i = 1}^n F(x^{(i)}) - F(x^{(i - 1)}) = F(x^{(n)}) - F(x^{(0)}) = 1.
 $$
@@ -118,19 +120,82 @@ $$
 \int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = \int_a^b F^{\prime}(x) = F(b) - F(a) = 1.
 $$
 
+Thus, for the remainder of these notes, we will start all integral-based definitions with the Riemann-Stieltjes form, and then reduce this form into traditional sums or integrals, as is appropriate for the distribution at hand.
+
+### Properties of the Bernoulli Distribution
+Given the extensive review above, showing that $f_{\text{Bern}}$ is a probability distribution is anti-climactic.
+
+**Claim 1**: The function $f_{\text{Bern}}$ must be non-negative for all values of its support given $p$ in the parameter space $(0,1)$.
+
+**Argument 1**: If $k = 0$, then $f_{\text{Bern}}(k = 0|p) = p^0(1 - p)^1 = 1 - p \ge 0$. Similarly, if $k = 1$, then $f_{\text{Bern}}(k = 1|p) = p^1(1 - p)^0 = p \ge 0$. 
+
+**Claim 2**: The integral of the function $f_{\text{Bern}}$ over all possible values of $k$ must be 1. 
+
+**Argument 2**: Consider that
+$$
+\begin{aligned}
+\int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) &= \sum\limits_{k = 0}^1 f_{\text{Bern}}(k|p) \\ 
+  &= \left[ p^k(1-p)^{1-k} \right]_{k = 0} + \left[ p^k(1-p)^{1-k} \right]_{k = 1} \\
+  &= [p^0(1-p)^1] + [p^1(1-p)^0] \\
+  &= (1 - p) + p \\
+  &= 1.
+\end{aligned}
+$$
+
 </br>
 
 
 
 ## Derive the Moment Generating Function
 
+### Review: What is the MGF?
+The **Moment Generating Function**^[<https://en.wikipedia.org/wiki/Moment-generating_function>] (MGF) is, as its name implies, a function to "generate" (i.e., calculate) **moments**. In statistics, I have not found great intuition on what a "moment" is, other than it relates to various measures of a probability distribution:
+
+- The 0$^{\text{th}}$ moment is the total area of the probability distribution [or 1],
+- The 1$^{\text{st}}$ moment is the expected value,
+- The 2$^{\text{nd}}$ (central) moment is the variance,
+- The 3$^{\text{rd}}$ moment is the skewness, and
+- The 4$^{\text{th}}$ moment is the kurtosis.
+
+Physics has more intuition of moments, where the 1$^{\text{st}}$ moment is the center of mass for a body (the point at which you could balance the shape on a pencil) and the 2$^{\text{nd}}$ moment is the moment of inertia (how much mass is spread out away from the axis at the center of mass, where larger values mean the mass is spread out further away from the first moment).
+
+Given a Cumulative Density Function $F_X(x|\boldsymbol\theta)$, the MGF of $F_X$ with respect to some value $t$ in an $\epsilon$-**neighborhood**^[$t \in (-\epsilon, \epsilon) \subset \mathbb{R}$ (where $\epsilon$ is an arbitrarily small value)] of 0 is defined to be
+$$
+M_X(t) \equiv \mathbb{E}\left[ e^{tX} \right] = \int\limits_{x \in \mathcal{S}(X)} e^{tx} \text{d}F_X(x|\boldsymbol\theta),
+$$
+where $\text{d}F_X$ is the integrand of a Riemann-Stieltjes integral (as discussed above).
+
+The process to calculate the first $n$ moments is to take the first $n$ derivatives of $M_X$ and evaluate these functions (if they exist) at $t = 0$. Then, these theoretical moments (functions of the distribution's parameters $\boldsymbol\theta$) are set equal to the first $|\boldsymbol\theta|$ sample moments, yielding a system of (often non-linear) equations to solve.
+
+### MGF of the Bernoulli Distribution
+Given the definition above, we can calculate the MGF:
+$$
+\begin{aligned}
+M_K(t) &\equiv \mathbb{E}\left[ e^{tK} \right] \\ 
+  &= \int\limits_{k \in \{0,1\}} e^{tk} \text{d}F_K(k|p) \\
+  &= \sum\limits_{k = 0}^1 e^{tk} p^k (1 - p)^{1 - k} \\
+  &= \sum\limits_{k = 0}^1 (pe^t)^k (1 - p)^{1 - k} \\
+  &= \left[ (pe^t)^0 (1 - p)^1 \right] + \left[ (pe^t)^1 (1 - p)^0 \right] \\
+  &= 1 - p + pe^t.
+\end{aligned}
+$$
 
 </br>
 
 
 
 ## Method of Moments Estimators
+Now that we have the MGF of the Bernoulli Distribution, we follow the process to calculate the theoretical moment(s) and set them equal to their corresponding sample moment(s). Because the Bernoulli Distribution has only 1 parameter, our systems to solve will be somewhat trivial.
 
+### First Moment
+Given the MGF calculated above, we begin with
+$$
+\begin{aligned}
+M_K(t) &= 1 - p + pe^t \\
+\Longrightarrow\qquad \frac{\partial}{\partial t}M_K(t) &= pe^t \\
+\Longrightarrow\qquad \frac{\partial}{\partial t}M_K(0) &= p.
+\end{aligned}
+$$
 
 </br>
 
