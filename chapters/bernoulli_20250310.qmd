@@ -142,6 +142,16 @@ $$
 \end{aligned}
 $$
 
+### An Example Sample from the Bernoulli Distribution
+Now let's use R to take $n = 100$ random samples from a Bernoulli Distribution with $p = 0.35$, but we will only inspect the first five (for now):
+```{r}
+#| label: rand-bernoulli-samp
+#| code-fold: false
+myBernSample <- rbinom(n = 100, size = 1, prob = 0.35)
+myBernSample[1:5]
+```
+We now pretend that we only know the results for the first five coin flips. We have flipped one coin five times, with the results $\{$Heads, Tails, Heads, Tails, Tails$\}$.
+
 </br>
 
 
@@ -165,7 +175,7 @@ M_X(t) \equiv \mathbb{E}\left[ e^{tX} \right] = \int\limits_{x \in \mathcal{S}(X
 $$
 where $\text{d}F_X$ is the integrand of a Riemann-Stieltjes integral (as discussed above).
 
-The process to calculate the first $n$ moments is to take the first $n$ derivatives of $M_X$ and evaluate these functions (if they exist) at $t = 0$. Then, these theoretical moments (functions of the distribution's parameters $\boldsymbol\theta$) are set equal to the first $|\boldsymbol\theta|$ sample moments, yielding a system of (often non-linear) equations to solve.
+If we have a distribution with $j$ parameters, the process to calculate the first $j$ moments is to take the first $j$ derivatives of $M_X$ and evaluate these functions (if they exist) at $t = 0$. Then, these theoretical moments (functions of the distribution's parameters $\boldsymbol\theta$) are set equal to the first $j = |\boldsymbol\theta|$ sample moments, yielding a system of (often non-linear) equations to solve.
 
 ### MGF of the Bernoulli Distribution
 Given the definition above, we can calculate the MGF:
@@ -185,7 +195,7 @@ $$
 
 
 ## Method of Moments Estimators
-Now that we have the MGF of the Bernoulli Distribution, we follow the process to calculate the theoretical moment(s) and set them equal to their corresponding sample moment(s). Because the Bernoulli Distribution has only 1 parameter, our systems to solve will be somewhat trivial.
+Now that we have the MGF of the Bernoulli Distribution, we follow the process to calculate the theoretical moment(s) and set them equal to their corresponding sample moment(s). Because the Bernoulli Distribution only has $j = 1$ parameter, our systems to solve will be somewhat trivial.
 
 ### First Moment
 Given the MGF calculated above, we begin with
@@ -193,16 +203,215 @@ $$
 \begin{aligned}
 M_K(t) &= 1 - p + pe^t \\
 \Longrightarrow\qquad \frac{\partial}{\partial t}M_K(t) &= pe^t \\
-\Longrightarrow\qquad \frac{\partial}{\partial t}M_K(0) &= p.
+\Longrightarrow\qquad \frac{\partial}{\partial t}M_K(0) &= p \\
+&= \mathbb{E}[X].
 \end{aligned}
 $$
 
+### The Second Moment
+The second (non-central) moment is then
+$$
+\begin{aligned}
+\frac{\partial}{\partial t}M_K(t) &= pe^t \\ \\
+\Longrightarrow\qquad \frac{\partial^2}{\partial t^2}M_K(t) &= pe^t \\
+\Longrightarrow\qquad \frac{\partial^2}{\partial t^2}M_K(0) &= p \\
+&= \mathbb{E}[X^2].
+\end{aligned}
+$$
+
+Because this is the non-central moment, we find the second central moment by exploiting the common relationship between variance and moments; that is,
+$$
+\begin{aligned}
+\text{Var}[X] &= \mathbb{E}[X^2] - \mathbb{E}^2[X] \\
+&= p - [p]^2 \\
+&= p(1 - p).
+\end{aligned}
+$$
+
+### Solving the System
+> For distributions with two parameters, we would now equate these two population moments, $\mathbb{E}[X]$ and $\text{Var}[X]$, the two sample moments, $\bar{x}$ and $s^2$, to yield the Method of Moments estimators for the two parameters of the distribution (which we will represent generically as $\hat\theta_{MoM}$ and $\hat\phi_{MoM}$).
+
+However, the Bernoulli has only one parameter, so our "system" of equations is just
+$$
+\begin{aligned}
+\bar{x} &= p \\
+\Longrightarrow \hat{p}_{MoM} &= \bar{x}.
+\end{aligned}
+$$
+For the data observed above, the coin-flip results $\{$Heads, Tails, Heads, Tails, Tails$\}$ which came from a coin with $P[\text{Heads}] = 0.35$, $\hat{p}_{MoM} = \frac{1}{5}\sum_{i = 1}^5 x_i = 0.4$.
 </br>
 
 
 
-## Maximum Likelihood Estimators
+## The Likelihood Function
+In standard statistical inference, we assume that the population parameter is some fixed but unknown value and that our observed data are random; we must estimate the unknown (but fixed) parameter using statistics of the observed (but random) data. Likelihood functions (and the related Bayesian school of thought) turn this question "inside out". The likelihood instead assumes that the parameter is a random variable (still unknown), but that the data are both observed and fixed.
 
+### Reviewing the Repeated Sampling Paradigm
+Let's recall the observed toy data: we flipped one coin five times and observed $\{$Heads, Tails, Heads, Tails, Tails$\}$. Is the coin fair? Traditional statistics would say "$p$ is unknown, but if I can collect enough data then I can estimate it with a narrow confidence interval". In a simple coin-flip example, this is reasonable: we can hire a person to repeatedly flip that same coin for hours and hours and record the results. Eventually, we will have a sample size large enough so that we can build a confidence interval small enough to say with any requested level of "confidence" that the coin is or isn't fair.
+
+Recall the $(1-\alpha)$-level confidence interval for a Bernoulli $p$ is
+$$
+\text{CI}(p|n,\alpha) =
+  \hat{p} \pm \frac{z_{\alpha/2}}{\sqrt{n}}\sqrt{\hat{p}(1 - \hat{p})},
+$$
+where $z_{\alpha/2}$ is the Standard Normal $z$ corresponding to the quantiles $1 - \alpha/2$ and $\alpha/2$. As we saw above, the true parameter value was $p = 0.35$, which (we remark) would be impossible to know in real life.
+
+We will assume that we take each coin flip one at a time. How many times will we have to flip the coin before the 95% CI no longer contains 0.5?
+```{r}
+zAlpha <- qnorm(p = 0.975)
+results_ls <- lapply(
+  X = seq.int(from = 2, to = length(myBernSample), by = 1),
+  FUN = function(n_i) {
+    
+    x <- myBernSample[1:n_i]
+    pHat <- mean(x)
+    CIwidth <- ( zAlpha / sqrt(n_i) ) * sqrt( pHat * (1 - pHat) )
+    
+    data.frame(
+      N = n_i,
+      pHat = pHat,
+      CIlb = pHat - CIwidth,
+      CIub = pHat + CIwidth
+    )
+  }
+)
+
+results_df <- do.call(rbind, results_ls)
+
+# add trivial CI results for first coin flip
+results_df <- rbind(
+  data.frame(
+    N = 1, pHat = myBernSample[1],
+    CIlb = myBernSample[1], CIub = myBernSample[1]
+  ),
+  results_df
+)
+```
+
+Let's plot these results:
+```{r}
+library(ggplot2)
+ggplot(data = results_df) + 
+  aes(x = N) +
+  ylim(c(0, 1)) +
+  scale_x_continuous(breaks = seq(from = 0, to = 100, by = 10)) +
+  geom_abline(slope = 0, intercept = 0.5, colour = "red") + 
+  geom_line(aes(y = CIlb)) + 
+  geom_line(aes(y = CIub))
+```
+
+As we can see, we need between 85-90 coin flips before we can be 95% sure that the coin is "not fair" (that the true value of $p\ne 0.5$). Also, we see that the confidence intervals are degenerate for a few of the samples with $n\le 5$ (that the bounds of the confidence interval for $p$ are outside $[0,1]$, which is impossible).
+
+### Making the Most Use of our Data
+For the computer, flipping additional coins to create new data is trivially inexpensive. However, in real life, collecting one additional sample may be of enormous cost to the research team. In these cases, it doesn't help us that we would theoretically be able to reject the claim that $p = 0.5$ at some point in the future (with more samples), we need to be able to make a statement about the **likelihood** that the coin is fair with the samples we have right now. Let the event $\{$Heads, Tails, Heads, Tails, Tails$\}$ be encoded $\textbf{x} = (1,0,1,0,0)$. Thus, we apply the **multiplication rule** of independent events for these five coin flips, and define the **likelihood function** of $p$ given the observed data:
+
+\begin{align}
+\mathcal{L}(p|\textbf{x}) &=
+  \left[ p^k(1 - p)^{1 - k} \right]_{k = 1} \times
+  \left[ p^k(1 - p)^{1 - k} \right]_{k = 0} \times \\
+  &\qquad \left[ p^k(1 - p)^{1 - k} \right]_{k = 1} \times
+  \left[ p^k(1 - p)^{1 - k} \right]_{k = 0} \times
+  \left[ p^k(1 - p)^{1 - k} \right]_{k = 0} \\
+  
+  &= \left[ p^1 \right] \times \left[ (1 - p)^1 \right] \times
+  \left[ p^1 \right] \times \left[ (1 - p)^1 \right] \times \left[ (1 - p)^1 \right] \\
+  &= p^2(1 - p)^3 \\
+  &= p^2(1 - 3p + 3p^2 - p^3) \\
+  &= p^2 - 3p^3 + 3p^4 - p^5.
+\end{align}
+
+### Integrating the Likelihood
+This function $\mathcal{L}$ contains almost all the information we have about $p$: it has all the data, and it has our best guess about the data generating process (we think it's a Bernoulli trial). A few things to notice:^[We could also notice that this is the kernel of a Beta distribution with $\alpha = 3$ and $\beta = 4$, with normalizing constant $\frac{(3-1)!(4-1)!}{(3+4-1)!} = \frac{2}{6*5*4} = \frac{1}{60}$, but that would make the next steps too easy...]
+
+1. $\mathcal{L}$ is a function of the parameter, $p$, not of the data.
+2. $\mathcal{L}$ is NOT a probability function; even though $\mathcal{L} \ge 0\ \forall p$, we have that the integral over the support of $p$ is
+
+\begin{align}
+\int_0^1 \mathcal{L}(p|\textbf{x})dp &=
+  \int_0^1 \left[ p^2 - 3p^3 + 3p^4 - p^5 \right]dp \\
+  &= \frac{1}{3}p^3 - \frac{3}{4}p^4 + \frac{3}{5}p^5 - \frac{1}{6}p^6 \Big\rvert_0^1 \\
+  &= \frac{1}{3} - \frac{3}{4} + \frac{3}{5} - \frac{1}{6} \\ 
+  &= \frac{20}{60} - \frac{45}{60} + \frac{36}{60} - \frac{10}{60} \\
+  &= \frac{1}{60} \\
+  &\ne 1
+\end{align}
+
+This exercise serves two purposes: first to show that $\mathcal{L}$ is not a probability distribution, and second to show the value of the multiplicative constant which would make a distribution. That is, $f(p|\textbf{x}) = 60*\mathcal{L}(p|\textbf{x})$ is a probability distribution. Now we can make probabilistic statements about the value of $p$.
+
+We can see what the probability distribution function looks like (it should look like a Beta distribution, because it is):
+```{r}
+#| label: prob-dist-of-p
+
+p <- seq(from = 0, to = 1, length.out = 101)
+f_p <- 60 * p^2 * (1 - p)^3
+
+plot(x = p, y = f_p)
+```
+
+And since we have calculated the indefinite integral already, we can plot the Cumulative Distribution Function:
+```{r}
+#| label: cuml-prob-of-p
+
+F_p <- 60 * (p^3/3 - 3*p^4/4 + 3*p^5/5 - p^6/6)
+plot(x = p, y = F_p)
+```
+
+Finally, we can make statements about the claim that $p = 0.5$. For instance, what is $P[p < 0.5]$?
+```{r}
+#| code-fold: false
+F_p[which(p == 0.5)]
+```
+
+What is $P[p > 0.5]$?
+```{r}
+#| code-fold: false
+1 - F_p[which(p == 0.5)]
+```
+
+What is $P[0.4 < p < 0.6]$?
+```{r}
+#| code-fold: false
+F_p[which(p == 0.6)] - F_p[which(p == 0.4)]
+```
+
+What is an 80% **credible set**^[<https://en.wikipedia.org/wiki/Credible_interval>] for $p$?
+```{r}
+#| code-fold: false
+# Lower
+p[max(which(F_p < 0.1))]
+# Upper
+p[min(which(F_p > 0.9))]
+```
+
+
+## Maximum Likelihood Estimators: The "Most Likely" Value of $p$
+We have an integrated likelihood, which contains basically almost all there is to know about the data we've collected, but finding a closed form of the integral of $\mathcal{L}$ (necessary to find $f$ and $F$) can be impossible in most real-world scenarios. Rather than trying to answer *all* the questions about $p$, sometimes it's still worthwhile to answer "what is the most likely value of $p$ given the data we've observed?"
+
+This is answered with **maximum likelihood estimation**, and we need two steps. Using (multivariable) differential calculus, we
+
+1. find the value of $\boldsymbol\theta$ which maximizes $\mathcal{L}(\boldsymbol\theta|\textbf{x})$, and
+2. show that $\mathcal{L}(\boldsymbol\theta|\textbf{x})$ is **concave down**^[<https://tutorial.math.lamar.edu/classes/calci/shapeofgraphptii.aspx>] at this point.
+
+For the first step, it is common practice to 1) disregard any multiplicative constants leading $\mathcal{L}$ (because the derivative in the next step will zero these constants out) and 2) to take the natural logarithm of the likelihood and maximize that instead. Because logarithms simply change the scale of the vertical axis, they do not affect the location of extreme values. Let's begin (I show what happens to the multiplicative constant in square brackets):
+
+\begin{align}
+\mathcal{L}(p|\textbf{x}) &= [60\times]\ p^2(1 - p)^3,\ p\in[0,1] \\
+\Longrightarrow \qquad \ell(p|\textbf{x}) &= [\log(60) +]\ 2\log(p) + 3\log(1 - p),\ p\in(0,1) \\
+\Longrightarrow \qquad \frac{\partial\ell}{\partial p} &= [0+]\ \frac{2}{p} - \frac{3}{1 - p} \\
+\Longrightarrow \qquad 0 &\overset{\text{set}}{=} \frac{2}{p} - \frac{3}{1 - p} \\
+\Longrightarrow \qquad 0 &= 2(1 - p) - 3p \\
+\Longrightarrow \qquad \hat{p} &= 2/5
+\end{align}
+
+The second step is to confirm that $\hat{p} = \frac{2}{5}$ is a *maximum* of $\mathcal{L}$, by ensuring that the second derivative of $\mathcal{L}$ is negative around $\hat{p}$. For that, we return to the first derivative of the log-likelihood (I'm using negative exponents instead of fractions because the **chain rule** is easier to apply than the **quotient rule** for these fractions), and differentiate again:
+
+\begin{align}
+\frac{\partial\ell}{\partial p} &= 2p^{-1} - 3(1 - p)^{-1} \\
+\Longrightarrow \qquad \frac{\partial^2\ell}{\partial p^2} &= -2p^{-2} + 3(1 - p)^{-2}\times(-1) \\
+&= -\left( \frac{2}{p^2} + \frac{3}{(1 - p)^2} \right) <0\ \forall p \in (0,1).
+\end{align}
+
+So, for this trivial example, both Method of Moments and Maximum Likelihood Estimation yielded the same estimate for $\hat{p}$.
 
 </br>
 
@@ -210,4 +419,4 @@ $$
 
 ## Exercises
 
-
+To be determined.
