@@ -88,15 +88,8 @@ par(mfrow = c(1, 1))
 
 ## Show that this is a Distribution
 
-### Review: Properties of Distributions
-Let $x$ be an observed value $\in \mathcal{A}$, and let $\boldsymbol\theta$ be a vector of parameters in a parameter space $\boldsymbol\Theta \subseteq \mathbb{R}^q$. Consider a function $f(\textbf{x}|\boldsymbol\theta)$ with anti-derivative $F$, and note that $f$ need not be continuous. This $f$ represents a **probability distribution** iff^[if and only if]
-
-1. $\forall x \in \mathcal{S}$, $\forall \boldsymbol\theta \in \boldsymbol\Theta$, $f(x|\boldsymbol\theta) \ge 0$.
-2. $\forall \boldsymbol\theta \in \boldsymbol\Theta$, $\int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = 1$, where $\text{d}F$ is the integrand of a **Riemann-Stieltjes** integral.
-
-> **The Riemann-Stieltjes Integral**
-> 
-> Let $f$ be a bounded function on the interval $\mathcal{S} = [a, b] \subset \mathbb{R}$, and let $G$ be a monotone increasing (but not necessarily continuous) function on $\mathcal{S}$. The Riemann-Stieltjes integral of $f$ with respect to $G$ is denoted as
+### Formal Foundations: The Riemann-Stieltjes Integral
+Let $f$ be a bounded function on the interval $\mathcal{S} = [a, b] \subset \mathbb{R}$, and let $G$ be a monotone increasing (but not necessarily continuous) function on $\mathcal{S}$. The Riemann-Stieltjes integral of $f$ with respect to $G$ is denoted as
 $$
 \text{R-S}(f, G) \equiv \int_{x \in \mathcal{S}} f(x) \text{d}G(x).
 $$
@@ -108,6 +101,13 @@ If, however, there exists $k < m < \infty$ points of discontinuity for $G$ on $\
 $$
 \int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \sum\limits_{i = 1}^m f(x)\left[ G(y_i) - G(y_{i - 1}) \right].
 $$
+
+
+### Review: Properties of Distributions
+Let $x$ be an observed value $\in \mathcal{A}$, and let $\boldsymbol\theta$ be a vector of parameters in a parameter space $\boldsymbol\Theta \subseteq \mathbb{R}^q$. Consider a function $f(\textbf{x}|\boldsymbol\theta)$ with anti-derivative $F$, and note that $f$ need not be continuous. This $f$ represents a **probability distribution** iff^[if and only if]
+
+1. $\forall x \in \mathcal{S}$, $\forall \boldsymbol\theta \in \boldsymbol\Theta$, $f(x|\boldsymbol\theta) \ge 0$.
+2. $\forall \boldsymbol\theta \in \boldsymbol\Theta$, $\int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = 1$, where $\text{d}F$ is the integrand of a **Riemann-Stieltjes** integral.
 
 As long as (1) holds above, then $F$ will be monotone increasing (because the anti-derivative of a non-negative function will always be flat or increasing). The probability density/mass functions for all statistical distributions share these two properties above. Because of the flexibility of the Riemann-Stieltjes integral, we don't have to make the distinction between probability density functions and probability mass functions any longer. This is because 
 

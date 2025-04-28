@@ -37,7 +37,66 @@ options(dplyr.summarise.inform = FALSE)
 
 
 ## Deriving the Distribution
+In the previous chapter, we explored the properties of a Bernoulli trial. We envisioned a scenario where a person flipped a coin five times, and the results were $\{$Heads, Tails, Heads, Tails, Tails$\}$. What we knew, but the hypothetical person did no know, was that this particular coin was not "fair". In fact, these five observations were drawn from a Bernoulli process with $P[\text{Heads}] = 0.35$.
 
+
+### A Primer on Exchangeability
+What if we saw $\{$Heads, Tails, Tails, Heads, Tails$\}$ instead? The total number of heads and tails flipped is the same, but the order is different. Does that affect our estimate of $p$? In order to generalize this experiment a bit, we need to use the principle of **exchangeability**.^[Read all the pages of this short lesson, as it also includes a refresher on Riemann-Stieltjes Integrals: <https://www.colorado.edu/amath/sites/default/files/attached-files/definetti.pdf>] The general idea of exchangeability is that the order of the observed flips doesn't matter; i.e., that the coin doesn't remember flipping a "Head" first then a "Tail". Recall that we encoded the observed flips as $\textbf{x} = (1,0,1,0,0)$. Therefore, if the order doesn't matter, then all these rows will give us the same information about $p$:
+```{r}
+#| label: all-binom-trials-yielding-2-wins-in-5-flips
+#| code-fold: false
+
+# Thanks to ChatGPT for finding this package for me.
+cquad::sq(J = 5, s = 2)
+```
+
+We see that there are 10 rows here, showing the 10 ways that we could flip 5 coins sequentially and only see 2 heads. While each of these rows shows the outcomes of different events, the resulting probability functions will be the same because of the **commutative property** of multiplication. That is, the likelihood function for the first row:
+$$
+\prod\limits_{k = (0, 0, 0, 1, 1)} \left[ p^{k_i}(1 - p)^{1 - k_i} \right] = p^{\sum_k k_i}(1 - p)^{\sum_k (1 - k_i)} = p^2(1 - p)^3;
+$$
+yields the same polynomial as the likelihood function for the last row:
+$$
+\prod\limits_{k = (1, 1, 0, 0, 0)} \left[ p^{k_i}(1 - p)^{1 - k_i} \right] = p^{\sum_k k_i}(1 - p)^{\sum_k (1 - k_i)} = p^2(1 - p)^3.
+$$
+The likelihood functions will be the same for all 10 rows.
+
+
+### The Binomial Coefficient
+Let's pretend that a prophet tells us that that the next time we flip $n = 5$ coins we will see $k = 2$ heads. We haven't flipped any coins yet, but we have a vision of the future. If we encode 1 for heads and 0 for tails, we know that what is about to happen when we flip these 5 coins can be described by one of the 10 rows above. But how did we get there?
+
+To make this process easier to explain, let's flip 5 coins and leave them on the table, so that we can "see" our results as they happen. The 10 rows of the matrix above are based on the logic of this process:
+
+1. Before I flip any coins, there are $n = 5$ coins in my hand. I haven't flipped any coins yet, so all my options are available. There are 5 ways to flip one head.
+2. I flip the first coin, and after I set that coin aside, I have $n - 1 = 4$ coins left for me to flip. There are still 4 ways to flip one head.
+3. I flip the second coin, and set it aside. I now have $n - 2 = 3$ coins left to flip. There are 3 ways left to flip one head.
+4. I flip the third coin, and set it aside. Now things get interesting: I have $n = k = 2$ coins left. If I have already flipped two heads in the first three flips, then I know the next two flips must be tails. If I haven't flipped any heads in the first three flips, then I know the next two flips must be heads. If I've only flipped one head in the first three flips, then I know that one of the two next flips will be heads and the other will be tails (but I don't know which is which).
+5. I flip the fourth coin and set it aside. The prophet already told me there would only be 2 heads in 5 flips, so the next flip is completely determined. If I have already flipped 2 heads with the first four coins, then this flip MUST be tails. If I've only flipped 1 head on the first four coins, then this flip MUST be heads. There is only one possible outcome, and it is predetermined to occur.
+
+If we hadn't been told by a prophet ahead of time that we would see two heads, then there would be $n$ options for the first flip (I haven't decided which coin to pick up yet, so that's why I have 4 choices), $n - 1$ for the second, all the way down to 1 way to flip at the end. That tells us there are $n!$ ways these flips could have happened. There would have been $5\times 4\times 3\times 2 = 120 = n!$^[This denotes the **factorial** of an integer: <https://en.wikipedia.org/wiki/Factorial>] possible orderings and configurations of heads and tails. However, in our process, we've already assumed exchangeability, so the order of the flips does not matter. Not only that, but we are further limited: the prophet informed us that we MUST see exactly $k = 2$ heads and $n - k = 3$ tails. *Because we use multiplication to "add" new possibilities, we must use division to take away these excluded possibilities.* Since we must have $k = 2$ heads, we remove 2 opportunities to flip tails; since we must have $n - k = 3$ tails, we remove 3 opportunities to flip heads. Therefore, the number of options will be:
+$$
+\frac{|\text{all results}|}{|\text{removed tails results}| \times |\text{removed heads results}|} = \frac{5!}{2!\times 3!} = \frac{120}{2 \times 6} = 10.
+$$
+
+<!-- There are n*(n-1)...(k+1)*k! ways to flip everything, and k! ways to get the heads and (n - k)! ways to get the tails. -->
+
+We then define the **Binomial Coefficient** as
+$$
+{n \choose k} \equiv \frac{n!}{k!(n - k)!}.
+$$
+
+
+### Constructing the Distribution
+To recap, we now have:
+
+1. a statement about the likelihood of a single binary event, of which $k = 1$ denotes one class and $k = 0$ denotes its complement (the other binary class): $p^k(1 - p)^{1 - k}$,
+2. an experiment that yields a set of $n$ such independent and exchangeable binary events, and
+3. a way to count all the ways that these events could possibly occur: $\frac{n!}{k!(n - k)!}$.
+
+Let us assume that the number of trials, $n$, is known. We will now construct a probability function for the random variable $k = 0, 1, \ldots, n$. We still assume independence and exchangeability, so the probability of success, $p$, is fixed. Then, this function will first have a the binomial coefficient, then the probability to observe $k$ successes, and finally the probability to observe $n - k$ failures. Thus, the **Binomial Distribution** is:
+
+$$
+f(k|n,p) \equiv {n \choose k} p^{k}(1 - p)^{n - k}.
+$$
 
 </br>
 
@@ -104,7 +163,24 @@ par(mfrow = c(1, 1))
 
 
 ## Show that this is a Distribution
+Let $\mathcal{S} = \mathbb{N} \cup 0$, where $\mathbb{N}$ denotes the set of **natural numbers**.^[<https://en.wikipedia.org/wiki/Natural_number>] Let $f(k|n,p) = {n \choose k} p^{k}(1 - p)^{n - k}$ represent the probability function of the Binomial Distribution. We must now show that
 
+1. $\forall k \in \mathcal{S}$, and for $p \in (0,1)$, $f(k|n, p) \ge 0$, and
+2. for $p \in (0,1)$, $\int_{k \in \mathcal{S}} \text{d}F(k|n,p) = 1$.
+
+
+### Formal Foundations: Mathematical Induction
+
+
+### The Distribution is Non-negative
+Consider $f$ defined above. First, we notice that the Binomial Coefficient is defined as a ratio of factorials; the standard definition of factorials only includes the natural numbers ($\mathbb{N}$), so they are necessarily positive. The ratio of two positive numbers is positive. Second, we have that $k,\ n - k \ge 0$, and that $p > 0$. Non-negative powers of positive numbers are also positive. Setting $p = 0$ yields a degenerate distribution anyway, so we don't bother with it. Putting these together for $p \in (0,1)$, we have that $f = 0$ outside the support of $k$ and $f > 0$ for $k \le n, \ni \{k,\ n\} \in \mathcal{S}$.
+
+
+### The Total Probability is 1
+Consider
+$$
+\int_{k \in \mathcal{S}} \text{d}F(k|n,p) = \sum_{k = 0}^n {n \choose k} p^{k}(1 - p)^{n - k}
+$$
 
 </br>
 
