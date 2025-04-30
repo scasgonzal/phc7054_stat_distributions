@@ -169,7 +169,100 @@ Let $\mathcal{S} = \mathbb{N} \cup 0$, where $\mathbb{N}$ denotes the set of **n
 2. for $p \in (0,1)$, $\int_{k \in \mathcal{S}} \text{d}F(k|n,p) = 1$.
 
 
+### Formal Foundations: Pascal's Rule
+For writing proofs involving combinations, we need the following property, known as **Pascal's Formula**,^[<https://en.wikipedia.org/wiki/Pascal%27s_rule>] which states that
+
+$$
+{a \choose b} = {a - 1 \choose b} + {a - 1 \choose b - 1}.
+$$
+
+*Proof:* For integers $a,b$, we construct this identity directly via simplification:
+$$
+\begin{aligned}
+{a - 1 \choose b} + {a - 1 \choose b - 1} &=
+  \frac{(a - 1)!}{b!(a - b - 1)!} + \frac{(a - 1)!}{(b - 1)!(a - 1 - b + 1)!} \\
+  &= \frac{a - b}{a - b}\left[ \frac{(a - 1)!}{b!(a - b - 1)!} \right] + \frac{b}{b} \left[ \frac{(a - 1)!}{(b - 1)!(a - b)!} \right] \\
+  &= \frac{a(a - 1)! - b(a - 1)!}{b!(a - b)(a - b - 1)!} + \frac{b(a - 1)!}{b(b - 1)!(a - b)!} \\
+  &= \frac{a! - b(a - 1)!}{b!(a - b)!} + \frac{b(a - 1)!}{b!(a - b)!} \\
+  &= \frac{a!}{b!(a - b)!} \\
+  &\equiv {a \choose b}.
+\end{aligned}
+$$
+
+
 ### Formal Foundations: Mathematical Induction
+For this section, we will also need to use the **Binomial Theorem**:^[<https://en.wikipedia.org/wiki/Binomial_theorem>] 
+
+$$
+(x +  y)^n = \sum_{k = 0}^n {n \choose k} x^k y^{n - k}.
+$$
+
+Before we can use this, we must prove that it is true first. This proof requires a technique called "Proof by Induction", or more generally, **mathematical induction**.^[<https://en.wikipedia.org/wiki/Mathematical_induction>] This is the structure of such a proof:
+
+> **Proof by Induction**: Consider a sequence of equations indexed over the integers by $n$. To show that the sequence of equations is true $\forall n$, we
+>
+1) show that the equation is true for $n = 1$ [the "base case"],
+2) assume that the equation is true for $n = i$ [the "hypothesis"], then
+3) prove that the equation is true for $n = i + 1$ from the case when $n = i$ [the "induction"].
+
+#### The Base Case
+Let $n = 1$. Then
+
+$$
+\begin{aligned}
+\sum_{k = 0}^1 {1 \choose k} x^k y^{1 - k} &=
+  \left[ {1 \choose 0} x^0 y^{1 - 0} \right] + \left[ {1 \choose 1} x^1 y^{1 - 1} \right] \\
+  &= \frac{1!}{0!\times 1!} (1) y^1 + \frac{1!}{1!\times 0!} x^1(1) \\
+  &= y + x \\
+  &= (x + y)^1.
+\end{aligned}
+$$
+
+#### The Hypothesis
+We assume that this equation is true for $n = i$. That is, we assume that
+
+$$
+\sum_{k = 0}^i {i \choose k} x^k y^{i - k} = (x + y)^i.
+$$
+
+#### The Induction
+Assuming that the hypothesis for $n = i$ is true, we will show that the equation also holds for $n = i + 1$. Note that the end of the proof requires Pascal's Rule to combine sums of combinations, and we comment that there is only one way to "choose" 0 things or all things. Thus,
+
+$$
+\begin{aligned}
+(x + y)^i &= \sum_{k = 0}^i {i \choose k} x^k y^{i - k} \\
+\Longrightarrow (x + y)^{i + 1} &= (x + y)\sum_{k = 0}^i {i \choose k} x^k y^{i - k} \\
+  &= (x + y)\left[ {i \choose 0} x^0 y^{i - 0} + {i \choose 1} x^1 y^{i - 1} + \ldots + {i \choose i - 1} x^{i - 1} y^1 + {i \choose i} x^{i - 0} y^0 \right] \\
+  &= x\left[ {i \choose 0} x^0 y^i + {i \choose 1} x^1 y^{i - 1} + \ldots + {i \choose i - 1} x^{i - 1} y^1 + {i \choose i} x^i y^0 \right] + \\
+  &\quad\ \  y\left[ {i \choose 0} x^0 y^i + {i \choose 1} x^1 y^{i - 1} + \ldots + {i \choose i - 1} x^{i - 1} y^1 + {i \choose i} x^i y^0 \right] \\
+  &= \left[ {i \choose 0} x^1 y^i + {i \choose 1} x^2 y^{i - 1} + \ldots + {i \choose i - 1} x^i y^1 + {i \choose i} x^{i+1} y^0 \right] + \\
+  &\quad\  \left[ {i \choose 0} x^0 y^{i + 1} + {i \choose 1} x^1 y^i + \ldots + {i \choose i - 1} x^{i - 1} y^2 + {i \choose i} x^i y^1 \right] \\
+  \\[0.1mm]
+  &\qquad \text{\emph{Collect like terms...}} \\
+  &= {i \choose 0} x^0 y^{i + 1} + \\
+  &\qquad \left[ {i \choose 0} x^1 y^i + {i \choose 1} x^1 y^i\right] + \ldots + \left[ {i \choose i - 1} x^i y^1 + {i \choose i} x^i y^1 \right] + \\
+  &\qquad {i \choose i} x^{i+1} y^0 \\
+  \\[0.1mm]
+  &\qquad \text{\emph{Only one way to choose all or none...}} \\
+  &= (1) x^0 y^{i + 1} + \\
+  &\qquad \left[ {i \choose 0} + {i \choose 1} \right]x^1 y^i + \ldots + \left[ {i \choose i - 1} + {i \choose i} \right]x^i y^1 + \\
+  &\qquad (1) x^{i+1} y^0 \\
+  \\[0.1mm]
+  &\qquad \text{\emph{Pascal's Rule...}} \\
+  &= (1) x^0 y^{i + 1} + \\
+  &\qquad \left[ {i + 1 \choose 1} \right]x^1 y^i + \ldots + \left[ {i + 1 \choose i} \right]x^i y^1 + \\
+  &\qquad (1) x^{i+1} y^0 \\
+  &= {i + 1 \choose 0} x^0 y^{i + 1} + {i + 1 \choose 1}x^1 y^i + \ldots + {i + 1 \choose i}x^i y^1 + {i + 1 \choose i + 1} x^{i+1} y^0 \\
+  \\[0.1mm]
+  &\qquad \text{\emph{By definition...}} \\
+  &= \sum_{k = 0}^{i + 1} {i + 1 \choose k} x^k y^{i + 1 - k}.
+\end{aligned}
+$$
+
+Therefore, $\forall n \in \mathbb{N}$,
+$$
+\sum_{k = 0}^n {n \choose k} x^k y^{n - k} = (x + y)^n.
+$$
 
 
 ### The Distribution is Non-negative
@@ -177,9 +270,14 @@ Consider $f$ defined above. First, we notice that the Binomial Coefficient is de
 
 
 ### The Total Probability is 1
-Consider
+Recall the **Binomial Theorem** we proved above, and let $x = p$ and $y = 1 - p$. Then,
 $$
-\int_{k \in \mathcal{S}} \text{d}F(k|n,p) = \sum_{k = 0}^n {n \choose k} p^{k}(1 - p)^{n - k}
+\begin{aligned}
+\int_{k \in \mathcal{S}} \text{d}F(k|n,p) &= \sum_{k = 0}^n {n \choose k} p^{k}(1 - p)^{n - k} \\
+  &= \left[ p + (1 - p) \right]^n \\
+  &= 1^n \\
+  &= 1.
+\end{aligned}
 $$
 
 </br>
