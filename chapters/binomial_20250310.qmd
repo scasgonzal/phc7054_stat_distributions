@@ -190,20 +190,34 @@ $$
 $$
 
 
-### Formal Foundations: Mathematical Induction
-For this section, we will also need to use the **Binomial Theorem**:^[<https://en.wikipedia.org/wiki/Binomial_theorem>] 
-
-$$
-(x +  y)^n = \sum_{k = 0}^n {n \choose k} x^k y^{n - k}.
-$$
-
-Before we can use this, we must prove that it is true first. This proof requires a technique called "Proof by Induction", or more generally, **mathematical induction**.^[<https://en.wikipedia.org/wiki/Mathematical_induction>] This is the structure of such a proof:
+### Formal Foundations: Mathematical Induction 
+The next foundational proof requires a technique called "Proof by Induction", or more generally, **mathematical induction**.^[<https://en.wikipedia.org/wiki/Mathematical_induction>] This is the structure of such a proof:
 
 > **Proof by Induction**: Consider a sequence of equations indexed over the integers by $n$. To show that the sequence of equations is true $\forall n$, we
 >
 1) show that the equation is true for $n = 1$ [the "base case"],
 2) assume that the equation is true for $n = i$ [the "hypothesis"], then
 3) prove that the equation is true for $n = i + 1$ from the case when $n = i$ [the "induction"].
+
+Here is a trivial example. Let's prove $\forall k \in\mathbb{N} \ge 5$ that $2^k < \Gamma(k + 1)$ (the point of this proof is to show that the factorial function increases more rapidly to $\infty$ than the exponential function). Our **base case** is for $k = 5$. We know that $2^5 = 32$ and $\Gamma(k + 1) = k! = 5! = 120$. Because $32 < 120$, the base case is true. Our **hypothesis**, what we assume to be true, is that $2^i < \Gamma(i + 1)$. To logically **induct**, we assume our hypothesis is true, and then show that our hypothesis implies that $2^{i + 1} < \Gamma(i + 2)$. That is
+$$
+\begin{aligned}
+2^{i+1} &\overset{?}{<} \Gamma(i + 2) \\
+\Longrightarrow 2 \times 2^i &\overset{?}{<} i \times \Gamma(i + 1) \\
+\Longrightarrow \frac{2}{i} \times 2^i &< \Gamma(i + 1),
+\end{aligned}
+$$
+which is true for $i \ge 5$ because our hypothesis was that $2^i < \Gamma(i + 1)$. Thus, $2^k < \Gamma(k + 1)\ \forall k \in\mathbb{N} \ge 5$, which completes our proof.
+
+
+### Formal Foundations: Mathematical Induction Proof of the Binomial Theorem
+For this section, we will also need to use the **Binomial Theorem**:^[<https://en.wikipedia.org/wiki/Binomial_theorem>] 
+
+$$
+(x +  y)^n = \sum_{k = 0}^n {n \choose k} x^k y^{n - k}.
+$$
+
+Before we can use this, we must prove that it is true. 
 
 #### The Base Case
 Let $n = 1$. Then
@@ -280,11 +294,23 @@ $$
 \end{aligned}
 $$
 
+Therefore, because the function $f(k|n,p)$ is always non-negative and it's Riemann-Stieljes integral is 1, the Binomial Distribution is a true distribution.
+
 </br>
 
 
 
 ## Derive the Moment Generating Function
+Deriving the MGF for the Binomial is a straightforward application of the definition and Binomial Theorem. That is
+$$
+\begin{aligned}
+M_k(t) &\equiv \mathbb{E}\left[ e^{tX} \right] \\
+  &= \int\limits_{k \in \mathcal{S}(K)} e^{tk} \text{d}F_K(k|n,p) \\
+  &= \sum\limits_{k = 0}^n e^{tk} {n \choose k} p^{k}(1 - p)^{n - k} \\
+  &= \sum\limits_{k = 0}^n {n \choose k} \left[e^t\right]^k p^{k}(1 - p)^{n - k} \\
+  &= \sum\limits_{k = 0}^n {n \choose k} \left[e^t\right]^k p^{k}(1 - p)^{n - k} \\
+\end{aligned}
+$$
 
 
 </br>
