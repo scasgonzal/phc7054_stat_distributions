@@ -420,3 +420,6 @@ So, for this trivial example, both Method of Moments and Maximum Likelihood Esti
 ## Exercises
 
 To be determined.
+
+
+## Footnotes
