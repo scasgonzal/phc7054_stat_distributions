@@ -4,7 +4,7 @@ author: "Gabriel J. Odom"
 date: last-modified
 format:
   html:
-    embed-resources: true
+    embed-resources: false
     code-fold: true
 knitr:
   opts_chunk:        ########## set global options ############
@@ -426,7 +426,6 @@ So, $\frac{1}{7} \sum_i k_i$ = `r kBar_num["k"]` and $\frac{1}{7} \sum_i k_i^2$ 
 
 *However*, we already said that $n = 5$ is known, so we don't need the second equation. All we have to solve is $np = (5)p = 1.571 \Rightarrow \hat{p}_{MoM} = 0.314$.
 
-
 #### Case When $n$ is Unknown
 This is a rare case, and usually only a theoretical exercise, though it can happen in ecological studies of species. One example could be where a park ranger goes deep into the woods on 5 different days. While on patrol, they encounter one grey wolf on the first day, none on the second, one on the third, and none on the fourth and fifth. In this case, we still have $|\text{Count of observed wolves}| = |\textbf{x}| = \{1, 0, 1, 0, 0\}$. In this case, we don't actually know how many grey wolves are in the park close enough to the ranger to even be detected. Thus, we could think about this as 5 Binomial trials with unknown $n$.
 
@@ -460,6 +459,7 @@ so we see that no analytic solutions exist to estimate $N$ here. I recommend tha
 
 ## Maximum Likelihood Estimators
 
+
 ### The Likelihood Function
 Let's continue our example of `r length(observed_int)` Binomial trials with 5 flips each during which we observed $\textbf{k}$ = `r observed_int` heads. In this case, we know that $n = 5$ and $N = 7$, so the **Likelihood** of $p$ given $\textbf{k}$ is
 $$
@@ -482,6 +482,7 @@ $$
 where $\propto$ is read "is proportional to".
 
 This kernel function is of incredible importance: $\mathcal{L}$ contains *almost* all the information known about $p$. It has all the data and it also has our best guess of the data generating process (a Binomial process in this case). However, we note that $\mathcal{L}$ is **not** a probability distribution of $p$. If it was, then we could make probabalistic statements about the values of $p$ which generated the observed data $\textbf{k}$.
+
 
 ### A Probability Function of $p$
 How can I so sure that $\mathcal{L}$ is not a probability distribution? It's clearly non-negative, so let's find out what it integrates to. That is,

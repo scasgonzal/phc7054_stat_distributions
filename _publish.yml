@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: 24d5825a-f65a-47e7-a459-e23a5d07ca4b
+      url: 'https://gabriel.quarto.pub/stat-distributions-primer'

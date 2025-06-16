@@ -1,9 +1,7 @@
 # Preface {.unnumbered}
 
-This is a Quarto book.
+> This is a Quarto book. To learn more about Quarto books visit <https://quarto.org/docs/books>.
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+This is a collection of notes about deriving basic properties of statistical distributions. I tried to write it so that a student who has had 2-3 semesters of undergraduate calculus can understand. It's not deeply theoretical, but it does include theory.
 
-```{r}
-1 + 1
-```
+There are probably mistakes in derivations and typos in formulas. As with anything you find on the internet, buyer beware. This is a free website, so--as the old saying goes--"you get what you pay for".

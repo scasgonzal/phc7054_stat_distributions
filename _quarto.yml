@@ -2,12 +2,13 @@ project:
   type: book
 
 book:
-  title: "PHC 7054 Advanced Biostatistics III"
+  title: "A Primer on Statistical Distributions"
+  subtitle: "PHC 7054 Advanced Biostatistics III"
   author: "Gabriel J. Odom, PhD, ThD"
   date: "February 2025"
   chapters:
     - index.qmd
-    - intro.qmd
+    # - intro.qmd
     - chapters/bernoulli_20250310.qmd
     - chapters/binomial_20250310.qmd
     - chapters/negative_binomial_20250310.qmd

@@ -4,7 +4,7 @@ author: "Gabriel J. Odom"
 date: last-modified
 format:
   html:
-    embed-resources: true
+    embed-resources: false
     code-fold: true
 knitr:
   opts_chunk:        ########## set global options ############
