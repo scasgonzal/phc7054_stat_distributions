@@ -37,7 +37,36 @@ options(dplyr.summarise.inform = FALSE)
 
 
 ## Deriving the Distribution
+Consider the outcomes of $n$ independent and identical Bernoulli trials, $k_i \overset{iid}{\sim} \text{Bern}(p),\ \forall i \in \{1, 2, \ldots, n\}$. We play a game where we "win" as soon as we flip enough heads. We pretend that we have a time machine, and we travel forward in time until right before the exact Bernoulli trial in which the "winning" coin flip happens. For example, imagine a game where, as soon as we've flipped 5 heads total, we win. We hop in our time machine and travel forward until we are just about to flip the 5th head. Let $Y_n = \sum_i k_i$ be the (cumulative) count of successes so far in the game; for example, if we win at the $5^{\text{th}}$ heads flipped, then we would have already seen four heads flipped this game. Let $G_m$ be the flip number in which we will observe the $m^{\text{th}}$ success (where $m \ge 1$). The probability of winning the game on coin flip $m$ is then
+$$
+\mathbb{P}[G_m = n] = \mathbb{P}[Y_{n - 1} = m - 1]\times\mathbb{P}[k_n = 1];
+$$
+that is, the probability we win the game now, on flip $n$, is the probability that we've seen $m - 1$ heads in the last $n - 1$ flips, times the probability that the very next flip (flip $n$) will be a heads. Recall that $k_i \overset{iid}{\sim} \text{Bern}(p)$, so the probability that we saw $m - 1$ successes in $n - 1$ trials follows the Binomial distribution, where
+$$
+\mathbb{P}[Y_{n - 1} = m - 1] = {n - 1 \choose m - 1} p^{m - 1} (1 - p)^{n - m}.
+$$
+Since, by definition, $\mathbb{P}[k_n = 1] = p$, then 
+$$
+\begin{aligned}
+\mathbb{P}[G_m = n] &= {n - 1 \choose m - 1} p^{m - 1} (1 - p)^{n - m} \times p \\
+&= {n - 1 \choose m - 1} p^{m} (1 - p)^{n - m},
+\end{aligned}
+$$
+which is a parametrization of the Negative Binomial Distribution.
 
+While using counts of successes in total Bernoulli trials ($m$ successes out of $n$ trials) offers a clear derivation of this distribution, most of the time the Negative Binomial distribution is parametrized in terms counts of successes, $r = m$, and failures, $k = n - m$. Thus, $n = k + r$ and $m = r$. So, for $k \in \{\mathbb{N} \cup 0\}$ and $r \ge 1$,
+$$
+\begin{aligned}
+f_{\text{NB}}(m, n|p) &\equiv {n - 1 \choose m - 1} p^{m} (1 - p)^{n - m} \\
+\Longrightarrow f_{\text{NB}}(r, k|p) &= {k + r - 1 \choose r - 1} p^{r} (1 - p)^{k} \\
+&= \frac{(k + r - 1)!}{(r - 1)!([k + r - 1] - [r - 1])!} p^{r} (1 - p)^{k} \\
+&= \frac{(k + r - 1)!}{(r - 1)!(k + r - 1 - r + 1)!} p^{r} (1 - p)^{k} \\
+&= \frac{(k + r - 1)!}{k!(r - 1)!} p^{r} (1 - p)^{k} \\
+&= \frac{(k + r - 1)!}{k!([k + r - 1] - k)!} p^{r} (1 - p)^{k} \\
+&= {k + r - 1 \choose k} p^{r} (1 - p)^{k},
+\end{aligned}
+$$
+which is the more common form of the Negative Binomial distribution.
 
 </br>
 
@@ -107,6 +136,17 @@ par(mfrow = c(1, 1))
 
 
 ## Show that this is a Distribution
+We first consider the parametrization with $m$ successes out of $n$ trials.
+That is,
+$$
+f_{\text{NB}}(m, n|p) \equiv {n - 1 \choose m - 1} p^{m} (1 - p)^{n - m}, 1 \le m \le n < \infty,\ p\in (0,1).
+$$
+Note that $m \ge 1$ because we are counting the number of trials until we see at least one success. Also note that $n$ has no upper bound. If the "game" is the United States Men's Soccer team winning the FIFA World Cup, the number of World Cups necessary for this event to occur $\to\infty$.
+
+### The Distribution is Non-negative
+
+
+### The Total Probability is 1
 
 
 </br>
