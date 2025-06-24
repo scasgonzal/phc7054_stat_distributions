@@ -157,19 +157,14 @@ hist(samplesSkew_ls$n100, breaks = bins_int)
 par(mfrow = c(1, 1))
 ```
 
-
 </br>
 
 
 
-## Show that this is a Distribution
-Let $\mathcal{S} = \mathbb{N} \cup 0$, where $\mathbb{N}$ denotes the set of **natural numbers**.^[<https://en.wikipedia.org/wiki/Natural_number>] Let $f(k|n,p) = {n \choose k} p^{k}(1 - p)^{n - k}$ represent the probability function of the Binomial Distribution. We must now show that
-
-1. $\forall k \in \mathcal{S}$, and for $p \in (0,1)$, $f(k|n, p) \ge 0$, and
-2. for $p \in (0,1)$, $\int_{k \in \mathcal{S}} \text{d}F(k|n,p) = 1$.
+## Formal Foundations
 
 
-### Formal Foundations: Pascal's Rule
+### Pascal's Rule
 For writing proofs involving combinations, we need the following property, known as **Pascal's Formula**,^[<https://en.wikipedia.org/wiki/Pascal%27s_rule>] which states that
 
 $$
@@ -190,7 +185,7 @@ $$
 $$
 
 
-### Formal Foundations: Mathematical Induction 
+### Mathematical Induction 
 The next foundational proof requires a technique called "Proof by Induction", or more generally, **mathematical induction**.^[<https://en.wikipedia.org/wiki/Mathematical_induction>] This is the structure of such a proof:
 
 > **Proof by Induction**: Consider a sequence of equations indexed over the integers by $n$. To show that the sequence of equations is true $\forall n$, we
@@ -210,7 +205,7 @@ $$
 which is true for $i \ge 5$ because our hypothesis was that $2^i < \Gamma(i + 1)$. Thus, $2^k < \Gamma(k + 1)\ \forall k \in\mathbb{N} \ge 5$, which completes our proof.
 
 
-### Formal Foundations: Mathematical Induction Proof of the Binomial Theorem
+### Mathematical Induction Proof of the Binomial Theorem
 For this section, we will also need to use the **Binomial Theorem**:^[<https://en.wikipedia.org/wiki/Binomial_theorem>] 
 
 $$
@@ -277,6 +272,16 @@ Therefore, $\forall n \in \mathbb{N}$,
 $$
 \sum_{k = 0}^n {n \choose k} x^k y^{n - k} = (x + y)^n.
 $$
+
+</br>
+
+
+
+## Show that this is a Distribution
+Let $\mathcal{S} = \mathbb{N} \cup 0$, where $\mathbb{N}$ denotes the set of **natural numbers**.^[<https://en.wikipedia.org/wiki/Natural_number>] Let $f(k|n,p) = {n \choose k} p^{k}(1 - p)^{n - k}$ represent the probability function of the Binomial Distribution. We must now show that
+
+1. $\forall k \in \mathcal{S}$, and for $p \in (0,1)$, $f(k|n, p) \ge 0$, and
+2. for $p \in (0,1)$, $\int_{k \in \mathcal{S}} \text{d}F(k|n,p) = 1$.
 
 
 ### The Distribution is Non-negative
@@ -363,7 +368,7 @@ $$
 \end{aligned}
 $$
 
-> Technically, we don't need the second central moment to find the Method of Moments estimators, but it is good practice.
+> Technically, we don't need the second central moment for this distribution to find the Method of Moments estimators, but it is good practice.
 
 
 ### Solving the System of Equations
@@ -450,7 +455,7 @@ np(np - p + 1) &= \frac{1}{N}\sum_i k_i^2\\
 \Longrightarrow 2 - 0.4 = 0,
 \end{aligned}
 $$
-so we see that no analytic solutions exist to estimate $N$ here. I recommend that students read the primer from [DasGupta and Rubin (2004)](https://www.stat.purdue.edu/~dasgupta/publications/binomialn.pdf) at this juncture.
+so we see that no analytic solutions exist to estimate $N$ here! I recommend that students read the primer from [DasGupta and Rubin (2004)](https://www.stat.purdue.edu/~dasgupta/publications/binomialn.pdf) at this juncture.
 
 
 </br>

@@ -130,6 +130,125 @@ hist(samplesSkew_ls$n500, breaks = binsSkew_int)
 par(mfrow = c(1, 1))
 ```
 
+</br>
+
+
+
+## Formal Foundations
+
+
+### Taylor/MacLaurin Series
+A Taylor (MacLaurin) Series expansion is a polynomial approximation of an $n$-differentiable real-valued function $f$ around a point $a$ (the MacLaurin Series is a special case when $a = 0$). Let $f^{(n)}(a)$ denote the $n^{\text{th}}$ derivative of the function $f$ evaluated at $a$. Then the $n^{\text{th}}$-order Taylor Series approximation of $f$ in a neighbourhood of $a$ is given by
+$$
+f(x) \approx f(a) + \frac{f^{\prime}(a)}{1!}(x - a)^1 + \frac{f^{\prime\prime}(a)}{2!}(x - a)^2 + \ldots + \frac{f^{(n)}(a)}{n!}(x - a)^n.
+$$
+If $f$ is infinitely-differentiable, then this series can be continued in perpetuity, and the approximation becomes exact. That is
+$$
+f(x) = \sum_{n = 0}^{\infty} \frac{f^{(n)}(a)}{n!}(x - a)^n.
+$$
+
+
+### Infinite Geometric Series
+For a real number $|r| < 1$, the Geometric Series is the infinite-term MacLaurin Series form for the ratio below:
+$$
+\frac{b}{1 - r} = \sum_{k = 0}^{\infty} br^k.
+$$
+**Proof**: We presented the definition of the Taylor Series for an infinitely-differentiable function $f$ above. We need the functional form of the $n^{\text{th}}$ derivative of $(1 - r)^{-1}$ evaluated at an arbitrary point $a$, where $|r| < 1$. These derivatives are given as
+$$
+\begin{align}
+f^{(0)}(a) &= (1 - a)^{-1} \\
+f^{(1)}(a) &= (-1)(1 - a)^{-2}(-1) =&  (1 - a)^{-2}\\
+f^{(2)}(a) &= (-2)(1 - a)^{-3}(-1) =& 2(1 - a)^{-3}\\
+f^{(3)}(a) &= (-3)(2)(1 - a)^{-4}(-1) =&  3\times2(1 - a)^{-4}\\
+f^{(4)}(a) &= (-4)(3)(2)(1 - a)^{-5}(-1) =&  4!(1 - a)^{-5}\\
+\vdots \\
+f^{(n)}(a) &= n!(1 - a)^{-(n + 1)}.
+\end{align}
+$$
+We evaluate these derivatives at $a = 0$, yielding $f^{(n)}(0) = n!(1 - 0)^{-(n + 1)} = n!$. Therefore, evaluating the MacLaurin Series for this ratio (the Taylor Series at $a = 0$) yields
+$$
+\begin{align}
+f(r) = \frac{1}{1 - r} &= \sum_{n = 0}^{\infty} \frac{f^{(n)}(0)}{n!}(r - 0)^n \\
+&= \sum_{n = 0}^{\infty} \frac{\left[ n! \right]}{n!}  r^n \\
+&= \sum_{n = 0}^{\infty} r^n.
+\end{align}
+$$
+Hence, after changing the index of summation from $n$ to $k$ and multiplying both sides by $b$, we have 
+$$
+\frac{b}{1 - r} = \sum_{k = 0}^{\infty} br^k.
+$$
+
+
+### Newton's Binomial Theorem
+[Newton's Binomial Theorem](https://en.wikipedia.org/wiki/Binomial_theorem#Newton%27s_generalized_binomial_theorem) allows us to generalize the Infinite Geometric Series as follows:
+$$
+b(1 + r)^{\alpha} = \sum_{n = 0}^{\infty} {\alpha \choose n} br^n.
+$$
+
+
+### The Gamma Function
+As a preliminary comment, we could spend literal weeks discussing and proving the many properties of a function called the [Gamma Function](https://en.wikipedia.org/wiki/Gamma_function), and we will discuss it in much greater depth as we progress further into these lessons on various statistical distributions. However, for now, suffice it to say that the Gamma Function is a generalization of the factorial function. Visually, it "connects the dots" between the integer factorial values. To see this, we will generate factorial and Gamma values from 0 to 4.
+
+```{r}
+factorialValues_df <- data.frame(
+  n = 0:4,
+  nFact = factorial(0:4)
+)
+gammaValues_df <- data.frame(
+  x = seq(from = 0, to = 4, length.out = 21),
+  xGamma = gamma(seq(from = 0, to = 4, length.out = 21) + 1)
+)
+```
+
+Now let's visualize these two sets of values.
+```{r}
+library(ggplot2)
+
+ggplot() + 
+  geom_line(data = gammaValues_df, aes(x = x, y = xGamma)) + 
+  geom_point(data = factorialValues_df, aes(x = n, y = nFact), color = "red") +
+  labs(
+    x = "Real (black) and Integer (red) valued x",
+    y = "Gamma(x+1) (black) and x! (red)"
+  )
+```
+
+So, we see that the Gamma Function is one (of potentially many) smooth interpolations between the values of $x!$ evaluated at each non-negative integer. However, it can be extended to the negative (non-integer) numbers and even the complex plane. At its most complex (for this class anyway), the Weierstrass's Definition of the Gamma Function for all complex values of $z = a + bi$ except for the negative integers is
+$$
+\Gamma(z) \equiv \frac{e^{-\gamma z}}{z} \prod_{n = 1}^{\infty} \left( 1 + \frac{z}{n} \right)^{-1} e^{\frac{z}{n}},
+$$
+where $\gamma \approx 0.577$ is the [Euler-Mascheroni constant](https://en.wikipedia.org/wiki/Euler%27s_constant).
+
+Thankfully, we don't have to use this version, we only have to know that it exists. The version that we will use most is the representation of the Gamma Function when the Real component $z$ is positive; that is, when $a > 0$. We represent this condition symbolically as $\mathbb{R}(z) > 0$. It's also worth noting that this includes all the positive real numbers as well, because $b$ in $z = a + bi$ could be $0$. So, the "common form" of the Gamma Function is
+$$
+\Gamma(z) = \int_0^{\infty} t^{z - 1}e^{-t}dt,\ \mathbb{R}(z) > 0.
+$$
+Finally, in the simplest case, if $z$ can be written as a non-negative integer $n$, then we get the simplest form of all:
+$$
+\Gamma(n) \equiv (n - 1)!.
+$$
+For the next few lessons (at least until we get to the Gamma and Beta Distributions), we won't yet need to formalize or prove any properties of this function. For now, we simply need to know that it's possible to extend the factorial beyond the integers.
+
+
+### "Negative" Binomial Coefficients
+This is a specific form of the Generalized Binomial Coefficient that allows us to extend the mathematical relationship of the binomial theorem beyond its usual applications of combinations (where $n$ and $k$ are required to be non-negative integers). This generalization yields the following property, which we will shortly prove:
+$$
+{-a \choose b} \equiv (-1)^b {a + b - 1 \choose b}.
+$$
+
+**Proof**: Consider $a,b \in \mathbb{R}$ and further recall by the above definition of the Gamma Function that the factorial operator can be extended beyond the integers. Even though we do not define how to calculate such a value, we will only need to know for this proof that such numbers could possibly exist. Thus,
+$$
+\begin{aligned}
+{-a \choose b} &= \frac{(-a)!}{b!(-a - b)!} \\
+&= \frac{(-a)(-a - 1)(-a - 2)\ldots(-a - b + 1)(-a - b)!}{b!(-a - b)!} \\
+&= \frac{(-a)(-a - 1)(-a - 2)\ldots(-a - b + 1)}{b!} \\
+&= (-1)^b\frac{(a)(a + 1)(a + 2)\ldots(a + b - 1)}{b!} \\
+&= (-1)^b\frac{(a + b - 1)\ldots(a + 2)(a + 1)(a)}{b!} \times \frac{(a - 1)!}{(a - 1)!} \\
+&= (-1)^b\frac{(a + b - 1)!}{b!(a - 1)!} \\
+&= (-1)^b\frac{(a + b - 1)!}{b!([a + b - 1] - b)!} \\
+&= (-1)^b {a + b - 1 \choose b}.
+\end{aligned}
+$$
 
 </br>
 
@@ -139,15 +258,76 @@ par(mfrow = c(1, 1))
 We first consider the parametrization with $m$ successes out of $n$ trials.
 That is,
 $$
-f_{\text{NB}}(m, n|p) \equiv {n - 1 \choose m - 1} p^{m} (1 - p)^{n - m}, 1 \le m \le n < \infty,\ p\in (0,1).
+f_{\text{NB}}(n|m,p) \equiv {n - 1 \choose m - 1} p^{m} (1 - p)^{n - m}, 1 \le m \le n < \infty,\ p\in (0,1).
 $$
-Note that $m \ge 1$ because we are counting the number of trials until we see at least one success. Also note that $n$ has no upper bound. If the "game" is the United States Men's Soccer team winning the FIFA World Cup, the number of World Cups necessary for this event to occur $\to\infty$.
+Note that $m \ge 1$ because we are counting the number of trials until we see at least one success. Also note that $n$ has no upper bound. If the "game" is the United States Men's Soccer team winning the FIFA World Cup, the number of World Cups necessary, $n$, for this event, $m = 1$, to occur $\to\infty$.
+
 
 ### The Distribution is Non-negative
+As we already know, $p\in (0,1)$. Thus $p^m,\ (1 - p)^{n - m} > 0$. Further, $1 \le m \le n < \infty$, so Binomial Coefficient will never be smaller than 1. Thus, for $p\in (0,1)$, $f_{\text{NB}}(m, n|p) > 0$, and for $p$ outside this defined range of probability, $f_{\text{NB}}(m, n|p) \equiv 0$ by definition. Thus, $f_{\text{NB}}(m, n|p) \ge 0\ \forall p$.
 
 
 ### The Total Probability is 1
+This proof is considerably more involved than the proof for the Binomial Distribution; I follow [this guide](https://math.stackexchange.com/a/1262325) from Mathematics Stack Exchange. We will use **proof by induction**, **infinite geometric series**, and **Pascal's Rule** of factorials. These topics are covered in the "Formal Foundations" subsections of this lesson and the previous lesson on the Binomial Distribution. Let's begin by defining a shorthand form of the Riemman-Stieljes integral of the Negative Binomial Distribution over the support of $n$; let
+$$
+S_m \equiv \int\limits_{\mathcal{S}(n|m)} dF(n|m,p) = \sum_{n = m}^{\infty} {n - 1 \choose m - 1} p^m (1 - p)^{n - m},\ \forall m\in\mathbb{N}.
+$$
 
+The **base case** is the event when $m = 1$. So we must show that $S_1 = 1$. First, recall that there is only 1 way to "choose" 0 events, so
+$$
+\begin{aligned}
+S_1 &= \sum_{n = 1}^{\infty} {n - 1 \choose 1 - 1} p^1 (1 - p)^{n - 1} \\
+&= p \sum_{n = 1}^{\infty} {n - 1 \choose 0} (1 - p)^{n - 1} \\
+&= p \sum_{n = 1}^{\infty} (1) (1 - p)^{n - 1} \\
+&= p \sum_{k + 1 = 1}^{\infty} (1 - p)^k,\ \text{for}\ n = k + 1 \\ 
+&= p \sum_{k = 0}^{\infty} (1 - p)^k \\ 
+&\qquad \text{\emph{Infinite Geometric Series...}} \\
+&= p \left[ \frac{1}{1 - [1 - p]} \right],\ |1 - p| < 1 \\
+&= \frac{p}{1 - 1 + p} \\
+&= 1.
+\end{aligned}
+$$
+The **hypothesis** is then that $S_m = 1$. That is, we assume that
+$$
+S_m = \sum_{n = m}^{\infty} {n - 1 \choose m - 1} p^m (1 - p)^{n - m} = 1.
+$$
+Our **induction** will be to assume the hypothesis is true for $m$ and show that this implies that it is also true for $m+1$. 
+
+Now, using this $S_m$ notation, and recalling Pascal's Rule:
+$$
+\begin{aligned}
+S_{m + 1} &= \sum_{n = m + 1}^{\infty} {n - 1 \choose m + 1 - 1} p^{m + 1} (1 - p)^{n - (m + 1)} \\
+&= \sum_{n = m + 1}^{\infty} {n - 1 \choose m} p^{m + 1} (1 - p)^{n - m - 1} \\
+&\qquad \text{\emph{Pascal's Rule...}} \\
+&= \sum_{n = m + 1}^{\infty} \left[ {n - 2 \choose m} + {n - 2 \choose m - 1} \right] p^{m + 1} (1 - p)^{n - m - 1} \\
+&= \sum_{n = m + 1}^{\infty} {n - 2 \choose m} p^{m + 1} (1 - p)^{n - m - 1} + \sum_{n = m + 1}^{\infty} {n - 2 \choose m - 1} p^{m + 1} (1 - p)^{n - m - 1}.
+\end{aligned}
+$$
+At this point, we'd like to pull out something that looks like $S_m$, because we are assuming that equals 1. Let's change the summation index by letting $j = n - 1 \Rightarrow n = j + 1$ and pick back up:
+$$
+\begin{aligned}
+S_{m + 1} &= \sum_{[j + 1] = m + 1}^{\infty} {[j + 1] - 2 \choose m} p^{m + 1} (1 - p)^{[j + 1] - m - 1} + \sum_{[j + 1] = m + 1}^{\infty} {[j + 1] - 2 \choose m - 1} p^{m + 1} (1 - p)^{[j + 1] - m - 1} \\
+&= \sum_{j = m}^{\infty} {j - 1 \choose m} p^{m + 1} (1 - p)^{j - m} + \sum_{j = m}^{\infty} {j - 1 \choose m - 1} p^{m + 1} (1 - p)^{j - m} \\
+&= (1 - p) \sum_{j = m}^{\infty} {j - 1 \choose m} p^{m + 1} (1 - p)^{j - m - 1} + p \sum_{j = m}^{\infty} {j - 1 \choose m - 1} p^{m} (1 - p)^{j - m} \\ 
+&= (1 - p) \sum_{j = m}^{\infty} {j - 1 \choose m} p^{m + 1} (1 - p)^{j - m - 1} + pS_m \\
+&= (1 - p) \left[ {m - 1 \choose m} p^{m + 1} (1 - p)^{m - m - 1} + \sum_{j = m + 1}^{\infty} {j - 1 \choose m} p^{m + 1} (1 - p)^{j - m - 1} \right] + pS_m \\
+&= (1 - p) \left[ 0 + \sum_{j = m + 1}^{\infty} {j - 1 \choose m} p^{m + 1} (1 - p)^{j - m - 1} \right] + pS_m.
+\end{aligned}
+$$
+The last line requires us to observe that ${m - 1 \choose m} = 0\ \forall m \in \mathbb{N}$ because there are 0 ways to choose $m$ objects from a set of $m - 1$ objects. For our final component of the induction step, we notice that the second term in the brackets is $S_{m+1}$ using an index of $j$ instead of $n$. Thus,
+$$
+\begin{aligned}
+S_{m + 1} &= (1 - p) \left[\sum_{j = m + 1}^{\infty} {j - 1 \choose m} p^{m + 1} (1 - p)^{j - m - 1} \right] + pS_m \\
+&= (1 - p) \left[ S_{m + 1} \right] + pS_m \\
+&= S_{m + 1} - pS_{m + 1} + pS_m \\
+\Longrightarrow 0 &= pS_m - pS_{m + 1} \\
+\Longrightarrow S_{m + 1} &= S_m.
+\end{aligned}
+$$
+Because we assumed that $S_m = 1$ at our hypothesis step, we then have that $S_m = 1 \Rightarrow S_{m + 1} = 1$, which completes our proof. Thus, $\forall m \in \mathbb{N}$, 
+$$
+\sum_{n = m}^{\infty} {n - 1 \choose m - 1} p^m (1 - p)^{n - m} = 1.
+$$
 
 </br>
 
