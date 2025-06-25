@@ -180,9 +180,33 @@ $$
 
 
 ### Newton's Binomial Theorem
-[Newton's Binomial Theorem](https://en.wikipedia.org/wiki/Binomial_theorem#Newton%27s_generalized_binomial_theorem) allows us to generalize the Infinite Geometric Series as follows:
+[Newton's Binomial Theorem](https://en.wikipedia.org/wiki/Binomial_theorem#Newton%27s_generalized_binomial_theorem) allows us to generalize the Infinite Geometric Series for $|r| < 1$ from exponents other than $-1$ as follows^[for the implications of "choosing" from values that aren't necessarily integers, see the next subsection on the Gamma Function]:
 $$
 b(1 + r)^{\alpha} = \sum_{n = 0}^{\infty} {\alpha \choose n} br^n.
+$$
+**Proof**: We will follow the same MacLaurin Series derivation for $(1 + r)^{\alpha}$ here as well, where the only major difference is that we have $+r$ instead of $-r$. The $n$ derivatives evaluated at $r = r_0$ are then
+$$
+\begin{align}
+f^{(0)}(r_0) &= (1 + r_0)^{\alpha} \\
+f^{(1)}(r_0) &= (\alpha)(1 + r_0)^{\alpha - 1} \\
+f^{(2)}(r_0) &= (\alpha)(\alpha - 1)(1 + r_0)^{\alpha - 2} \\
+f^{(3)}(r_0) &= (\alpha)(\alpha - 1)(\alpha - 2)(1 + r_0)^{\alpha - 3} \\
+\vdots \\
+f^{(n)}(r_0) &= \left[ (\alpha)(\alpha - 1)(\alpha - 2) \ldots (\alpha - n + 1) \right] (1 + r_0)^{\alpha - n} \\
+&= \left[ (\alpha)(\alpha - 1)(\alpha - 2) \ldots (\alpha - n + 1) \right] \frac{(\alpha - n)!}{(\alpha - n)!} (1 + r_0)^{\alpha - n} \\ 
+&= \frac{\alpha!}{(\alpha - n)!} (1 + r_0)^{\alpha - n} \\
+\Longrightarrow f^{(n)}(0) &= \frac{\alpha!}{(\alpha - n)!} (1 + 0)^{\alpha - n} \\
+&= \frac{\alpha!}{(\alpha - n)!}.
+\end{align}
+$$
+Therefore, 
+$$
+\begin{aligned}
+b(1 + r)^{\alpha} &= b \sum_{n = 0}^{\infty} \frac{f^{(n)}(0)}{n!} (r - 0)^n \\
+&= b \sum_{n = 0}^{\infty} \frac{\left[ \frac{\alpha!}{(\alpha - n)!} \right]}{n!} r^n \\
+&= b \sum_{n = 0}^{\infty} \frac{\alpha!}{n!(\alpha - n)!} r^n \\
+&= \sum_{n = 0}^{\infty} {\alpha \choose n} br^n
+\end{aligned}
 $$
 
 
@@ -334,13 +358,47 @@ $$
 
 
 ## Derive the Moment Generating Function
+In my opinion, it's easier to derive the MGF of the Negative Binomial when we use the $k,r$ parametrization (where $r \ge 1$ is the number of successes and $k \ge 0$ is the number of failures). Thus,
+$$
+\begin{aligned}
+f_{\text{NB}}(k,r|p) &= {k + r - 1 \choose k} p^r (1 - p)^k \\
+\Longrightarrow M_k(t) &= \int_{\mathcal{S}(k)} e^{tk} dF(k,r|p) \\
+&= \sum_{k = 0}^{\infty} e^{tk} {k + r - 1 \choose k} p^r (1 - p)^k \\ 
+&= p^r \sum_{k = 0}^{\infty} {k + r - 1 \choose k} \left[ e^{t}(1 - p) \right]^k \\
+&\qquad \text{\emph{Generalized/Negative Binomial Coefficient...}} \\
+&= p^r \sum_{k = 0}^{\infty} \left[ (-1)^k {-r \choose k} \right] \left[ e^{t}(1 - p) \right]^k \\
+&= p^r \sum_{k = 0}^{\infty} {-r \choose k} \left[ -e^{t}(1 - p) \right]^k \\&\qquad \text{\emph{Newton's Binomial Theorem...}} \\
+&= p^r \left( 1 + \left[ -e^{t}(1 - p) \right] \right)^{[-r]}.
+\end{aligned}
+$$
+To correctly invoke Newton's Binomial Theorem in this last step, we must recall that Moment Generating Functions are defined within an $\epsilon$-neighbourhood of 0. Therefore, $e^t(1 - p) \approx (1)(1 - p)$, which we can safely bound between $0$ and $1$ for arbitrarily small $\epsilon$, just as long as $p \ne \{0, 1\}$ (as in, as long as neither failure nor success are guaranteed). Thus,
+$$
+M_k(t) = \left[ \frac{p}{1 - e^{t}(1 - p)} \right]^r.
+$$
 
 
 </br>
 
 
 
-## Method of Moments Estimators
+## Method of Moments Estimates from Observed Data
+If we see $n$ repeated Negative Binomial experiments, then we must already know the following information:
+
+1. We know that in each of the $n$ experiments, by definition we observed $r$ successes.
+2. We know that in each experiment, the "games" or "trials" were conducted independently **until** all $r$ successes were observed. Thus, the number of games in each experiment vary, and the probability of winning in each game, $p$, does not change (but it is unknown in real life).
+3. Based on the first two facts, we then know that the "data" in repeated Negative Binomial experiments is the count of failures observed in each experiment until all $r$ successes were observed. We denote these counts as $k_i,\ i = 1, 2, \ldots n$.
+
+Therefore, our observed data is $\textbf{k} = \langle k_1, k_2,\ldots,k_n\rangle$, the counts of the number of failures in each experiment until success number $r$ was observed. Let's generate some random data with $r = 5$ and $p = 0.35$ across 7 experiments:
+```{r}
+set.seed(20150516)
+
+r_int <- 5L
+p_num <- 0.35
+NBk_int <- rnbinom(n = 7, size = r_int, prob = p_num)
+NBk_int
+```
+
+As we can see, in order to achieve 5 wins total in each experiment, we needed `r NBk_int` "games" in those experiments.
 
 
 </br>
@@ -348,7 +406,68 @@ $$
 
 
 ## Maximum Likelihood Estimators
+Now that we have the MGF and a sample of data, we can:
 
+1. Find $\mathbb{E}[k]$, $\mathbb{E}[k^2]$, and $\text{Var}[k]$, then
+2. Create (and solve) a system of two equations by setting $\mathbb{E}[k] = \bar{k}$ and $\text{Var}[k] = s^2$.
+
+
+### $\mathbb{E}[k]$
+Consider
+$$
+\begin{aligned}
+M_k(t) &= p^r \left[ 1 - e^t(1 - p) \right]^{-r} \\
+\Longrightarrow M^{\prime}_k(t) &= -rp^r \left[ 1 - e^t(1 - p) \right]^{-r - 1} \times \left[ - e^t(1 - p) \right] \\
+&= r(1 - p)p^r \left[ 1 + e^t(p - 1) \right]^{-r - 1} e^t \\
+\Longrightarrow M^{\prime}_k(0) &= r(1 - p)p^r [1] \left[ 1 - [1](1 - p) \right]^{-r - 1} \\
+&= r(1 - p) \frac{p^r}{p^{r + 1}} \\
+&= r \frac{(1 - p)}{p} \\
+&= \mathbb{E}[k].
+\end{aligned}
+$$
+
+
+### $\mathbb{E}[k^2]$ and $\text{Var}[k]$
+Taking $M^{\prime}_k(t)$ from above, we then have that
+$$
+\begin{aligned}
+M^{\prime\prime}_k(t) &= r(1 - p)p^r \frac{\partial}{\partial t} \left[ 1 + e^t(p - 1) \right]^{-r - 1} e^t \\
+&= r(1 - p)p^r \left[ \left[ 1 + e^t(p - 1) \right]^{-r - 1} \frac{\partial}{\partial t} e^t + e^t \frac{\partial}{\partial t} \left[ 1 + e^t(p - 1) \right]^{-r - 1} \right] \\
+&= r(1 - p)p^r e^t \left[ \left[ 1 + e^t(p - 1) \right]^{-r - 1} - (r + 1)\left[ 1 + e^t(p - 1) \right]^{-r - 2} \times e^t(p - 1) \right].
+\end{aligned}
+$$
+Thus, 
+$$
+\begin{aligned}
+M^{\prime\prime}_k(0) &= r(1 - p)p^r [1] \left[ \left[ 1 + [1](p - 1) \right]^{-r - 1} - (r + 1)\left[ 1 + [1](p - 1) \right]^{-r - 2} \times [1](p - 1) \right] \\
+&= r(1 - p)p^r \left[ p^{-(r+1)} + (r+1)(1-p)p^{-(r+2)} \right] \\
+&= r(1 - p) \left[ \frac{p}{p^2} + (r+1)\frac{1 - p}{p^2} \right] \\
+&= \mathbb{E}[k^2],
+\end{aligned}
+$$
+so that
+$$
+\begin{aligned}
+\text{Var}[k] &= \mathbb{E}[k^2] - \left[\mathbb{E}[k]\right]^2 \\
+&= r(1 - p) \left[ \frac{p}{p^2} + (r+1)\frac{1 - p}{p^2} \right] - \left[ r \frac{(1 - p)}{p} \right]^2 \\
+&= \frac{ rp(1 - p) + r(r+1)(1 - p)^2 - r^2(1 - p)^2 }{p^2} \\
+&= r(1 - p) \left[ \frac{ p + (r+1)(1 - p) - r(1 - p) }{p^2} \right] \\
+&= r(1 - p) \left[ \frac{ p + r(1 - p) + 1(1 - p) - r(1 - p) }{p^2} \right] \\
+&= r(1 - p) \left[ \frac{ p + 1(1 - p) }{p^2} \right] \\
+&= r(1 - p) \frac{1}{p^2} \\
+&= \frac{r(1 - p)}{p^2}.
+\end{aligned}
+$$
+
+
+### Solving the System
+We now have the following non-linear system of equations to solve:
+$$
+\begin{aligned}
+\mathbb{E}[k] &: \frac{r(1 - p)}{p} = \bar{k} \\
+\text{Var}[k] &: \frac{r(1 - p)}{p^2} = s^2
+\end{aligned}
+$$
 
 </br>
 
