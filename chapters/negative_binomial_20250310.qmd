@@ -392,21 +392,14 @@ Therefore, our observed data is $\textbf{k} = \langle k_1, k_2,\ldots,k_n\rangle
 ```{r}
 set.seed(20150516)
 
+nTrials_int <- 7
 r_int <- 5L
 p_num <- 0.35
-NBk_int <- rnbinom(n = 7, size = r_int, prob = p_num)
+NBk_int <- rnbinom(n = nTrials_int, size = r_int, prob = p_num)
 NBk_int
 ```
 
-As we can see, in order to achieve 5 wins total in each experiment, we needed `r NBk_int` "games" in those experiments.
-
-
-</br>
-
-
-
-## Maximum Likelihood Estimators
-Now that we have the MGF and a sample of data, we can:
+As we can see, in order to achieve 5 wins total in each experiment, we needed `r NBk_int` "games" in those experiments. Now that we have the MGF and a sample of data, we can:
 
 1. Find $\mathbb{E}[k]$, $\mathbb{E}[k^2]$, and $\text{Var}[k]$, then
 2. Create (and solve) a system of two equations by setting $\mathbb{E}[k] = \bar{k}$ and $\text{Var}[k] = s^2$.
@@ -468,11 +461,84 @@ $$
 \text{Var}[k] &: \frac{r(1 - p)}{p^2} = s^2
 \end{aligned}
 $$
+We will first isolate $r$ as a function of $s^2$. In most real data scenarios, we know $r$, but for completion we will here assume it's unknown. Thus,
+$$
+\begin{aligned}
+s^2 &= \frac{r(1 - p)}{p^2} \\
+\Longrightarrow r &= \frac{p^2s^2}{1 - p} \\
+\Longrightarrow \bar{k} &= \left[ \frac{p^2s^2}{1 - p} \right] \times \frac{(1 - p)}{p} \\
+&= ps^2 \\
+\Longrightarrow \hat{p}_{MoM} = \frac{\bar{k}}{s^2}.
+\end{aligned}
+$$
+Subsequently, if we had to estimate $r$ (which is unlikely), then 
+$$
+\begin{aligned}
+\bar{k} &= \frac{r(1 - p)}{p} \\
+&= \frac{r\left( 1 - \left[ \frac{\bar{k}}{s^2} \right] \right)}{\left[ \frac{\bar{k}}{s^2} \right]} \\
+&= r\frac{s^2}{\bar{k}} \left[ 1 - \frac{\bar{k}}{s^2} \right] \\
+\Longrightarrow \bar{k} &= r \left[ \frac{s^2}{\bar{k}} - 1 \right] \\
+\Longrightarrow \bar{k}^2 &= r (s^2 - \bar{k}) \\
+\Longrightarrow \hat{r}_{MoM} &= \frac{\bar{k}^2}{s^2 - \bar{k}}.
+\end{aligned}
+$$
+For this data, we know that $r$ = `r r_int`, and we generated data for $n$ = `r nTrials_int` trials with $p$ equal to `r p_num`. Thus, given the observed data, we estimate $\hat{p}_{MoM}$ as
+```{r}
+mean(NBk_int) / var(NBk_int)
+```
+
+</br>
+
+
+
+## Maximum Likelihood Estimators
+Because we should know $r$ in advance of the experiment, and because $\textbf{k}$ is the observed counts across $n$ experiments, the only unknown is $p$. The likelihood function is then
+$$
+\mathcal{L}(p|\textbf{k},r) = \prod\limits_{i = 1}^n {k_i + r - 1 \choose k_i} p^r (1 - p)^k_i,\ p\in (0,1).
+$$
+We then find the extreme value of $\mathcal{L}$ by
+$$
+\begin{aligned}
+\ell(p|\textbf{k},r) &= \sum\limits_{i = 1}^n \log\left[ {k_i + r - 1 \choose k_i} p^r (1 - p)^{k_i} \right] \\
+&= \sum\limits_{i = 1}^n \left[ \log{k_i + r - 1 \choose k_i} + r\log(p) + k_i \log(1 - p) \right] \\
+&= nr\log(p) + \log(1 - p) \sum\limits_{i = 1}^n k_i + \sum\limits_{i = 1}^n \log{k_i + r - 1 \choose k_i} \\
+&= nr\log(p) + n\bar{k}\log(1 - p) + \sum\limits_{i = 1}^n \log{k_i + r - 1 \choose k_i} \\
+\Longrightarrow \frac{\partial\ell(p|\textbf{k},r)}{\partial p} &= \frac{nr}{p} - \frac{n\bar{k}}{1 - p} + 0 \\
+\Longrightarrow 0 &\overset{\text{set}}{=} \frac{nr}{\hat{p}} - \frac{n\bar{k}}{1 - \hat{p}} \\
+\Longrightarrow 0 &= nr(1 - \hat{p}) - n\bar{k}\hat{p} \\
+&= nr - nr\hat{p} - n\bar{k}\hat{p} \\
+\Longrightarrow nr &= \hat{p}(nr + n\bar{k}) \\
+\Longrightarrow \hat{p} &= \frac{nr}{nr + n\bar{k}} \\
+&= \frac{r}{r + \bar{k}}.
+\end{aligned}
+$$
+Now we need to confirm that this is indeed a maximum value, so we check the second derivative of the log-likelihood:
+$$
+\begin{aligned}
+\frac{\partial\ell(p|\textbf{k},r)}{\partial p} &= \frac{nr}{p} - \frac{n\bar{k}}{1 - p} \\
+&= nrp^{-1} - n\bar{k}(1 - p)^{-1} \\
+\Longrightarrow \frac{\partial^2\ell(p|\textbf{k},r)}{\partial p^2} &= -nrp^{-2} - (-1)n\bar{k}(1 - p)^{-2}(-1) \\
+&= -\frac{nr}{p^2} - \frac{n\bar{k}}{(1 - p)^2} \\
+&< 0,
+\end{aligned}
+$$
+as long as $\{n,r\} >0$ and $p\in(0,1)$. Thus, $\hat{p}_{MLE} = \frac{r}{r + \bar{k}}$. For our observed data, with $r$ = `r r_int`, this is
+```{r}
+r_int / (r_int + mean(NBk_int))
+```
+Unlike in the Binomial Distribution case, where the two estimators were quite close, this ML estimate for $p$ is much closer to the true value of $p$ = `r p_num` than the MoM estimate.
+
 
 </br>
 
 
 
 ## Exercises
+
+To be determined.
+
+
+## Footnotes 
+
 
 

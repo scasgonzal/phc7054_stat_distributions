@@ -36,6 +36,129 @@ options(dplyr.summarise.inform = FALSE)
 
 
 
+## Formal Foundations
+We will begin this lesson a little differently. For the previous lessons, we were able to derive the distributions without a tremendous amount of preliminary mathematics. However, while the Poisson distribution will *end up* as a simple distribution to work with, deriving it requires a deep refresh of calculus in addition to some of the other Formal Foundations we have already seen.
+
+
+### The Limit Definition of the Derivative
+In our introductory calculus courses, we first learned that the derivative was a sophisticated "slope" of a function. Consider some function $y = f(x)$ and its first derivative, which is most commonly denoted as $y^{\prime}$, $f^{\prime}(x)$, or $\frac{dy}{dx}$. Specifically, we learned that $f^{\prime}(x)$ is the function that yields the **instantaneous rate of change** of the function $f(x)$. That is, the function $f$ at the point $x = x_0$ is parallel to every straight line which has a slope given by the value of the function $f^{\prime}(x)$ evaluated at $x = x_0$.
+
+![Function and its derivative at a point](https://engineering.usu.edu/images/math-resource-center/calculus/tangent-line-derivatives.png)
+In the above picture (from the engineers at [Utah State University](https://engineering.usu.edu/students/engineering-math-resource-center/topics/calculus/derivatives)), the red curve is the function $f(x)$, the evaluation point is the black dot near $\{x = 2.25,\ y = 1.25\}$, and the blue line is the **tangent line**^[<https://en.wikipedia.org/wiki/Tangent>] to $f(x)$ at the evaluation point. It's the line that has a slope given by $f^{\prime}$ evaluated at the black dot.
+
+In basic algebra, we know that we calculate the slope between two points, $\{x,y\}$ and $\{x_0,y_0\}$, as "the change in $y$ divided by the change in $x$". We use $\Delta y$ to represent the "change in $y$", and $\Delta x$ similarly for $x$. Let's begin there, noting that $\{x_0,y_0\} = \{x + \Delta x,y + \Delta y\}$:
+$$
+\begin{aligned}
+\text{Slope} &= \frac{y_0 - y}{x_0 - x} \\
+&= \frac{f(x_0) - f(x)}{x_0 - x}\\
+&= \frac{f([x + \Delta x]) - f(x)}{[x + \Delta x] - x} \\
+&= \frac{f(x + \Delta x) - f(x)}{\Delta x}.
+\end{aligned}
+$$
+Given two fixed points, $\{x,y\}$ and $\{x_0,y_0\}$, these ratio above can be calculated directly. However, we said above that the derivative is called the **instantaneous** rate of change. That means, we want $\{x,y\}$ and $\{x_0,y_0\}$ to be "infinitely" close to each other. In other words, we want $\Delta x \rightarrow 0$. This yields our well-known **limit definition of the derivative**^[<https://tutorial.math.lamar.edu/classes/calci/defnofderivative.aspx>]:
+$$
+f^{\prime}(x) \equiv \lim_{\Delta x \rightarrow 0} \frac{f(x + \Delta x) - f(x)}{\Delta x}.
+$$
+This limit calculation yields the **first order** derivative^[<https://www.geeksforgeeks.org/maths/derivatives/>] if we take it only once (but higher order derivatives can be found by sequentially repeating this process).
+
+For example, the first order derivative of $y = x^2$ via limit definition is
+$$
+\begin{aligned}
+y^{\prime} &= \lim_{\Delta x \rightarrow 0} \frac{f(x + \Delta x) - f(x)}{\Delta x} \\
+&= \lim_{\Delta x \rightarrow 0} \frac{\left[ (x + \Delta x)^2 \right] - \left[ x^2 \right]}{\Delta x} \\
+&= \lim_{\Delta x \rightarrow 0} \frac{x^2 + 2x\Delta x + (\Delta x)^2 - x^2}{\Delta x} \\
+&= \lim_{\Delta x \rightarrow 0} \frac{\Delta x(2x + \Delta x)}{\Delta x} \\
+&= \lim_{\Delta x \rightarrow 0} 2x + \Delta x \\
+&= 2x + 0,
+\end{aligned}
+$$
+which is the well-known first-order derivative of $y = x^2$ with respect to $x$.
+
+
+### Homogeneous Functions
+A function $f(x)$ is said to be **homogeneous**^[<https://en.wikipedia.org/wiki/Homogeneous_function>] iff $f(c\textbf{x}) = c^kf(\textbf{x})$ for some scalar $c$ and $k \in \mathbb{N}$. The value of $k$ in the equation is known as the "degree of homogeneity" (which isn't super important for us to know, but I digress), but it must be an integer. What's important about homogeneous functions is that they are stretched (but aren't "shifted") in space: $f(\textbf{x})$ and $c^kf(\textbf{x})$ all have "zeroes" at the same values of the vector $\textbf{x}$. These functions are often sums or products of single-term polynomials.
+
+For example, consider $f(x,y) = x^3 + y^3$. If I pick an arbitrary constant, say 10, then
+$$
+f(10x, 10y) = (10x)^3 + (10y)^3 = 10^3(x^3 + y^3) = 10^kf(x,y),
+$$
+with $k = 3$. Thus $f(x) = x^3$ is **homogeneous with degree 3**. In contrast, consider the counter-example $f(x) = x^2 - 3$. For that same arbitrary constant above, is $f(10x)$ the same as some power of 10 times $f(x)$? Well, $f(10x) = 10^2x^2 + 3 = 10^2(x^2 + \frac{3}{100}) \ne 10^k f(x)$. So $f(x) = x^2 - 3$ is not homogeneous. As another counter-example, consider $f(x,y) = x^2 + y$. We see that
+$$
+f(10x, 10y) = 10^2x^2 - 10y = 10^2(x^2 - \frac{1}{10}y) \ne 10^kf(x,y).
+$$
+You may have forgotten about homogeneous functions because of how limiting they are. However, they play a very important role in solving *differential equations*.
+
+
+### First-Order, Homogeneous Differential Equations
+Now that we understand what a **first order derivative** and a **homogeneous function** are, we can find out what the build up was all about. [**Differential Equations**](https://en.wikipedia.org/wiki/Differential_equation) are mathematical expressions that systematically equate unknown functions and their derivatives. A primer on solving **ordinary**^[Meaning derivatives with respect to only one variable; see <https://web.uvic.ca/~tbazett/diffyqs/classification_section.html>] differential equations is well beyond the scope of this material. However, we can review a very small collection of ordinary differential equations, known as [homogeneous first order differential equations](https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_first-order_differential_equations) which have the form
+$$
+M(x,y) + N(x,y)\frac{dy}{dx} = 0,
+$$
+where $M$ and $N$ are both homogeneous functions of the same degree $n$. Because these two functions are homogenous with the same degree $n$, then we can write this derivative as a function of $\frac{y}{x}$. That is,
+$$
+\begin{aligned}
+0 &= M(x,y) + N(x,y)\frac{dy}{dx} \\
+\Longrightarrow \frac{dy}{dx} &= -\frac{M(x,y)}{N(x,y)} \\
+\Longrightarrow \frac{dy}{dx} &= -f\left(\frac{y}{x}\right),
+\end{aligned}
+$$
+for some function $f$. Now, we can substitute $y = ux$ on both sides, and distribute the derivative through the substitution with the product rule. Thus, we can **separate**^[<https://tutorial.math.lamar.edu/classes/de/separable.aspx>] this differential equation into two independent functions of $x$ and $u$:
+$$
+\begin{aligned}
+\frac{dy}{dx} &= -f\left(\frac{y}{x}\right) \\
+\Longrightarrow \frac{d(ux)}{dx} &= -f\left(\frac{ux}{x}\right) \\
+\Longrightarrow u\frac{dx}{dx} + x\frac{du}{dx} &= -f(u) \\
+\Longrightarrow x\frac{du}{dx} &= -f(u) - u \\
+\Longrightarrow \frac{1}{x}\frac{dx}{du} &= \frac{-1}{f(u) + u} \\
+\Longrightarrow \int \frac{1}{x}dx &= \int \frac{-1}{f(u) + u}du,
+\end{aligned}
+$$
+which can be solved if the integral of the right hand side can be found. We note that the solution to the left hand side is $\ln(x)$.
+
+Let's have an example before we move on (we'll work something similar to [this example](https://www.ncl.ac.uk/webtemplate/ask-assets/external/maths-resources/core-mathematics/calculus/homogeneous-first-order-differential-equations.html) from Newcastle University). Consider
+$$
+\begin{aligned}
+(x^2 + y^2) + y^2\frac{dy}{dx} &= 0 \\
+\Longrightarrow \frac{dy}{dx} &= -\frac{x^2 + y^2}{y^2} \\
+\Longrightarrow \frac{dy}{dx} &= -\left(\frac{x}{y}\right)^2 - 1.
+\end{aligned}
+$$
+Now, we let $y = ux$, so $\frac{dy}{dx} = u + x\frac{du}{dx}$. Hence,
+$$
+\begin{aligned}
+\frac{dy}{dx} &= -\left(\frac{x}{y}\right)^2 - 1 \\
+\Longrightarrow u + x\frac{du}{dx} &= -u^2 - 1 \\
+\Longrightarrow x\frac{du}{dx} &= -u^2 -u - 1 \\
+\Longrightarrow \frac{1}{x}dx &= -\frac{1}{u^2 + u + 1}du \\
+&= -\frac{1}{\left[u^2 + u + \frac{1}{4}\right] + \left[1 - \frac{1}{4}\right]}du \\
+&= -\frac{1}{ \left[u + \frac{1}{2}\right]^2 + \left[ \frac{\sqrt{3}}{2} \right]^2 }du \\
+&= -\frac{\frac{4}{3}}{ \left[\frac{2}{\sqrt{3}}\left(u + \frac{1}{2}\right)\right]^2 + \frac{4}{3}\left[ \frac{\sqrt{3}}{2} \right]^2 }du \\
+&= -\frac{4}{3} \frac{1}{ \left[\frac{1}{\sqrt{3}}\left(2u + 1\right)\right]^2 + 1 }du.
+\end{aligned}
+$$
+
+While the last few lines may have seemed bizarre, unintuitive, and adding needless complexity, there is a method to our madness. It is known that^[See integral No. 9 here: <https://www.physics.umd.edu/hep/drew/IntegralTable.pdf>] 
+$$
+\arctan(x) \equiv \int \frac{1}{x^2 + 1}dx.
+$$
+Therefore, substituting $a = \frac{1}{\sqrt{3}}(2u + 1)$ so that $da = \frac{2}{\sqrt{3}}du$,
+$$
+\begin{aligned}
+\frac{1}{x}dx &= -\frac{4}{3} \frac{1}{ \left[ \frac{1}{\sqrt{3}} (2u + 1) \right]^2 + 1 }du \\
+\Longrightarrow \int \frac{1}{x}dx &= -\frac{4}{3} \int \frac{1}{a^2 + 1} \left( \frac{\sqrt{3}}{2}da \right) \\
+\Longrightarrow \ln(x) &= -\left[ \frac{4}{3}\frac{\sqrt{3}}{2} \right] \arctan\left(\frac{1}{\sqrt{3}}(2u + 1)\right) + C \\
+&= -\frac{2}{\sqrt{3}} \arctan\left( \frac{2}{\sqrt{3}}\left[\frac{y}{x}\right] + \frac{1}{\sqrt{3}} \right) + C,
+\end{aligned}
+$$
+where $C$ is the **integrating constant**^[<https://en.wikipedia.org/wiki/Constant_of_integration>], which can be solved for in cases where an **initial value**^[<https://en.wikipedia.org/wiki/Initial_value_problem>] is known. We will solve for $C$ below while deriving the Poisson Distribution, so we will discuss that in more detail later.
+
+Now, if solving this differential equation was miserable for you, take solace in knowing that we just solved the most challenging one that we will need to tackle in this course. If you had fun solving this integral, I suggest you take more electives in the mathematics department during your graduate work.
+
+
+</br>
+
+
+
 ## Deriving the Distribution
 
 
@@ -135,5 +258,10 @@ par(mfrow = c(1, 1))
 
 
 ## Exercises
+
+To be determined.
+
+
+## Footnotes 
 
 
