@@ -155,11 +155,95 @@ where $C$ is the **integrating constant**^[<https://en.wikipedia.org/wiki/Consta
 Now, if solving this differential equation was miserable for you, take solace in knowing that we just solved the most challenging one that we will need to tackle in this course. If you had fun solving this integral, I suggest you take more electives in the mathematics department during your graduate work.
 
 
+### Integrating Factors
+When we have a **linear**^[Meaning that $y^{\prime}$ has a power of 1] first order differential equation, there are various techniques and strategies that work based on the form of the differential equation. When we have a differential equation with the form
+$$
+\frac{dy}{dx} + yf(x) = g(x),
+$$
+then we can multiply both sides of the equation by an **integrating factor**^[<https://en.wikipedia.org/wiki/Integrating_factor>] to make the problem easier to solve. Recall the **Product Rule**:
+$$
+\frac{d}{dx}\left[f(x) \times g(x)\right] \equiv f(x) \frac{dg}{dx} + g(x) \frac{df}{dx}
+$$
+So the purpose of the integrating factor is to find something that can be multiplied by the differential equation so that the left hand can be re-written as the derivative of a product. 
+
+For differential equations in the form above, the well-known integrating factor is 
+$$
+I(x) = \exp\left[ \int f(x)dx \right].
+$$
+Let's confirm this via algebraic manipulation, starting with the product rule form of $y \times I(x)$, then invoking the chain rule on $I(x)$:
+$$
+\begin{aligned}
+\frac{d}{dx} \left( y \times I(x) \right) &= \frac{d}{dx} \left( y \times \exp\left[ \int f(x)dx \right] \right) \\
+&= y \times \left( \frac{d}{dx} \exp\left[ \int f(x)dx \right] \right) + \exp\left[ \int f(x)dx \right] \frac{dy}{dx} \\
+&= y \left( \exp\left[ \int f(x)dx \right] \right) \frac{d}{dx} \int f(x)dx + \exp\left[ \int f(x)dx \right] \frac{dy}{dx} \\
+&= yf(x) \exp\left[ \int f(x)dx \right] + \exp\left[ \int f(x)dx \right] \frac{dy}{dx} \\
+&= \exp\left[ \int f(x)dx \right] \left( \frac{dy}{dx} + yf(x) \right).
+\end{aligned}
+$$
+
+Now, using what we know, we substitute this into the original differential equation:
+$$
+\begin{aligned}
+\frac{dy}{dx} + yf(x) &= g(x) \\
+\Longrightarrow \exp\left[ \int f(x)dx \right] \left( \frac{dy}{dx} + yf(x) \right) &= g(x) \exp\left[ \int f(x)dx \right] \\
+\Longrightarrow \frac{d}{dx} \left( y \times \exp\left[ \int f(x)dx \right] \right) &= g(x) \exp\left[ \int f(x)dx \right] \\
+\Longrightarrow y\exp\left[ \int f(x)dx \right] &= \int g(x) \exp\left[ \int f(x)dx \right] dx,
+\end{aligned}
+$$
+which can often be solved, or at least simplified, if $f(x)$ is a "nice" function.
+
+
 </br>
 
 
 
 ## Deriving the Distribution
+Now that we have recalled the basics of very simple solving ordinary differential equations, we can follow along with Prof. Cowen's [notes on deriving the Poisson distribution](https://www.pp.rhul.ac.uk/~cowan/stat/notes/PoissonNote.pdf).^[Glen Cowan, 2009. Royal Holloway University of London.] Suppose we are counting independent events which happen over a fixed interval of time (such as patients visiting a clinic each hour). Let $t$ be the time, let $\{T, T + \Delta t\}$ be a finite interval of time with width $\Delta t$, and let $1$ indicate that the event occurs within the interval (for example, that a single patient enters the clinic within this next small window of time). Then, we can express the probability of a new event happening between "now" (time $T$) and the next $\Delta t$ minutes as
+$$
+\mathbb{P}\left[1 | T \le t \le T + \Delta t \right] = \lambda \Delta t,
+$$
+where $\lambda$ is the "rate" of visits within a standard "unit" of time (like an hour). We can then see that this product $\lambda \Delta t$ is the rate over an hour ($\lambda$) times the amount of that time ($\Delta t$). Because "now" (time $T$ is arbitrary), we simplify this notation a bit and say
+$$
+\mathbb{P}(1|\Delta t) \equiv \lambda \Delta t;\ \mathbb{P}(0|\Delta t) \equiv 1 - \lambda \Delta t.
+$$
+Finally, let's assume that we already know if an event occurred before "now". That is, $\mathbb{P}[0|t \le T]$ and $\mathbb{P}[1|t \le T]$ are known.
+
+
+### Probability of "No Events" So Far
+Because events are independent, the probability that the "first" event happens after the next $\Delta t$ (that no events have happened yet AND no events will happen for the next $\Delta t$ units of time) is
+$$
+\begin{aligned}
+\mathbb{P}(0|\Delta t) &\equiv \mathbb{P}(0|t \le T + \Delta t) \\
+&= \mathbb{P}(0|t \le T) \times \mathbb{P}(0|T \le t \le \Delta t) \\
+&= \mathbb{P}(0|t \le T) \times (1 - \lambda \Delta t) \\
+&= \mathbb{P}(0|t \le T) - \lambda \mathbb{P}(0|t \le T) \Delta t \\
+\Longrightarrow \mathbb{P}(0|t \le T + \Delta t) - \mathbb{P}(0|t \le T) &= - \lambda \mathbb{P}(0|t \le T) \Delta t \\
+\Longrightarrow \frac{\mathbb{P}(0|t \le T + \Delta t) - \mathbb{P}(0|t \le T)}{\Delta t} &= - \lambda \mathbb{P}(0|t \le T).
+\end{aligned}
+$$
+
+Notice that we are interested in the "instantaneous" probability of the next event. Hence, we want to take $\Delta t \rightarrow 0$, which will yield a first order, linear differential equation. Thus,
+$$
+\begin{aligned}
+\frac{\mathbb{P}(0|t \le T + \Delta t) - \mathbb{P}(0|t \le T)}{\Delta t} &= - \lambda \mathbb{P}(0|t \le T) \\
+\Longrightarrow \lim_{\Delta t \rightarrow 0} \frac{\mathbb{P}(0|t \le T + \Delta t) - \mathbb{P}(0|t \le T)}{\Delta t} &= - \lim_{\Delta t \rightarrow 0} \lambda \mathbb{P}(0|t \le T) \\
+\Longrightarrow \frac{d}{dt} \mathbb{P}(0|t \le T) &= - \lambda \mathbb{P}(0|t \le T) \\
+\Longrightarrow \frac{1}{\mathbb{P}(0|t \le T)} d\mathbb{P}(0|t \le T)  &= - \lambda dt \\
+\Longrightarrow \int \frac{1}{\mathbb{P}(0|t \le T)} d\mathbb{P}(0|t \le T)  &= -\lambda \int dt \\
+\Longrightarrow \log\left[ \mathbb{P}(0|t \le T) \right] &= - \lambda t + C \\
+\Longrightarrow \mathbb{P}(0|t \le T) &= e^{-\lambda t + C} \\
+&= Ae^{-\lambda t},
+\end{aligned}
+$$
+for some constant $A$.
+
+Now, we have the general solution, but we can incorporate the initial condition that $\mathbb{P}(0|t = 0) = 1$; that is, that no successes occurred before the experiment started. In our example of clinic visits, this means that no patients were already hiding inside the clinic before the doors opened in the morning. Therefore, we have that $Ae^{-\lambda 0} = 1$, so $A = 1$. Therefore, 
+$$
+\mathbb{P}(0|t \le T) = e^{-\lambda t}.
+$$
+
+
+### Probability of $n$ Events So Far
 
 
 </br>
