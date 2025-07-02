@@ -198,18 +198,21 @@ which can often be solved, or at least simplified, if $f(x)$ is a "nice" functio
 
 
 ## Deriving the Distribution
-Now that we have recalled the basics of very simple solving ordinary differential equations, we can follow along with Prof. Cowen's [notes on deriving the Poisson distribution](https://www.pp.rhul.ac.uk/~cowan/stat/notes/PoissonNote.pdf).^[Glen Cowan, 2009. Royal Holloway University of London.] Suppose we are counting independent events which happen over a fixed interval of time (such as patients visiting a clinic each hour). Let $t$ be the time, let $\{T, T + \Delta t\}$ be a finite interval of time with width $\Delta t$, and let $1$ indicate that the event occurs within the interval (for example, that a single patient enters the clinic within this next small window of time). Then, we can express the probability of a new event happening between "now" (time $T$) and the next $\Delta t$ minutes as
+Now that we have recalled the basics of very simple solving ordinary differential equations, we can follow along with Prof. Cowen's [notes on deriving the Poisson distribution](https://www.pp.rhul.ac.uk/~cowan/stat/notes/PoissonNote.pdf).^[Glen Cowan, 2009. Royal Holloway University of London.] Suppose we are counting independent events which happen over a fixed interval of time (such as patients visiting a clinic each hour). Let $t$ be the time, let $\{T, T + \Delta t\}$ be a finite interval of time with width $\Delta t$, and let $1$ indicate that the event occurs within the interval (for example, that a single patient enters the clinic within this next small window of time). Then, we can express the probability of a new event happening between "now" (time $T$) and the next $\Delta t$ few seconds as
 $$
 \mathbb{P}\left[1 | T \le t \le T + \Delta t \right] = \lambda \Delta t,
 $$
-where $\lambda$ is the "rate" of visits within a standard "unit" of time (like an hour). We can then see that this product $\lambda \Delta t$ is the rate over an hour ($\lambda$) times the amount of that time ($\Delta t$). Because "now" (time $T$ is arbitrary), we simplify this notation a bit and say
+where $\lambda$ is the "rate" of visits within a standard "unit" of time (like an hour). We can then see that this product $\lambda \Delta t$ is the rate over an hour ($\lambda$) multiplied by the amount of time in our small observation interval ($\Delta t$). Because "now" (time $T$ is arbitrary), we simplify this notation a bit and say
 $$
-\mathbb{P}(1|\Delta t) \equiv \lambda \Delta t;\ \mathbb{P}(0|\Delta t) \equiv 1 - \lambda \Delta t.
+\begin{aligned}
+\mathbb{P}(1|\Delta t) &\equiv \lambda \Delta t \\
+\mathbb{P}(0|\Delta t) &\equiv 1 - \lambda \Delta t.
+\end{aligned}
 $$
 Finally, let's assume that we already know if an event occurred before "now". That is, $\mathbb{P}[0|t \le T]$ and $\mathbb{P}[1|t \le T]$ are known.
 
 
-### Probability of "No Events" So Far
+### Probability that the First Event will Happen Later
 Because events are independent, the probability that the "first" event happens after the next $\Delta t$ (that no events have happened yet AND no events will happen for the next $\Delta t$ units of time) is
 $$
 \begin{aligned}
@@ -230,21 +233,152 @@ $$
 \Longrightarrow \frac{d}{dt} \mathbb{P}(0|t \le T) &= - \lambda \mathbb{P}(0|t \le T) \\
 \Longrightarrow \frac{1}{\mathbb{P}(0|t \le T)} d\mathbb{P}(0|t \le T)  &= - \lambda dt \\
 \Longrightarrow \int \frac{1}{\mathbb{P}(0|t \le T)} d\mathbb{P}(0|t \le T)  &= -\lambda \int dt \\
-\Longrightarrow \log\left[ \mathbb{P}(0|t \le T) \right] &= - \lambda t + C \\
+\Longrightarrow \ln\left[ \mathbb{P}(0|t \le T) \right] &= - \lambda t + C \\
 \Longrightarrow \mathbb{P}(0|t \le T) &= e^{-\lambda t + C} \\
 &= Ae^{-\lambda t},
 \end{aligned}
 $$
 for some constant $A$.
 
-Now, we have the general solution, but we can incorporate the initial condition that $\mathbb{P}(0|t = 0) = 1$; that is, that no successes occurred before the experiment started. In our example of clinic visits, this means that no patients were already hiding inside the clinic before the doors opened in the morning. Therefore, we have that $Ae^{-\lambda 0} = 1$, so $A = 1$. Therefore, 
+Now, we have the general solution, but we can incorporate the initial condition that $\mathbb{P}(0|t = 0) = 1$; that is, that no successes occurred before the experiment started. In our example of clinic visits, this means that no patients were already hiding inside the clinic before the doors opened in the morning. Therefore, we have that $Ae^{-\lambda (0)} = 1$, so $A = 1$. Therefore, 
 $$
 \mathbb{P}(0|t \le T) = e^{-\lambda t}.
 $$
+This is the answer to the question: "what is the probability we haven't seen the first event yet and won't see the first event right now?"
 
 
-### Probability of $n$ Events So Far
+### A General Form for the Probability of $n$ Events So Far
+The next question we must answer to derive this distribution is: "what is the probability that we will have observed $n$ events right now?" Or, $\mathbb{P}(n|t  \le T + \Delta t)$? We first assume that $\Delta t$ is small enough that multiple events cannot occur simultaneously; mathematically, we say $\Delta t \in (0,\epsilon)$ for sufficiently small $\epsilon$. This is a composite of two possibilities:
 
+- All $n$ events have already happened AND we *will not* observe an event "now"; that is, $\mathbb{P}(n|t \le T) \times \mathbb{P}(0|T \le t \le \Delta t)$, which we represent in shorthand as $\mathbb{P}(n|T)\mathbb{P}(0|\Delta t)$.
+- All but 1 event has already happened AND we *will* observe an event "now"; that is, $\mathbb{P}(n - 1|t \le T) \times \mathbb{P}(1|T \le t \le \Delta t)$, which we represent in shorthand as $\mathbb{P}(n - 1|T)\mathbb{P}(1|\Delta t)$.
+
+Recall that we defined $\mathbb{P}(1|\Delta t) \equiv \lambda \Delta t$ and $\mathbb{P}(0|\Delta t) \equiv 1 - \lambda \Delta t$. Thus (using our shorthand notation to move from the first to the second line), 
+$$
+\begin{aligned}
+\mathbb{P}(n|t \le T + \Delta t) &= \mathbb{P}(n|t \le T) \times \mathbb{P}(0|T \le t \le \Delta t) + \mathbb{P}(n - 1|t \le T) \times \mathbb{P}(1|T \le t \le \Delta t) \\
+\Longrightarrow \mathbb{P}(n|T + \Delta t) &= \mathbb{P}(n|T) \mathbb{P}(0|\Delta t) + \mathbb{P}(n - 1|T) \mathbb{P}(1|\Delta t) \\
+&= \mathbb{P}(n|T) \left[ 1 - \lambda \Delta t \right] + \mathbb{P}(n - 1|T) \left[ \lambda \Delta t \right] \\
+&= \mathbb{P}(n|T) - \lambda \mathbb{P}(n|T) \Delta t + \lambda \mathbb{P}(n - 1|T) \Delta t.
+\end{aligned}
+$$
+
+Now, we will follow a similar strategy as above. We will first rearrange terms, then construct a derivative as we take $\Delta t \rightarrow 0$, and finally identify the components of the differential equation which yield an Integrating Factor. Thus,
+$$
+\begin{aligned}
+\mathbb{P}(n|T + \Delta t) - \mathbb{P}(n|T) + \lambda \mathbb{P}(n|T) \Delta t &= \lambda \mathbb{P}(n - 1|T) \Delta t \\
+\Longrightarrow \frac{\mathbb{P}(n|T + \Delta t) - \mathbb{P}(n|T)}{\Delta t} + \lambda \mathbb{P}(n|T) &= \lambda \mathbb{P}(n - 1|T) \\
+\Longrightarrow \lim_{\Delta t \rightarrow 0} \frac{\mathbb{P}(n|T + \Delta t) - \mathbb{P}(n|T)}{\Delta t} + \lambda \mathbb{P}(n|T) &= \lim_{\Delta t \rightarrow 0} \lambda \mathbb{P}(n - 1|T) \\
+\Longrightarrow \frac{d}{dt} \mathbb{P}(n|T) + \lambda \mathbb{P}(n|T) &= \lambda \mathbb{P}(n - 1|T),
+\end{aligned}
+$$
+so for the **Integrating Factor**, $f(x) = \lambda$ and $g(x) = \lambda \mathbb{P}(n - 1|T)$. Therefore, $I(x) = \exp\left[\int\lambda dt\right]$, and
+$$
+\begin{aligned}
+\frac{d}{dt} \mathbb{P}(n|T) + \lambda \mathbb{P}(n|T) &= \lambda \mathbb{P}(n - 1|T) \\
+\Longrightarrow \exp\left[\int\lambda dt\right] \times \left( \frac{d}{dt} \mathbb{P}(n|T) + \lambda \mathbb{P}(n|T) \right) &= \exp\left[\int\lambda dt\right] \times \lambda \mathbb{P}(n - 1|T) \\
+\Longrightarrow e^{\lambda t + C} \times \left( \frac{d}{dt} \mathbb{P}(n|T) + \lambda \mathbb{P}(n|T) \right) &= e^{\lambda t + C} \times \lambda \mathbb{P}(n - 1|T) \\
+\Longrightarrow e^{\lambda t} \times \left( \frac{d}{dt} \mathbb{P}(n|T) + \lambda \mathbb{P}(n|T) \right) &= e^{\lambda t} \times \lambda \mathbb{P}(n - 1|T) \\
+\Longrightarrow \frac{d}{dt} \left( e^{\lambda t} \mathbb{P}(n|T) \right) &= \lambda e^{\lambda t} \mathbb{P}(n - 1|T).
+\end{aligned}
+$$
+
+While this is *a* solution, we don't know how to integrate $\mathbb{P}(n - 1|T)$ for any arbitrary $n$.
+
+
+### A Closed Form of the Distribution for Small $n$
+Even though the general solution we found above isn't particularly helpful for a specific value of $n$, we do have a closed form for $n = 0$. We showed that $\mathbb{P}(0|T) = e^{-\lambda t}$ in the first derivation subsection. Therefore, we will leave this solution still in the form of a differential equation and construct the equations iteratively for all $n$. We start with $n = 1$:
+$$
+\begin{aligned}
+\frac{d}{dt} \left( e^{\lambda t} \mathbb{P}(n|T) \right) &= \lambda e^{\lambda t} \mathbb{P}(n - 1|T) \\
+\Longrightarrow \frac{d}{dt} \left( e^{\lambda t} \mathbb{P}(n = 1|T) \right) &= \lambda e^{\lambda t} \mathbb{P}(n - 1 = 0|T) \\
+&= \lambda e^{\lambda t} \left[ e^{-\lambda t} \right] \\
+&= \lambda \\
+\Longrightarrow e^{\lambda t} \mathbb{P}(1|T) &= \int \lambda dt \\
+&= \lambda t + C.
+\end{aligned}
+$$
+
+We know that $\mathbb{P}(1|t = 0) = 0$. In our clinic example, again we state that there are no patients "hiding" in the clinic before the doors open. Therefore,
+$$
+\begin{aligned}
+e^{\lambda (0)} \mathbb{P}(1|t = 0) &= \lambda (0) + C \\
+\Longrightarrow (1) (0) &= 0 + C \\
+\Longrightarrow 0 &= C.
+\end{aligned}
+$$
+Without loss of generality, we then further state that $\mathbb{P}(n|t = 0) = 0$, which implies that $C = 0$ for each solution of this differential equation. Therefore, 
+$$
+\begin{aligned}
+e^{\lambda t} \mathbb{P}(1|T) &= \lambda t + 0 \\
+\Longrightarrow \mathbb{P}(1|T) &= \lambda t e^{-\lambda t}.
+\end{aligned}
+$$
+
+Now we can substitute $\mathbb{P}(1|T) = \lambda t e^{-\lambda t}$ to solve for $\mathbb{P}(2|T)$:
+$$
+\begin{aligned}
+\frac{d}{dt} \left( e^{\lambda t} \mathbb{P}(2|T) \right) &= \lambda e^{\lambda t} \mathbb{P}(1|T) \\
+&= \lambda e^{\lambda t} \left[ \lambda t e^{-\lambda t} \right] \\
+&= \lambda^2 t\\
+\Longrightarrow \mathbb{P}(2|T) &= e^{-\lambda t} \left[ \int \lambda^2 t dt \right] \\
+&= e^{-\lambda t} \left[ \frac{1}{2}(\lambda t)^2 + C \right] \\
+&= e^{-\lambda t} \left[ \frac{1}{2}(\lambda t)^2 + 0 \right] \\
+&= \frac{1}{2}(\lambda t)^2 e^{-\lambda t}.
+\end{aligned}
+$$
+
+We're almost at the "ad nauseum" component of this derivation. Substituting $\mathbb{P}(2|T) = \frac{1}{2}(\lambda t)^2 e^{-\lambda t}$ yields
+$$
+\begin{aligned}
+\frac{d}{dt} \left( e^{\lambda t} \mathbb{P}(3|T) \right) &= \lambda e^{\lambda t} \mathbb{P}(2|T) \\
+&= \lambda e^{\lambda t} \left[ \frac{1}{2}(\lambda t)^2 e^{-\lambda t} \right] \\
+&= \frac{1}{2} \lambda^3 t^2\\
+\Longrightarrow \mathbb{P}(3|T) &= e^{-\lambda t} \left[ \int \frac{1}{2} \lambda^3 t^2 dt \right] \\
+&= e^{-\lambda t} \left[ \frac{1}{3 \times 2}(\lambda t)^3 + C \right] \\
+&= e^{-\lambda t} \left[ \frac{1}{3 \times 2}(\lambda t)^3 + 0 \right] \\
+&= \frac{(\lambda t)^3}{3!} e^{-\lambda t}.
+\end{aligned}
+$$
+
+
+### Induction Proof for all $n$
+Let's recap what we know:
+$$
+\begin{aligned}
+(1) &: \mathbb{P}(0|T) = e^{-\lambda t} \\
+(2) &: \frac{d}{dt} \left( e^{\lambda t} \mathbb{P}(n|T) \right) = \lambda e^{\lambda t} \mathbb{P}(n - 1|T)
+\end{aligned}
+$$
+
+For mathematical induction, we need a **hypothesis**. The pattern of solutions we found was that
+$$
+\mathbb{P}(n|t \le T) = \frac{(\lambda t)^n}{n!} e^{-\lambda t}.
+$$
+The **base case** is then when $n = 0$, so
+$$
+\mathbb{P}(n = 0|t \le T) = \frac{(\lambda t)^0}{0!} e^{-\lambda t} = e^{-\lambda t},
+$$
+which we showed to be true above. Assuming the hypothesis is true, the **induction** is then to show that the following is true:
+$$
+\mathbb{P}(n + 1|t \le T) = \frac{(\lambda t)^{n + 1}}{(n + 1)!} e^{-\lambda t}.
+$$
+That is,
+$$
+\begin{aligned}
+\frac{d}{dt} \left( e^{\lambda t} \mathbb{P}(n + 1|T) \right) &= \lambda e^{\lambda t} \mathbb{P}(n|T) \\
+&= \lambda e^{\lambda t} \left[ \frac{(\lambda t)^n}{n!} e^{-\lambda t} \right] \\
+&= \frac{\lambda^{n+1}}{n!} t^n \\
+\Longrightarrow \mathbb{P}(n + 1|T) &= \frac{\lambda^{n+1}}{n!} e^{-\lambda t} \int t^n dt \\
+&= \frac{\lambda^{n+1}}{n!} e^{-\lambda t} \left[ \frac{1}{n + 1} t^{n + 1} + C \right] \\
+&= \frac{\lambda^{n+1}}{n!} e^{-\lambda t} \left[ \frac{1}{n + 1} t^{n + 1} + 0 \right] \\ 
+&= \frac{(\lambda t)^{n + 1}}{(n + 1)!} e^{-\lambda t},
+\end{aligned}
+$$
+which completes the proof. Therefore, 
+$$
+f_{\text{Poisson}}(k|\lambda) \equiv \frac{(\lambda t)^k}{k!} e^{-\lambda t}.
+$$
 
 </br>
 
