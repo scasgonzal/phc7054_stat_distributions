@@ -573,6 +573,40 @@ mean(Poisk_int)
 
 
 ## Maximum Likelihood Estimators
+For this last section, we will slightly change the parametrization of the Poisson Distribution. Let the Poisson rate be $r = \lambda t$. Consider a sample $\textbf{k}_i \overset{iid}{\sim} \text{Pois}(r),\ i = 1, 2, \ldots, n$. The log-likelihood is then
+$$
+\begin{aligned}
+f_{\text{Pois}}(k|r) &\equiv \frac{r^k}{k!}e^{-r} \\
+\Longrightarrow \mathcal{L}(r|\textbf{k}) &= \prod_{i = 1}^n \frac{r^{k_i}}{k_i!}e^{-r} \\
+\Longrightarrow \ell(r|\textbf{k}) &= \log \left[ \prod_{i = 1}^n \frac{r^{k_i}}{k_i!}e^{-r} \right] \\
+&= \sum_{i = 1}^n \log \left[ \frac{r^{k_i}}{k_i!}e^{-r} \right] \\
+&= \sum_{i = 1}^n \left[ k_i\log(r) - \log(k_i!) - r \right] \\
+&= \log(r) \left[ \sum_{i = 1}^n k_i \right] - \left[ \sum_{i = 1}^n \log(k_i!) \right] - nr.
+\end{aligned}
+$$
+
+Therefore, we find the extreme values of this log-likelihood by
+$$
+\begin{aligned}
+\ell(r|\textbf{k}) &= \log(r) \left[ \sum_{i = 1}^n k_i \right] - \left[ \sum_{i = 1}^n \log(k_i!) \right] - nr \\
+\Longrightarrow \frac{\partial}{\partial r} \ell(r|\textbf{k}) &= \frac{\partial}{\partial r} \left( \log(r) \left[ \sum_{i = 1}^n k_i \right] - \left[ \sum_{i = 1}^n \log(k_i!) \right] - nr \right) \\
+&= \frac{1}{r} \left[ \sum_{i = 1}^n k_i \right] - 0 - n \\
+&= \frac{1}{r} [n\bar{k}] - n \\
+\Longrightarrow 0 &\overset{\text{set}}{=} \frac{n\bar{k}}{\hat{r}} - n \\
+\Longrightarrow n\hat{r} &= n\bar{k} \\
+\Longrightarrow \hat{r} &= \bar{k}.
+\end{aligned}
+$$
+We have found that $\hat{r} = \bar{k}$ yields an extreme value of $\ell(r|\textbf{k})$, but we need to take the second derivative to confirm that it is a maximum. Then,
+$$
+\begin{aligned}
+\frac{\partial}{\partial r} \ell(r|\textbf{k}) &= \frac{1}{r} [n\bar{k}] - n \\
+\Longrightarrow \frac{\partial^2}{\partial r^2} \ell(r|\textbf{k}) &= \frac{\partial}{\partial r} \left[\frac{1}{r} [n\bar{k}] - n \right] \\
+&= -\frac{n\bar{k}}{r^2} \\
+&< 0.
+\end{aligned}
+$$
+Ergo, $\hat{r}_{\text{MLE}} = \bar{k}$.
 
 
 </br>
