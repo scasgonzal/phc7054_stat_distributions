@@ -24,7 +24,7 @@
     "href": "chapters/bernoulli_20250310.html#deriving-the-distribution",
     "title": "1  The Bernoulli Distribution",
     "section": "",
-    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.\n\n\n1.1.1 An Example Sample from the Bernoulli Distribution\nNow let’s use R to take \\(n = 100\\) random samples from a Bernoulli Distribution with \\(p = 0.35\\), but we will only inspect the first five (for now):\n\nmyBernSample &lt;- rbinom(n = 100, size = 1, prob = 0.35)\nmyBernSample[1:5]\n[1] 0 0 0 1 0\n\nWe now pretend that we only know the results for the first five coin flips. We have flipped one coin five times, with the results \\(\\{\\)Heads, Tails, Heads, Tails, Tails\\(\\}\\).",
+    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.\n\n\n1.1.1 An Example Sample from the Bernoulli Distribution\nNow let’s use R to take \\(n = 100\\) random samples from a Bernoulli Distribution with \\(p = 0.35\\), but we will only inspect the first five (for now):\n\nmyBernSample &lt;- rbinom(n = 100, size = 1, prob = 0.35)\nmyBernSample[1:5]\n[1] 0 0 0 0 1\n\nWe now pretend that we only know the results for the first five coin flips. We have flipped one coin five times, with the results \\(\\{\\)Heads, Tails, Heads, Tails, Tails\\(\\}\\).",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
     ]
@@ -364,7 +364,7 @@
     "href": "chapters/poisson_20250310.html#show-that-this-is-a-distribution",
     "title": "4  The Poisson Distribution",
     "section": "4.4 Show that this is a Distribution",
-    "text": "4.4 Show that this is a Distribution",
+    "text": "4.4 Show that this is a Distribution\nAfter the Herculean effort to derive this distribution, showing that it is a distribution is downright pedestrian in comparison.\n\n4.4.1 The Distribution is Non-negative\nAs we already know, \\(\\lambda &gt; 0\\), \\(t \\ge 0\\), and \\(k \\in 0 \\cup\\mathbb{N}\\). Thus \\((\\lambda t)^k \\ge 0\\). Further, the exponential and factorial functions are non-negative. Thus, \\(f_{\\text{Poisson}}(k|\\lambda t) \\ge 0\\).\n\n\n4.4.2 The Total Probability is 1\nLet’s recall the MacLaurin Series Expansion for the exponential function: \\[\ne^x \\equiv \\sum_{n = 0}^{\\infty} \\frac{x^n}{n!}.\n\\] This should give us a big hint for how were are going to integrate the Poisson distribution. Recall that the support for \\(k\\) is the set of 0 and all positive integers up to \\(\\infty\\); that is \\(\\mathcal{S}(k) = [0,\\infty) \\in \\mathbb{Z}\\). Thus, we substitute the MacLaurin Series as follows: \\[\n\\begin{aligned}\n\\int_{\\mathcal{S}(k)} dF(k|\\lambda t) &= \\sum_{k = 0}^{\\infty} \\frac{(\\lambda t)^k}{k!} e^{-\\lambda t} \\\\\n&= e^{-\\lambda t} \\sum_{k = 0}^{\\infty} \\frac{(\\lambda t)^k}{k!} \\\\\n&= e^{-\\lambda t} \\left[ e^{\\lambda t}  \\right] \\\\\n&= 1.\n\\end{aligned}\n\\]",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Poisson Distribution</span>"
     ]
@@ -374,17 +374,17 @@
     "href": "chapters/poisson_20250310.html#derive-the-moment-generating-function",
     "title": "4  The Poisson Distribution",
     "section": "4.5 Derive the Moment Generating Function",
-    "text": "4.5 Derive the Moment Generating Function",
+    "text": "4.5 Derive the Moment Generating Function\nThe MGF is found similarly, by (again) applying the MacLaurin Series expansion for \\(e^x\\). Note that we are using \\(s\\) as the nuisance parameter of the MGF instead of \\(t\\) because we already use \\(\\lambda t\\) as the parameter of the Poisson Distribution Thus, \\[\n\\begin{aligned}\nM_k(s) &= \\int_{\\mathcal{S}(k)} e^{sk} dF(k|\\lambda t) \\\\\n&= \\sum_{k = 0}^{\\infty} e^{sk} \\frac{(\\lambda t)^k}{k!} e^{-\\lambda t} \\\\\n&= e^{-\\lambda t} \\sum_{k = 0}^{\\infty} \\frac{(e^s \\lambda t)^k}{k!} \\\\\n&= e^{-\\lambda t} e^{e^s \\lambda t} \\\\\n&= \\exp\\left[ -\\lambda t + e^s \\lambda t \\right] \\\\\n&= \\exp\\left[ \\lambda t (e^s - 1) \\right].\n\\end{aligned}\n\\]",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Poisson Distribution</span>"
     ]
   },
   {
-    "objectID": "chapters/poisson_20250310.html#method-of-moments-estimators",
-    "href": "chapters/poisson_20250310.html#method-of-moments-estimators",
+    "objectID": "chapters/poisson_20250310.html#method-of-moments-estimates-from-observed-data",
+    "href": "chapters/poisson_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "4  The Poisson Distribution",
-    "section": "4.6 Method of Moments Estimators",
-    "text": "4.6 Method of Moments Estimators",
+    "section": "4.6 Method of Moments Estimates from Observed Data",
+    "text": "4.6 Method of Moments Estimates from Observed Data\nLet’s generate some random data across 7 experiments. We assume that these 7 experiments represent 7 identical and fixed periods of time wherein to count events, with an average of with \\(\\lambda t = 5\\) events in each interval:\n\n\nCode\nset.seed(20150516)\n\nnTrials_int &lt;- 7L\nlambt_num &lt;- 5\nPoisk_int &lt;- rpois(n = nTrials_int, lambda = lambt_num)\nPoisk_int\n[1] 7 3 5 8 4 1 4\n\n\nIf these data are the counts of patient visits to a clinic in these 7 time intervals, we can see that there were 7, 3, 5, 8, 4, 1, 4 patients in each interval. Now that we have the MGF and a sample of data, we can estimate the Poisson “rate” parameter \\(\\lambda t\\).\n\n4.6.1 \\(\\mathbb{E}[k]\\)\nRecall that our MGF nuisance parameter is \\(s\\), not \\(t\\); \\(\\lambda t\\) is the Poisson parameter. Now consider \\[\n\\begin{aligned}\nM_k(s) &= \\exp[ \\lambda t (e^s - 1) ] \\\\\n\\Longrightarrow \\frac{d}{ds} M_k(s) &= \\frac{d}{ds} \\exp[ \\lambda t (e^s - 1) ] \\\\\n&= \\exp[ \\lambda t (e^s - 1) ] \\frac{d}{ds} \\lambda t (e^s - 1) \\\\\n&= \\exp[ \\lambda t (e^s - 1) ] \\lambda t e^s \\\\\n&= \\lambda t \\exp[ \\lambda t (e^s - 1) + s].\n\\end{aligned}\n\\] Thus, \\[\n\\begin{aligned}\nM_k^{\\prime}(s) &= \\lambda t \\exp[ \\lambda t (e^s - 1) + s] \\\\\n\\Longrightarrow M_k^{\\prime}(0) &= \\lambda t \\exp[ \\lambda t (e^{[0]} - 1) + [0]] \\\\\n&= \\lambda t \\exp[ \\lambda t (1 - 1) ] \\\\\n&= \\lambda t \\exp[ 0 ] \\\\\n&= \\lambda t \\\\\n&= \\mathbb{E}[k].\n\\end{aligned}\n\\]\n\n\n4.6.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\nSimilarly, \\[\n\\begin{aligned}\nM_k^{\\prime}(s) &= \\lambda t \\exp[ \\lambda t (e^s - 1) + s] \\\\\n\\Longrightarrow M_k^{\\prime\\prime}(s) &= \\frac{d}{ds} \\lambda t \\exp[ \\lambda t (e^s - 1) + s] \\\\\n&= \\lambda t \\exp[ \\lambda t (e^s - 1) + s] \\frac{d}{ds} [ \\lambda t (e^s - 1) + s] \\\\\n&= \\lambda t [ \\lambda t e^s + 1] \\exp[ \\lambda t (e^s - 1) + s].\n\\end{aligned}\n\\] Evaluating this second derivative at 0 yields \\[\n\\begin{aligned}\nM_k^{\\prime\\prime}(0) &= \\lambda t [ \\lambda t e^{[0]} + 1] \\exp[ \\lambda t (e^{[0]} - 1) + [0]] \\\\\n&= \\lambda t (\\lambda t [1] + 1) \\exp[\\lambda t (1 - 1)] \\\\\n&= \\lambda t (\\lambda t + 1) \\\\\n&= \\mathbb{E}[k^2].\n\\end{aligned}\n\\] Therefore, \\[\n\\begin{aligned}\n\\text{Var}[k] &= \\mathbb{E}[k^2] - \\left[ \\mathbb{E}[k] \\right]^2 \\\\\n&= \\lambda t (\\lambda t + 1) - [\\lambda t]^2 \\\\\n&= (\\lambda t)^2 + \\lambda t - (\\lambda t)^2 \\\\\n&= \\lambda t.\n\\end{aligned}\n\\]\n\n\n4.6.3 Solving the System\nWe now see the trivial solution to our problem: the Poisson distribution has the same estimates for mean and variance. Thus, \\(\\hat{\\lambda}_{\\text{MoM}} = \\bar{k}\\). For our example data, where the true value of \\(\\lambda t\\) was 5, we see the Method of Moments estimate is\n\n\nCode\nmean(Poisk_int)\n[1] 4.57",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>The Poisson Distribution</span>"
     ]
@@ -460,11 +460,11 @@
     ]
   },
   {
-    "objectID": "chapters/exponential_20250310.html#method-of-moments-estimators",
-    "href": "chapters/exponential_20250310.html#method-of-moments-estimators",
+    "objectID": "chapters/exponential_20250310.html#method-of-moments-estimates-from-observed-data",
+    "href": "chapters/exponential_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "5  The Exponential Distribution",
-    "section": "5.5 Method of Moments Estimators",
-    "text": "5.5 Method of Moments Estimators",
+    "section": "5.5 Method of Moments Estimates from Observed Data",
+    "text": "5.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n5.5.1 \\(\\mathbb{E}[k]\\)\n\n\n5.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n5.5.3 Solving the System",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
     ]
@@ -530,11 +530,11 @@
     ]
   },
   {
-    "objectID": "chapters/gamma_20250310.html#method-of-moments-estimators",
-    "href": "chapters/gamma_20250310.html#method-of-moments-estimators",
+    "objectID": "chapters/gamma_20250310.html#method-of-moments-estimates-from-observed-data",
+    "href": "chapters/gamma_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "6  The Gamma Distribution",
-    "section": "6.5 Method of Moments Estimators",
-    "text": "6.5 Method of Moments Estimators",
+    "section": "6.5 Method of Moments Estimates from Observed Data",
+    "text": "6.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n6.5.1 \\(\\mathbb{E}[k]\\)\n\n\n6.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n6.5.3 Solving the System",
     "crumbs": [
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
@@ -600,11 +600,11 @@
     ]
   },
   {
-    "objectID": "chapters/beta_20250310.html#method-of-moments-estimators",
-    "href": "chapters/beta_20250310.html#method-of-moments-estimators",
+    "objectID": "chapters/beta_20250310.html#method-of-moments-estimates-from-observed-data",
+    "href": "chapters/beta_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "7  The Beta Distribution",
-    "section": "7.5 Method of Moments Estimators",
-    "text": "7.5 Method of Moments Estimators",
+    "section": "7.5 Method of Moments Estimates from Observed Data",
+    "text": "7.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n7.5.1 \\(\\mathbb{E}[k]\\)\n\n\n7.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n7.5.3 Solving the System",
     "crumbs": [
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Beta Distribution</span>"
     ]
@@ -670,11 +670,11 @@
     ]
   },
   {
-    "objectID": "chapters/normal_20250310.html#method-of-moments-estimators",
-    "href": "chapters/normal_20250310.html#method-of-moments-estimators",
+    "objectID": "chapters/normal_20250310.html#method-of-moments-estimates-from-observed-data",
+    "href": "chapters/normal_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "8  The Normal Distribution",
-    "section": "8.5 Method of Moments Estimators",
-    "text": "8.5 Method of Moments Estimators",
+    "section": "8.5 Method of Moments Estimates from Observed Data",
+    "text": "8.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n8.5.1 \\(\\mathbb{E}[k]\\)\n\n\n8.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n8.5.3 Solving the System",
     "crumbs": [
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Normal Distribution</span>"
     ]
@@ -740,11 +740,11 @@
     ]
   },
   {
-    "objectID": "chapters/chi_square_20250310.html#method-of-moments-estimators",
-    "href": "chapters/chi_square_20250310.html#method-of-moments-estimators",
+    "objectID": "chapters/chi_square_20250310.html#method-of-moments-estimates-from-observed-data",
+    "href": "chapters/chi_square_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "9  The Central Chi Squared Distribution",
-    "section": "9.5 Method of Moments Estimators",
-    "text": "9.5 Method of Moments Estimators",
+    "section": "9.5 Method of Moments Estimates from Observed Data",
+    "text": "9.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n9.5.1 \\(\\mathbb{E}[k]\\)\n\n\n9.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n9.5.3 Solving the System",
     "crumbs": [
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
     ]
@@ -810,11 +810,11 @@
     ]
   },
   {
-    "objectID": "chapters/students_t_20250310.html#method-of-moments-estimators",
-    "href": "chapters/students_t_20250310.html#method-of-moments-estimators",
+    "objectID": "chapters/students_t_20250310.html#method-of-moments-estimates-from-observed-data",
+    "href": "chapters/students_t_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "10  The Student’s t Distribution",
-    "section": "10.5 Method of Moments Estimators",
-    "text": "10.5 Method of Moments Estimators",
+    "section": "10.5 Method of Moments Estimates from Observed Data",
+    "text": "10.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n10.5.1 \\(\\mathbb{E}[k]\\)\n\n\n10.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n10.5.3 Solving the System",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
@@ -880,11 +880,11 @@
     ]
   },
   {
-    "objectID": "chapters/f_20250310.html#method-of-moments-estimators",
-    "href": "chapters/f_20250310.html#method-of-moments-estimators",
+    "objectID": "chapters/f_20250310.html#method-of-moments-estimates-from-observed-data",
+    "href": "chapters/f_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "11  The Central F Distribution",
-    "section": "11.5 Method of Moments Estimators",
-    "text": "11.5 Method of Moments Estimators",
+    "section": "11.5 Method of Moments Estimates from Observed Data",
+    "text": "11.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n11.5.1 \\(\\mathbb{E}[k]\\)\n\n\n11.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n11.5.3 Solving the System",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]

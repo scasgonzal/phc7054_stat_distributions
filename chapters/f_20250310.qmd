@@ -154,7 +154,17 @@ par(mfrow = c(1, 1))
 
 
 
-## Method of Moments Estimators
+## Method of Moments Estimates from Observed Data
+Let's generate some random data...
+
+
+### $\mathbb{E}[k]$
+
+
+### $\mathbb{E}[k^2]$ and $\text{Var}[k]$
+
+
+### Solving the System
 
 
 </br>

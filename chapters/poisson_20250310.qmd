@@ -448,6 +448,27 @@ par(mfrow = c(1, 1))
 
 
 ## Show that this is a Distribution
+After the Herculean effort to derive this distribution, showing that it is a distribution is downright pedestrian in comparison.
+
+
+### The Distribution is Non-negative
+As we already know, $\lambda > 0$, $t \ge 0$, and $k \in 0 \cup\mathbb{N}$. Thus $(\lambda t)^k \ge 0$. Further, the exponential and factorial functions are non-negative. Thus, $f_{\text{Poisson}}(k|\lambda t) \ge 0$.
+
+
+### The Total Probability is 1
+Let's recall the MacLaurin Series Expansion for the exponential function:
+$$
+e^x \equiv \sum_{n = 0}^{\infty} \frac{x^n}{n!}.
+$$
+This should give us a big hint for how were are going to integrate the Poisson distribution. Recall that the support for $k$ is the set of 0 and all positive integers up to $\infty$; that is $\mathcal{S}(k) = [0,\infty) \in \mathbb{Z}$. Thus, we substitute the MacLaurin Series as follows:
+$$
+\begin{aligned}
+\int_{\mathcal{S}(k)} dF(k|\lambda t) &= \sum_{k = 0}^{\infty} \frac{(\lambda t)^k}{k!} e^{-\lambda t} \\
+&= e^{-\lambda t} \sum_{k = 0}^{\infty} \frac{(\lambda t)^k}{k!} \\
+&= e^{-\lambda t} \left[ e^{\lambda t}  \right] \\
+&= 1.
+\end{aligned}
+$$
 
 
 </br>
@@ -455,13 +476,96 @@ par(mfrow = c(1, 1))
 
 
 ## Derive the Moment Generating Function
+The MGF is found similarly, by (again) applying the MacLaurin Series expansion for $e^x$. Note that we are using $s$ as the nuisance parameter of the MGF instead of $t$ because we already use $\lambda t$ as the parameter of the Poisson Distribution Thus,
+$$
+\begin{aligned}
+M_k(s) &= \int_{\mathcal{S}(k)} e^{sk} dF(k|\lambda t) \\
+&= \sum_{k = 0}^{\infty} e^{sk} \frac{(\lambda t)^k}{k!} e^{-\lambda t} \\
+&= e^{-\lambda t} \sum_{k = 0}^{\infty} \frac{(e^s \lambda t)^k}{k!} \\
+&= e^{-\lambda t} e^{e^s \lambda t} \\
+&= \exp\left[ -\lambda t + e^s \lambda t \right] \\
+&= \exp\left[ \lambda t (e^s - 1) \right].
+\end{aligned}
+$$
 
 
 </br>
 
 
 
-## Method of Moments Estimators
+## Method of Moments Estimates from Observed Data
+Let's generate some random data across 7 experiments. We assume that these 7 experiments represent 7 identical and fixed periods of time wherein to count events, with an average of with $\lambda t = 5$ events in each interval:
+```{r}
+set.seed(20150516)
+
+nTrials_int <- 7L
+lambt_num <- 5
+Poisk_int <- rpois(n = nTrials_int, lambda = lambt_num)
+Poisk_int
+```
+
+If these data are the counts of patient visits to a clinic in these 7 time intervals, we can see that there were `r Poisk_int` patients in each interval. Now that we have the MGF and a sample of data, we can estimate the Poisson "rate" parameter $\lambda t$.
+
+
+### $\mathbb{E}[k]$
+Recall that our MGF nuisance parameter is $s$, not $t$; $\lambda t$ is the Poisson parameter. Now consider
+$$
+\begin{aligned}
+M_k(s) &= \exp[ \lambda t (e^s - 1) ] \\
+\Longrightarrow \frac{d}{ds} M_k(s) &= \frac{d}{ds} \exp[ \lambda t (e^s - 1) ] \\
+&= \exp[ \lambda t (e^s - 1) ] \frac{d}{ds} \lambda t (e^s - 1) \\
+&= \exp[ \lambda t (e^s - 1) ] \lambda t e^s \\
+&= \lambda t \exp[ \lambda t (e^s - 1) + s].
+\end{aligned}
+$$
+Thus,
+$$
+\begin{aligned}
+M_k^{\prime}(s) &= \lambda t \exp[ \lambda t (e^s - 1) + s] \\
+\Longrightarrow M_k^{\prime}(0) &= \lambda t \exp[ \lambda t (e^{[0]} - 1) + [0]] \\
+&= \lambda t \exp[ \lambda t (1 - 1) ] \\
+&= \lambda t \exp[ 0 ] \\
+&= \lambda t \\
+&= \mathbb{E}[k].
+\end{aligned}
+$$
+
+
+### $\mathbb{E}[k^2]$ and $\text{Var}[k]$
+Similarly,
+$$
+\begin{aligned}
+M_k^{\prime}(s) &= \lambda t \exp[ \lambda t (e^s - 1) + s] \\
+\Longrightarrow M_k^{\prime\prime}(s) &= \frac{d}{ds} \lambda t \exp[ \lambda t (e^s - 1) + s] \\
+&= \lambda t \exp[ \lambda t (e^s - 1) + s] \frac{d}{ds} [ \lambda t (e^s - 1) + s] \\
+&= \lambda t [ \lambda t e^s + 1] \exp[ \lambda t (e^s - 1) + s].
+\end{aligned}
+$$
+Evaluating this second derivative at 0 yields
+$$
+\begin{aligned}
+M_k^{\prime\prime}(0) &= \lambda t [ \lambda t e^{[0]} + 1] \exp[ \lambda t (e^{[0]} - 1) + [0]] \\
+&= \lambda t (\lambda t [1] + 1) \exp[\lambda t (1 - 1)] \\
+&= \lambda t (\lambda t + 1) \\
+&= \mathbb{E}[k^2].
+\end{aligned}
+$$
+Therefore,
+$$
+\begin{aligned}
+\text{Var}[k] &= \mathbb{E}[k^2] - \left[ \mathbb{E}[k] \right]^2 \\
+&= \lambda t (\lambda t + 1) - [\lambda t]^2 \\
+&= (\lambda t)^2 + \lambda t - (\lambda t)^2 \\
+&= \lambda t.
+\end{aligned}
+$$
+
+
+### Solving the System
+We now see the trivial solution to our problem: the Poisson distribution has the same estimates for mean and variance. Thus, $\hat{\lambda}_{\text{MoM}} = \bar{k}$. For our example data, where the true value of $\lambda t$ was 5, we see the Method of Moments estimate is
+```{r}
+mean(Poisk_int)
+```
 
 
 </br>
