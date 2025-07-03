@@ -24,7 +24,7 @@
     "href": "chapters/bernoulli_20250310.html#deriving-the-distribution",
     "title": "1  The Bernoulli Distribution",
     "section": "",
-    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.\n\n\n1.1.1 An Example Sample from the Bernoulli Distribution\nNow let’s use R to take \\(n = 100\\) random samples from a Bernoulli Distribution with \\(p = 0.35\\), but we will only inspect the first five (for now):\n\nmyBernSample &lt;- rbinom(n = 100, size = 1, prob = 0.35)\nmyBernSample[1:5]\n[1] 0 0 0 1 0\n\nWe now pretend that we only know the results for the first five coin flips. We have flipped one coin five times, with the results \\(\\{\\)Heads, Tails, Heads, Tails, Tails\\(\\}\\).",
+    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.\n\n\n1.1.1 An Example Sample from the Bernoulli Distribution\nNow let’s use R to take \\(n = 100\\) random samples from a Bernoulli Distribution with \\(p = 0.35\\), but we will only inspect the first five (for now):\n\nmyBernSample &lt;- rbinom(n = 100, size = 1, prob = 0.35)\nmyBernSample[1:5]\n[1] 1 0 0 1 0\n\nWe now pretend that we only know the results for the first five coin flips. We have flipped one coin five times, with the results \\(\\{\\)Heads, Tails, Heads, Tails, Tails\\(\\}\\).",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
     ]
@@ -424,7 +424,7 @@
     "href": "chapters/exponential_20250310.html",
     "title": "5  The Exponential Distribution",
     "section": "",
-    "text": "5.1 Deriving the Distribution",
+    "text": "5.1 Deriving the Distribution\nLet’s consider counting events happening in an observation interval with time \\(T \\in [0,t)\\). The count of these events are generated according to a Poisson process with rate \\(\\lambda\\) and observation interval width \\(t\\), given by \\[\nf_{\\text{Pois}}(k|\\lambda t) \\equiv \\frac{(\\lambda t)^k}{k!} e^{-\\lambda t}.\n\\] We can continue our “clinic” example from the Poisson lesson; a Poisson process could be used to describe the number of patients who visit a clinic in a one-hour period. Let’s say that we opened up the clinic in the morning, and we ask ourselves “how long do we have to wait until the first patient arrives?” Mathematically, this would be asking what the value of \\(T\\) will be when \\(k\\) increments from 0 to 1.\nThe probability that we have not yet observed an event by time \\(t\\) is given by \\[\n\\mathbb{P}(0|\\lambda, T = t) = \\frac{(\\lambda t)^0}{0!} e^{-\\lambda t} = e^{-\\lambda t}.\n\\] Notice that we can modify our question from asking about a random variable \\(k\\) to asking about a random variable \\(T\\). We then see that these two quantities are the same, but their random variables are different: \\[\n\\mathbb{P}_k(0|T = t, \\lambda) = \\mathbb{P}_T(T &gt; t|\\lambda).\n\\] In vernacular, we are saying that the probability of observing a count of zero events on or before time \\(t\\) is the same as the probability that the time of the first event is after (greater than) \\(t\\).\nBecause of the logical equivalence of these events, we can say that the probability that the first event (which happens at time \\(T\\)) hasn’t happened yet (as of time \\(t\\)) is given by \\[\n\\mathbb{P}(T &gt; t) = e^{-\\lambda t}.\n\\] This is the probability that the first event will happen after time \\(t\\). Thus, the probability that the first event will happen before the end of our observation interval (which ends at time \\(t\\)) will be the opposite of this: \\[\n\\mathbb{P}(T \\le t) = 1 - e^{-\\lambda t}.\n\\]\nNotice that we have just described the cumulative probability function1. As we all remember, the Cumulative Probability Function is the indefinite integral of the Probability Function, so to find a closed form of the Exponential distribution, we take the derivative with respect to the random variable \\(t\\). So, for \\(\\lambda,t &gt; 0\\), \\[\n\\begin{aligned}\nF_T(t|\\lambda) &= 1 - e^{-\\lambda t} \\\\\n\\Longrightarrow f_T(t|\\lambda) &= \\frac{d}{dt} \\left( 1 - e^{-\\lambda t} \\right) \\\\\n&= - e^{-\\lambda t} (-\\lambda) \\\\\n\\Longrightarrow f_{\\text{Exp}}(t|\\lambda) &= \\lambda e^{-\\lambda t}.\n\\end{aligned}\n\\]",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
     ]
@@ -440,11 +440,21 @@
     ]
   },
   {
+    "objectID": "chapters/exponential_20250310.html#formal-foundations",
+    "href": "chapters/exponential_20250310.html#formal-foundations",
+    "title": "5  The Exponential Distribution",
+    "section": "5.3 Formal Foundations",
+    "text": "5.3 Formal Foundations\nAfter all the suffering through theory we’ve done in the last few lessons, the formal theory needed for this lesson is quite light.\n\n5.3.1 Improper Integrals\nThe Fundamental Theorem of Calculus states that, if \\(f\\) is a continuous function on a closed interval from \\(a\\) to \\(b\\) (inclusive) with anti-derivative \\(F\\), then \\[\n\\int_a^b f(x) dx \\equiv \\left[ F(x) \\right]_a^b \\equiv F(b) - F(a).\n\\] Notice that this definition requires that the interval include both \\(a\\) and \\(b\\). Improper integrals mean that either \\(f\\) is not continuous over the interval \\([a,b]\\), or either \\(a\\), \\(b\\), or both, are infinite. For many statistical distributions, the bounds of the support of the random variable include \\(\\infty\\) on one side or both. That means that we can’t just take the integral and substitute in \\(\\infty\\) and “call it a day”. For common statistical distributions with unbounded support, there are two cases.\nCase 1: The Interval is Open on One Side. If we have either the lower or upper bound of the integral tending to \\(\\infty\\), then we do this: \\[\n\\begin{aligned}\n\\int_a^{\\infty} f(x) dx &= \\lim_{\\psi\\to\\infty} F(\\psi) - F(a) \\\\\n\\int_{-\\infty}^b f(x) dx &= F(b) - \\lim_{\\psi\\to -\\infty} F(\\psi) \\\\\n\\end{aligned}\n\\]\nCase 2: The Interval is Open on Both Sides. If we have the lower and upper bound of the integral as the entire Real line, then we split the integral into two “one-sided” improper integrals at some value \\(x = a\\) and evaluate each separately. That is: \\[\n\\int_{-\\infty}^{\\infty} f(x) dx = \\int_{-\\infty}^a f(x) dx\\ +\\ \\int_a^{\\infty} f(x) dx.\n\\] If \\(f\\) is symmetric around the axis \\(x = a\\), then this simplifies even further: \\[\n\\int_{-\\infty}^{\\infty} f(x) dx = 2 \\times \\int_a^{\\infty} f(x) dx.\n\\] The Normal and Student’s \\(t\\) distributions are the two most famous distributions with support over the entire Real line, and they are both symmetric around their mean values (\\(\\mu\\) for the Normal and 0 for the Student’s \\(t\\) distributions).",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
+    ]
+  },
+  {
     "objectID": "chapters/exponential_20250310.html#show-that-this-is-a-distribution",
     "href": "chapters/exponential_20250310.html#show-that-this-is-a-distribution",
     "title": "5  The Exponential Distribution",
-    "section": "5.3 Show that this is a Distribution",
-    "text": "5.3 Show that this is a Distribution",
+    "section": "5.4 Show that this is a Distribution",
+    "text": "5.4 Show that this is a Distribution\nWe recall that \\(\\lambda, t &gt; 0\\), so \\(f_{\\text{Exp}}(t|\\lambda) &gt; 0\\). For the total probability, we need to remember that we can reverse the limits of integration,2 and we need to be able to solve an improper integral (described above). Once you have reviewed these concepts, consider \\[\n\\begin{aligned}\n\\int_{\\mathcal{S}(t)} dF(t|\\lambda) &= \\int_0^{\\infty} \\lambda e^{-\\lambda t} dt \\\\\n&= \\lim_{\\psi \\to \\infty} \\left[ -\\frac{\\lambda}{\\lambda} e^{-\\lambda t} \\right]_{t = 0}^{\\psi} \\\\\n&= \\lim_{\\psi \\to \\infty} \\left[ -e^{-\\lambda t} (-1) \\right]_{\\psi}^{t = 0} \\\\\n&= \\lim_{\\psi \\to \\infty} \\left[ e^{-\\lambda t} \\right]_{\\psi}^{t = 0} \\\\\n&= \\left[ e^{\\lambda [0]} \\right] - \\left[ \\lim_{\\psi \\to \\infty} e^{-\\lambda \\psi} \\right] \\\\\n&= 1 - 0.\n\\end{aligned}\n\\] Therefore, \\(f_{\\text{Exp}}(t|\\lambda)\\) is a probability distribution.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
     ]
@@ -453,8 +463,8 @@
     "objectID": "chapters/exponential_20250310.html#derive-the-moment-generating-function",
     "href": "chapters/exponential_20250310.html#derive-the-moment-generating-function",
     "title": "5  The Exponential Distribution",
-    "section": "5.4 Derive the Moment Generating Function",
-    "text": "5.4 Derive the Moment Generating Function",
+    "section": "5.5 Derive the Moment Generating Function",
+    "text": "5.5 Derive the Moment Generating Function\nAs with the Poisson Distribution, we will call the nuisance parameter for the MGF \\(s\\) instead of \\(t\\), as \\(t\\) is the random variable of the Exponential Distribution. Recall that the MGF must be defined for \\(s\\) in an \\(\\epsilon\\)-neighbourhood of 0, for some arbitrarily small \\(\\epsilon\\). This means that, without loss of generality, we can bound \\(s\\) to be smaller than the rate parameter \\(\\lambda &gt; 0\\) (which we will need below). Thus,\n\\[\n\\begin{aligned}\nM_t(s) &= \\int_{\\mathcal{S}(t)} e^{st} dF(t|\\lambda) \\\\\n&= \\int_0^{\\infty} e^{st} \\lambda e^{-\\lambda t} dt \\\\\n&= \\lambda \\int_0^{\\infty} e^{t(s - \\lambda)} dt \\\\\n&= \\frac{\\lambda}{s - \\lambda} \\lim_{\\psi\\to\\infty} \\left[ e^{t(s - \\lambda)} \\right]_{t = 0}^{\\psi},\\ s &lt; \\lambda \\\\\n&= \\frac{\\lambda}{s - \\lambda} \\left[ \\lim_{\\psi\\to\\infty} e^{\\psi(s - \\lambda)} - e^{[0](s - \\lambda)} \\right] \\\\\n&= \\frac{\\lambda}{s - \\lambda} \\left[ \\lim_{\\psi\\to\\infty} e^{-\\psi(\\lambda - s)} - 1 \\right],\\ s &lt; \\lambda \\Rightarrow \\lambda - s &gt; 0 \\\\\n&= \\frac{\\lambda}{s - \\lambda} [0 - 1] \\\\\n&= \\frac{\\lambda}{\\lambda - s}.\n\\end{aligned}\n\\]",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
     ]
@@ -463,8 +473,8 @@
     "objectID": "chapters/exponential_20250310.html#method-of-moments-estimates-from-observed-data",
     "href": "chapters/exponential_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "5  The Exponential Distribution",
-    "section": "5.5 Method of Moments Estimates from Observed Data",
-    "text": "5.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n5.5.1 \\(\\mathbb{E}[k]\\)\n\n\n5.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n5.5.3 Solving the System",
+    "section": "5.6 Method of Moments Estimates from Observed Data",
+    "text": "5.6 Method of Moments Estimates from Observed Data\nLet’s generate some random data. We continue our “clinic” example, and now we generate 7 “waiting times” until the first patient walks in. For a single experiment, that is, when we first open the clinic, how long will we have to wait for the first patient to arrive? Let’s assume the same rate of \\(\\lambda = 5\\) for one hour that we used in the previous lesson. We can generate data (in fractional hours) by\n\n\nCode\nset.seed(20150516)\n\nnTrials_int &lt;- 7L\nrate_num &lt;- 5\nExpt_num &lt;- rexp(n = nTrials_int, rate = rate_num)\nExpt_num\n[1] 0.03635 0.00557 0.27411 0.00179 0.21331 0.20857 0.27598\nExpt_num * 60\n[1]  2.181  0.334 16.446  0.108 12.798 12.514 16.559\n\n\nSo, for these 7 independent trials where the waiting times \\(T\\) have an identical Exponential distribution with rate of 5 patients per hour, we wait 2.2, 0.3, 16.4, 0.1, 12.8, 12.5, 16.6 minutes to see the first patient.\n\n5.6.1 \\(\\mathbb{E}[k]\\)\nConsider \\[\n\\begin{aligned}\nM_t(s) &= \\lambda(\\lambda - s)^{-1} \\\\\n\\Longrightarrow M_t^{\\prime}(s) &= \\frac{d}{ds} \\lambda(\\lambda - s)^{-1} \\\\\n&= -\\lambda(\\lambda - s)^{-2}(-1) \\\\\n&= \\lambda(\\lambda - s)^{-2} \\\\\n\\Longrightarrow M_t^{\\prime}(0) &= \\frac{\\lambda}{(\\lambda - [0])^2} \\\\\n&= \\frac{1}{\\lambda} \\\\\n&= \\mathbb{E}[t].\n\\end{aligned}\n\\]\n\n\n5.6.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\nWe continue: \\[\n\\begin{aligned}\nM^{\\prime}_t(s) &= \\lambda(\\lambda - s)^{-2} \\\\\n\\Longrightarrow M^{\\prime\\prime}_t(s) &= \\frac{d}{ds} \\lambda(\\lambda - s)^{-2} \\\\\n&= -2\\lambda(\\lambda - s)^{-3}(-1) \\\\\n&= \\frac{2\\lambda}{(\\lambda - s)^3} \\\\\n\\Longrightarrow M^{\\prime\\prime}_t(0) &= \\frac{2\\lambda}{(\\lambda - [0])^3} \\\\\n&= \\frac{2}{\\lambda^2} \\\\\n&= \\mathbb{E}[t^2].\n\\end{aligned}\n\\]\nThen, \\[\n\\text{Var}[t] = \\mathbb{E}[t^2] - \\left[\\mathbb{E}[t]\\right]^2 = \\frac{2}{\\lambda^2} - \\left[\\frac{1}{\\lambda}\\right]^2 = \\frac{1}{\\lambda^2}.\n\\]\n\n\n5.6.3 Solving the System\nWe then have that \\(\\bar{x} = \\frac{1}{\\lambda}\\) and \\(s^2 = \\frac{1}{\\lambda^2}\\), which is an overdetermined system. For the Exponential Distribution, once we know the mean, then we should also know the variance. For our sample, generated from an Exponential with rate \\(\\lambda = 5\\), \\(\\hat{\\lambda}_{\\text{MoM}}\\) = 6.892. It’s worth noting that the Method of Moments estimate for this distribution requires a very large number of samples before it is “close” to the true value (the Maximum Likelihood estimator is the same, as we’ll see next).",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
     ]
@@ -473,8 +483,8 @@
     "objectID": "chapters/exponential_20250310.html#maximum-likelihood-estimators",
     "href": "chapters/exponential_20250310.html#maximum-likelihood-estimators",
     "title": "5  The Exponential Distribution",
-    "section": "5.6 Maximum Likelihood Estimators",
-    "text": "5.6 Maximum Likelihood Estimators",
+    "section": "5.7 Maximum Likelihood Estimators",
+    "text": "5.7 Maximum Likelihood Estimators\nTo estimate a true rate, \\(\\lambda\\), using the likelihood, we collect a set of independent observed times for the first success. That is, \\(\\textbf{t} = [t_1, t_2, \\ldots, t_n] \\overset{iid}{\\sim} \\text{Exp}(\\lambda)\\). Thus, \\[\n\\begin{aligned}\nf_{\\text{Exp}}(t|\\lambda) &= \\lambda e^{-\\lambda t} \\\\\n\\Longrightarrow \\mathcal{L}(\\lambda|\\textbf{t}) &= \\prod_{i = 1}^n \\lambda e^{-\\lambda t_i} \\\\\n\\Longrightarrow \\ell(\\lambda|\\textbf{t}) &= \\log \\left[ \\prod_{i = 1}^n \\lambda e^{-\\lambda t_i} \\right] \\\\\n&= \\sum_{i = 1}^n \\log \\left[ \\lambda e^{-\\lambda t_i} \\right] \\\\\n&= \\sum_{i = 1}^n \\left[ \\log(\\lambda) - \\lambda t_i \\right] \\\\\n&= n\\log(\\lambda) - \\lambda \\sum_{i = 1}^n t_i \\\\\n&= n\\log(\\lambda) - n\\lambda\\bar{t} \\\\\n\\Longrightarrow \\frac{\\partial}{\\partial\\lambda} \\ell(\\lambda|\\textbf{t}) &= \\frac{\\partial}{\\partial\\lambda} \\left( n\\log(\\lambda) - n\\lambda\\bar{t} \\right) \\\\\n&= \\frac{n}{\\lambda} - n\\bar{t} \\\\\n\\Longrightarrow 0 &\\overset{\\text{set}}{=} \\frac{n}{\\hat{\\lambda}} - n\\bar{t} \\\\\n\\Longrightarrow n\\bar{t} &= \\frac{n}{\\hat{\\lambda}} \\\\\n\\Longrightarrow \\hat{\\lambda} &= \\frac{1}{\\bar{t}}.\n\\end{aligned}\n\\] In order to confirm that this extreme value of the log-likelihood is truly a maxima, we take the second partial derivative: \\[\n\\begin{aligned}\n\\frac{\\partial}{\\partial\\lambda} \\ell(\\lambda|\\textbf{t}) &= \\frac{n}{\\lambda} - n\\bar{t} \\\\\n&= n\\lambda^{-1} - n\\bar{t} \\\\\n\\Longrightarrow \\frac{\\partial^2}{\\partial\\lambda^2} \\ell(\\lambda|\\textbf{t}) &= -n\\lambda^{-2} \\\\\n&&lt; 0.\n\\end{aligned}\n\\] Hence, \\(\\hat{\\lambda}_{MLE} = \\frac{1}{\\bar{t}}\\).",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
     ]
@@ -483,8 +493,18 @@
     "objectID": "chapters/exponential_20250310.html#exercises",
     "href": "chapters/exponential_20250310.html#exercises",
     "title": "5  The Exponential Distribution",
-    "section": "5.7 Exercises",
-    "text": "5.7 Exercises",
+    "section": "5.8 Exercises",
+    "text": "5.8 Exercises\nTo be determined.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/exponential_20250310.html#footnotes",
+    "href": "chapters/exponential_20250310.html#footnotes",
+    "title": "5  The Exponential Distribution",
+    "section": "",
+    "text": "https://en.wikipedia.org/wiki/Cumulative_distribution_function↩︎\nhttps://proofwiki.org/wiki/Reversal_of_Limits_of_Definite_Integral↩︎",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
     ]
