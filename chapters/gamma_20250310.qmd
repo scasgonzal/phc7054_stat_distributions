@@ -36,7 +36,34 @@ options(dplyr.summarise.inform = FALSE)
 
 
 
-## Deriving the Distribution
+## Deriving the Distribution, Overview
+
+
+</br>
+
+
+
+## Formal Foundations
+
+
+### Leibniz' Integral Rule
+
+
+### Integrating like a Statistician
+
+
+</br>
+
+
+
+## Deriving the Distribution: The Erlang Distribution
+
+
+</br>
+
+
+
+## Deriving the Distribution: The Gamma Distribution
 
 
 </br>

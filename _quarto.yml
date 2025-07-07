@@ -14,6 +14,7 @@ book:
     - chapters/negative_binomial_20250310.qmd
     - chapters/poisson_20250310.qmd
     - chapters/exponential_20250310.qmd
+    - chapters/theory_gamma_function_20250707.qmd
     - chapters/gamma_20250310.qmd
     - chapters/beta_20250310.qmd
     - chapters/normal_20250310.qmd

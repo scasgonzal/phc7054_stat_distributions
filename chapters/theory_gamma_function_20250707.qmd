@@ -1,0 +1,245 @@
+---
+title: "Formal Foundations: The Gamma and Beta Functions"
+author: "Gabriel J. Odom"
+date: last-modified
+format:
+  html:
+    embed-resources: false
+    code-fold: true
+knitr:
+  opts_chunk:        ########## set global options ############
+    collapse: true   # keep code from blocks together (if shown)
+    echo: true       # show code
+    message: true    # show messages
+    warning: true    # show warnings
+    error: true      # show error messages
+    comment: ""      # don't show ## with printed output
+    dpi: 100         # image resolution (typically 300 for publication)
+    fig-width: 6.5   # figure width
+    fig-height: 4.0  # figure height
+    R.options:    
+      digits: 3    # round to three digits
+editor: source
+---
+
+```{r, tidyverse-tidymodels}
+#| echo: false
+
+library(conflicted)
+suppressPackageStartupMessages(library(tidymodels))
+tidymodels_prefer()
+suppressPackageStartupMessages(library(tidyverse))
+
+# suppress "`summarise()` has grouped output by " messages
+options(dplyr.summarise.inform = FALSE)
+```
+
+
+
+## Overview
+As we mentioned in the Negative Binomial lesson, we could spend literal weeks discussing and proving the many properties of the [Gamma Function](https://en.wikipedia.org/wiki/Gamma_function) (and its relative the [Beta Function](https://en.wikipedia.org/wiki/Beta_function)). Instead, we will try to distill the most important properties of these functions that are necessary for us to derive and prove properties of the Gamma, Beta, $\chi^2$, Student's $t$, and Central $F$ distributions. As we saw previously, the Gamma Function is one (of potentially many) smooth interpolations between the values of $x!$ evaluated at each non-negative integer. 
+
+</br>
+
+
+
+## Formal Foundations (of Foundations)
+Yes, I know this entire chapter is already dedicated to "math foundations", but we have to go deeper (insert [Inception](https://www.youtube.com/watch?v=DKce4wCe2zI) joke here). We need some foundations to our foundations.
+
+
+### L'Hospital's Rule
+If we have the limit of a ratio of functions, where the ratio of the numerator and denominator yield an **indeterminant form**^[<https://en.wikipedia.org/wiki/Indeterminate_form>], then we can apply [L'Hospital's Rule](https://en.wikipedia.org/wiki/L%27H%C3%B4pital%27s_rule) to simplify the limit. Consider
+$$
+\lim_{x \to c} \frac{f(x)}{g(x)}.
+$$
+
+We need four conditions to hold before we can apply L'Hospital's Rule:
+
+1. The ratio must have an indeterminant form of the same value in the numerator and denominator (such as $0/0$ or $\infty/\infty$).
+2. The derivatives of $f$ and $g$ must exist in a neighbourhood of the point $c$, but not necessarily at the point $c$ itself.
+3. The derivative of $g$ must not equal 0 in this neighbourhood of the point $c$, except potentially at the point $c$ itself.
+4. The ratio of the derivatives of $f$ and $g$ (**not** the derivative of the ratio) must exist at the point $c$ (even if we can't find it immediately).
+
+**IF** all four conditions hold, then
+$$
+\lim_{x \to c} \frac{f(x)}{g(x)} = \lim_{x \to c} \frac{f^{\prime}(x)}{g^{\prime}(x)}.
+$$
+
+
+### The Jacobian Determinant
+In univariate calculus, we used **$u$-substitution**^[<https://www.math.ucdavis.edu/~kouba/CalcTwoDIRECTORY/usubdirectory/USubstitution.html>] as the "inverse" of the **Chain Rule** for derivatives. As you should recall from multivariable calculus, the multi-dimensional version of $u$-substitution involves a matrix of derivatives in all possible directions. If you need a reminder on what **matrices**^[<https://en.wikipedia.org/wiki/Matrix_(mathematics)>] are or what a **determinant**^[<https://en.wikipedia.org/wiki/Determinant>] is, then I apologize that such material is beyond the scope of this text.
+
+Consider a function $f(x,y)$ that we are integrating with respect to both $x$ and $y$. When we change variables from $x,y$ to some other variables, say $u,v$, then we use the [Jacobian Determinant](https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant#Jacobian_determinant) as the value to substitute in the place of $dydx$ or $dxdy$ (we assume that they can be reversed). This determinant for two dimensions (including the absolute value to ensure that the area is always positive) is then:
+$$
+|\textbf{J}| \equiv \det\! \begin{bmatrix}
+  \frac{\partial x}{\partial u} & \frac{\partial x}{\partial v} \\
+  \frac{\partial y}{\partial u} & \frac{\partial y}{\partial v}
+\end{bmatrix} = 
+  \left| \frac{\partial x}{\partial u} \frac{\partial y}{\partial v} - \frac{\partial x}{\partial v} \frac{\partial y}{\partial u} \right|.
+$$
+
+</br>
+
+
+
+## The Gamma Function
+For a complex number $z = a + bi$ (except for the negative integers), the Weierstrass's Definition of the Gamma Function is 
+$$
+\Gamma(z) \equiv \frac{e^{-\gamma z}}{z} \prod_{n = 1}^{\infty} \left( 1 + \frac{z}{n} \right)^{-1} e^{\frac{z}{n}},
+$$
+where $\gamma \approx 0.577$ is the [Euler-Mascheroni constant](https://en.wikipedia.org/wiki/Euler%27s_constant). This is (in my experience) the most complex form of the Gamma function. In contrast, if $z$ can be written as a non-negative integer $n$, then we get the simplest form of all:
+$$
+\Gamma(n) \equiv (n - 1)!.
+$$
+
+However, we don't need the "most" or the "least" complex versions of this function. Instead, we need a version with the flexibility to handle any $z \in \mathbb{R}^+$, so we will dive deep into the "common form" of the Gamma Function:
+$$
+\Gamma(z) = \int_0^{\infty} t^{z - 1}e^{-t}dt,\ z \in \mathbb{R}^+.
+$$
+
+</br>
+
+
+
+## Integer Form of the Lower Incomplete Gamma Function
+Let $\alpha, x \in \mathbb{R}^+$. Then we define the **lower complete Gamma Function** as
+$$
+\gamma(\alpha,x) \equiv \int_0^x t^{\alpha - 1} e^{-t} dt.
+$$
+
+Now, restrict $\alpha \ni \alpha \in 0 \cup \mathbb{N}$, then we can "simplify" the above integral as
+$$
+\gamma(\alpha,x) = (\alpha - 1)! \left[ 1 - e^{-x} \sum_{k = 0}^{\alpha - 1} \frac{x^k}{k!} \right].
+$$
+
+The first result has stumped me. I have not been able to figure out how to prove it. So, even though I usually tell my students to "never give up", I'm giving up (for now) on trying to figure out how to prove this. Therefore, I am quoting the US [National Institute of Standards and Technology](https://www.nist.gov/)'s [Digital Library of Mathematical Functions](https://dlmf.nist.gov/), specifically [chapter 8, section 4](https://dlmf.nist.gov/8.4), equation 7. This book says that equation is true, and I'm just going to trust it.
+
+
+</br>
+
+
+
+## Product of Gamma Functions
+Let $a,b \in \mathbb{R}^+$. We will show that
+$$
+\Gamma(a) \times \Gamma(b) = \int_0^{\infty} \int_0^1 (uv)^{a - 1} (u - uv)^{b - 1} e^{-u} dvdu.
+$$
+
+**Proof**: First, we want to find another way to express the quantity $\Gamma(a) \times \Gamma(b)$, which is a product of single integrals, as a double integral. Notice that all the values with $t$ are constant with respect to $s$, and vice versa, so:
+$$
+\begin{aligned}
+\Gamma(a) \times \Gamma(b) &\equiv \left[ \int_0^{\infty} t^{a - 1} e^{-t} dt \right] \times \left[ \int_0^{\infty} s^{b - 1} e^{-s} ds \right] \\
+&= \int_0^{\infty} \int_0^{\infty} t^{a - 1} s^{b - 1} e^{-(t + s)} dtds.
+\end{aligned}
+$$
+
+Next, we want to transform from variables in $\mathbb{R}^+ \times \mathbb{R}^+$ to variables in $\mathbb{R}^+ \times (0,1)$. For our change of variables, we target the $\exp[-(t+s)]$ component first, because exponentials are more challenging to integrate than polynomials. So, let $u = t + s$. We know that $t,s \in \mathbb{R}^+$, so $u \in \mathbb{R}^+$.
+
+Now, the next variable, $v$, needs to have two properties: 1) $v \in (0,1)$, and 2) the product $uv$ needs to be a really simple polynomial. One candidate is $v = t/(t + s)$. For property (1), let's fix $s$ as any arbitrary value in $\mathbb{R}^+$. Now consider these limits (the second limit by L'Hospital's Rule):
+$$
+\begin{aligned}
+&\lim_{t\to 0} \frac{t}{t+s} = \frac{0}{s} = 0, \\
+&\lim_{t\to\infty} \frac{t}{t+s} = \lim_{t\to\infty} \frac{\frac{d}{dt} (t)}{\frac{d}{dt} (t + s)} = \lim_{t\to\infty} \frac{1}{1+0} = 1.
+\end{aligned}
+$$
+For property (2), we note that $uv = [t + s][t/(t + s)] = t$, which is a very simple polynomial.
+
+We change these variables, so
+$$
+v = \frac{t}{t + s} = \frac{t}{u} \Rightarrow t = uv.
+$$
+Moreover,
+$$
+u = t + s = uv + s \Rightarrow s = u - uv.
+$$
+
+Now, we find the **determinant** of the **Jacobian matrix**:
+$$
+\begin{aligned}
+|\textbf{J}| &\equiv \det\! \begin{bmatrix}
+  \frac{\partial t}{\partial u} & \frac{\partial t}{\partial v} \\
+  \frac{\partial s}{\partial u} & \frac{\partial s}{\partial v}
+\end{bmatrix} \\
+&= \det\! \begin{bmatrix}
+  \frac{\partial}{\partial u} (uv) & \frac{\partial}{\partial v} (uv) \\
+  \frac{\partial}{\partial u} (u - uv) & \frac{\partial}{\partial v} (u - uv)
+\end{bmatrix} \\
+&= \det\! \begin{bmatrix}
+  v & u \\
+  1 - v & -u
+\end{bmatrix} \\
+&= \left| (v)(-u) - (u)(1 - v) \right| \\
+&= \left| -uv - u + uv \right| \\
+&= u.
+\end{aligned}
+$$
+
+Therefore, taking $t = uv$, $s = u - uv$, and $dtds = udvdu$, we have
+$$
+\begin{aligned}
+\Gamma(a) \times \Gamma(b) &= \int_0^{\infty} \int_0^{\infty} t^{a - 1} s^{b - 1} e^{-(t + s)} dtds \\
+&= \int_{u = 0}^{\infty} \int_{v = 0}^1 [uv]^{a - 1} [u - uv]^{b - 1} e^{-[u]} [udvdu],
+\end{aligned}
+$$
+which completes our proof.
+
+
+</br>
+
+
+
+## The Complete Beta Function
+You may be thinking, "why did we just do all that changing of variables? We still have two integrals to deal with!" And you aren't wrong. However, this new double integral can be simplified to yield the [Complete Beta Function](https://en.wikipedia.org/wiki/Beta_function). Let's pick back up where we left off, and collect all the like terms together:
+$$
+\begin{aligned}
+\Gamma(a) \times \Gamma(b) &= \int_{u = 0}^{\infty} \int_{v = 0}^1 (uv)^{a - 1} [u(1 - v)]^{b - 1} e^{-u} udvdu \\
+&= \int_{u = 0}^{\infty} \int_{v = 0}^1 u^{a - 1} u^{b - 1} u^1 e^{-u} \times v^{a - 1} (1 - v)^{b - 1} dvdu \\
+&= \int_{u = 0}^{\infty} u^{a - 1 + b - 1 + 1} e^{-u} du \times \int_{v = 0}^1 v^{a - 1} (1 - v)^{b - 1} dv \\
+&= \int_{0}^{\infty} u^{a + b - 1} e^{-u} du \times \int_{0}^1 v^{a - 1} (1 - v)^{b - 1} dv \\
+&= \Gamma(a + b) \int_{0}^1 v^{a - 1} (1 - v)^{b - 1} dv \\
+\Longrightarrow \frac{\Gamma(a) \times \Gamma(b)}{\Gamma(a + b)} &= \int_{0}^1 v^{a - 1} (1 - v)^{b - 1} dv,
+\end{aligned}
+$$
+which is the definition of the Beta Function.
+
+
+</br>
+
+
+
+## Alternate form of the Beta Function over $\mathbb{R}^+$
+While the above form of the Beta Function over $(0,1)$ is useful, sometimes we need a variant which we can integrate over the entire positive real line (particularly for the Central $F$ Distribution). We will let
+$$
+t = \frac{1}{1 + s} \Rightarrow \frac{dt}{ds} = \frac{-1}{(1 + s)^2} \Rightarrow dt = -\frac{1}{(1 + s)^2}ds.
+$$
+Therefore,
+$$
+s = \frac{1}{t} - 1,\ t \in (0,1).
+$$
+
+For the bounds of integration, we have that as $t\to 0^+$, $s \to +\infty$.^[$t\to 0^+$ means "as $t$ approaches 0 from the right" (the positive side)] Also, as $t\to 1$, $s\to 0$. Thus,
+$$
+\begin{aligned}
+\frac{\Gamma(a) \times \Gamma(b)}{\Gamma(a + b)} &= \int_{t = 0}^1 t^{a - 1} (1 - t)^{b - 1} dt \\
+&= \int_{\infty}^{s = 0} \left[ \frac{1}{1 + s} \right]^{a - 1} \left[ 1 - \frac{1}{1 + s} \right]^{b - 1} \left[ -\frac{1}{(1 + s)^2}ds \right] \\
+&= (-1) \int_{s = 0}^{\infty} \frac{1}{(1 + s)^{a - 1}} \frac{1}{(1 + s)^2} \left[ \frac{1 + s}{1 + s} - \frac{1}{1 + s} \right]^{b - 1} (-1) ds \\
+&= \int_{s = 0}^{\infty} \frac{1}{(1 + s)^{a + 1}} \left[ \frac{s}{1 + s} \right]^{b - 1} ds \\
+&= \int_{s = 0}^{\infty} \frac{1}{(1 + s)^{a + 1}} \frac{s^{b - 1}}{(1 + s)^{b - 1}} ds \\
+&= \int_{s = 0}^{\infty} \frac{s^{b - 1}}{(1 + s)^{a + b}} ds.
+\end{aligned}
+$$
+
+
+</br>
+
+
+
+## The Gamma Difference Equation
+
+
+</br>
+
+
+
+## Footnotes
+

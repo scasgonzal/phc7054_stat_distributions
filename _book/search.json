@@ -24,7 +24,7 @@
     "href": "chapters/bernoulli_20250310.html#deriving-the-distribution",
     "title": "1  The Bernoulli Distribution",
     "section": "",
-    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.\n\n\n1.1.1 An Example Sample from the Bernoulli Distribution\nNow let’s use R to take \\(n = 100\\) random samples from a Bernoulli Distribution with \\(p = 0.35\\), but we will only inspect the first five (for now):\n\nmyBernSample &lt;- rbinom(n = 100, size = 1, prob = 0.35)\nmyBernSample[1:5]\n[1] 1 0 0 1 0\n\nWe now pretend that we only know the results for the first five coin flips. We have flipped one coin five times, with the results \\(\\{\\)Heads, Tails, Heads, Tails, Tails\\(\\}\\).",
+    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.\n\n\n1.1.1 An Example Sample from the Bernoulli Distribution\nNow let’s use R to take \\(n = 100\\) random samples from a Bernoulli Distribution with \\(p = 0.35\\), but we will only inspect the first five (for now):\n\nmyBernSample &lt;- rbinom(n = 100, size = 1, prob = 0.35)\nmyBernSample[1:5]\n[1] 1 0 1 0 1\n\nWe now pretend that we only know the results for the first five coin flips. We have flipped one coin five times, with the results \\(\\{\\)Heads, Tails, Heads, Tails, Tails\\(\\}\\).",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
     ]
@@ -474,7 +474,7 @@
     "href": "chapters/exponential_20250310.html#method-of-moments-estimates-from-observed-data",
     "title": "5  The Exponential Distribution",
     "section": "5.6 Method of Moments Estimates from Observed Data",
-    "text": "5.6 Method of Moments Estimates from Observed Data\nLet’s generate some random data. We continue our “clinic” example, and now we generate 7 “waiting times” until the first patient walks in. For a single experiment, that is, when we first open the clinic, how long will we have to wait for the first patient to arrive? Let’s assume the same rate of \\(\\lambda = 5\\) for one hour that we used in the previous lesson. We can generate data (in fractional hours) by\n\n\nCode\nset.seed(20150516)\n\nnTrials_int &lt;- 7L\nrate_num &lt;- 5\nExpt_num &lt;- rexp(n = nTrials_int, rate = rate_num)\nExpt_num\n[1] 0.03635 0.00557 0.27411 0.00179 0.21331 0.20857 0.27598\nExpt_num * 60\n[1]  2.181  0.334 16.446  0.108 12.798 12.514 16.559\n\n\nSo, for these 7 independent trials where the waiting times \\(T\\) have an identical Exponential distribution with rate of 5 patients per hour, we wait 2.2, 0.3, 16.4, 0.1, 12.8, 12.5, 16.6 minutes to see the first patient.\n\n5.6.1 \\(\\mathbb{E}[k]\\)\nConsider \\[\n\\begin{aligned}\nM_t(s) &= \\lambda(\\lambda - s)^{-1} \\\\\n\\Longrightarrow M_t^{\\prime}(s) &= \\frac{d}{ds} \\lambda(\\lambda - s)^{-1} \\\\\n&= -\\lambda(\\lambda - s)^{-2}(-1) \\\\\n&= \\lambda(\\lambda - s)^{-2} \\\\\n\\Longrightarrow M_t^{\\prime}(0) &= \\frac{\\lambda}{(\\lambda - [0])^2} \\\\\n&= \\frac{1}{\\lambda} \\\\\n&= \\mathbb{E}[t].\n\\end{aligned}\n\\]\n\n\n5.6.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\nWe continue: \\[\n\\begin{aligned}\nM^{\\prime}_t(s) &= \\lambda(\\lambda - s)^{-2} \\\\\n\\Longrightarrow M^{\\prime\\prime}_t(s) &= \\frac{d}{ds} \\lambda(\\lambda - s)^{-2} \\\\\n&= -2\\lambda(\\lambda - s)^{-3}(-1) \\\\\n&= \\frac{2\\lambda}{(\\lambda - s)^3} \\\\\n\\Longrightarrow M^{\\prime\\prime}_t(0) &= \\frac{2\\lambda}{(\\lambda - [0])^3} \\\\\n&= \\frac{2}{\\lambda^2} \\\\\n&= \\mathbb{E}[t^2].\n\\end{aligned}\n\\]\nThen, \\[\n\\text{Var}[t] = \\mathbb{E}[t^2] - \\left[\\mathbb{E}[t]\\right]^2 = \\frac{2}{\\lambda^2} - \\left[\\frac{1}{\\lambda}\\right]^2 = \\frac{1}{\\lambda^2}.\n\\]\n\n\n5.6.3 Solving the System\nWe then have that \\(\\bar{x} = \\frac{1}{\\lambda}\\) and \\(s^2 = \\frac{1}{\\lambda^2}\\), which is an overdetermined system. For the Exponential Distribution, once we know the mean, then we should also know the variance. For our sample, generated from an Exponential with rate \\(\\lambda = 5\\), \\(\\hat{\\lambda}_{\\text{MoM}}\\) = 6.892. It’s worth noting that the Method of Moments estimate for this distribution requires a very large number of samples before it is “close” to the true value (the Maximum Likelihood estimator is the same, as we’ll see next).",
+    "text": "5.6 Method of Moments Estimates from Observed Data\nLet’s generate some random data. We continue our “clinic” example, and now we generate 7 “waiting times” until the first patient walks in. For a single experiment, that is, when we first open the clinic, how long will we have to wait for the first patient to arrive? Let’s assume the same rate of \\(\\lambda = 5\\) for one hour that we used in the previous lesson. We can generate data (in fractional hours) by\n\n\nCode\nset.seed(20150516)\n\nnTrials_int &lt;- 7L\nrate_num &lt;- 5\nExpt_num &lt;- rexp(n = nTrials_int, rate = rate_num)\nExpt_num\n[1] 0.03635 0.00557 0.27411 0.00179 0.21331 0.20857 0.27598\nExpt_num * 60\n[1]  2.181  0.334 16.446  0.108 12.798 12.514 16.559\n\n\nSo, for these 7 independent trials where the waiting times \\(T\\) have an identical Exponential distribution with rate of 5 patients per hour, we wait 2.2, 0.3, 16.4, 0.1, 12.8, 12.5, 16.6 minutes to see the first patient.\n\n5.6.1 \\(\\mathbb{E}[k]\\)\nConsider \\[\n\\begin{aligned}\nM_t(s) &= \\lambda(\\lambda - s)^{-1} \\\\\n\\Longrightarrow M_t^{\\prime}(s) &= \\frac{d}{ds} \\lambda(\\lambda - s)^{-1} \\\\\n&= -\\lambda(\\lambda - s)^{-2}(-1) \\\\\n&= \\lambda(\\lambda - s)^{-2} \\\\\n\\Longrightarrow M_t^{\\prime}(0) &= \\frac{\\lambda}{(\\lambda - [0])^2} \\\\\n&= \\frac{1}{\\lambda} \\\\\n&= \\mathbb{E}[t].\n\\end{aligned}\n\\]\n\n\n5.6.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\nWe continue: \\[\n\\begin{aligned}\nM^{\\prime}_t(s) &= \\lambda(\\lambda - s)^{-2} \\\\\n\\Longrightarrow M^{\\prime\\prime}_t(s) &= \\frac{d}{ds} \\lambda(\\lambda - s)^{-2} \\\\\n&= -2\\lambda(\\lambda - s)^{-3}(-1) \\\\\n&= \\frac{2\\lambda}{(\\lambda - s)^3} \\\\\n\\Longrightarrow M^{\\prime\\prime}_t(0) &= \\frac{2\\lambda}{(\\lambda - [0])^3} \\\\\n&= \\frac{2}{\\lambda^2} \\\\\n&= \\mathbb{E}[t^2].\n\\end{aligned}\n\\]\nThen, \\[\n\\text{Var}[t] = \\mathbb{E}[t^2] - \\left[\\mathbb{E}[t]\\right]^2 = \\frac{2}{\\lambda^2} - \\left[\\frac{1}{\\lambda}\\right]^2 = \\frac{1}{\\lambda^2}.\n\\]\n\n\n5.6.3 Solving the System\nWe then have that \\(\\bar{x} = \\frac{1}{\\lambda}\\) and \\(s^2 = \\frac{1}{\\lambda^2}\\), which is an overdetermined system (with \\(\\hat{\\lambda}_{\\text{MoM}} = \\frac{1}{\\bar{t}}\\)). For the Exponential Distribution, once we know the mean, then we should also know the variance. For our sample, generated from an Exponential with rate \\(\\lambda = 5\\), \\(\\hat{\\lambda}_{\\text{MoM}}\\) = 6.892. It’s worth noting that the Method of Moments estimate for this distribution requires a very large number of samples before it is “close” to the true value (the Maximum Likelihood estimator is the same, as we’ll see next).",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>The Exponential Distribution</span>"
     ]
@@ -510,423 +510,543 @@
     ]
   },
   {
+    "objectID": "chapters/theory_gamma_function_20250707.html",
+    "href": "chapters/theory_gamma_function_20250707.html",
+    "title": "6  Formal Foundations: The Gamma and Beta Functions",
+    "section": "",
+    "text": "6.1 Overview\nAs we mentioned in the Negative Binomial lesson, we could spend literal weeks discussing and proving the many properties of the Gamma Function (and its relative the Beta Function). Instead, we will try to distill the most important properties of these functions that are necessary for us to derive and prove properties of the Gamma, Beta, \\(\\chi^2\\), Student’s \\(t\\), and Central \\(F\\) distributions. As we saw previously, the Gamma Function is one (of potentially many) smooth interpolations between the values of \\(x!\\) evaluated at each non-negative integer.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Formal Foundations: The Gamma and Beta Functions</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/theory_gamma_function_20250707.html#formal-foundations-of-foundations",
+    "href": "chapters/theory_gamma_function_20250707.html#formal-foundations-of-foundations",
+    "title": "6  Formal Foundations: The Gamma and Beta Functions",
+    "section": "6.2 Formal Foundations (of Foundations)",
+    "text": "6.2 Formal Foundations (of Foundations)\nYes, I know this entire chapter is already dedicated to “math foundations”, but we have to go deeper (insert Inception joke here). We need some foundations to our foundations.\n\n6.2.1 L’Hospital’s Rule\nIf we have the limit of a ratio of functions, where the ratio of the numerator and denominator yield an indeterminant form1, then we can apply L’Hospital’s Rule to simplify the limit. Consider \\[\n\\lim_{x \\to c} \\frac{f(x)}{g(x)}.\n\\]\nWe need four conditions to hold before we can apply L’Hospital’s Rule:\n\nThe ratio must have an indeterminant form of the same value in the numerator and denominator (such as \\(0/0\\) or \\(\\infty/\\infty\\)).\nThe derivatives of \\(f\\) and \\(g\\) must exist in a neighbourhood of the point \\(c\\), but not necessarily at the point \\(c\\) itself.\nThe derivative of \\(g\\) must not equal 0 in this neighbourhood of the point \\(c\\), except potentially at the point \\(c\\) itself.\nThe ratio of the derivatives of \\(f\\) and \\(g\\) (not the derivative of the ratio) must exist at the point \\(c\\) (even if we can’t find it immediately).\n\nIF all four conditions hold, then \\[\n\\lim_{x \\to c} \\frac{f(x)}{g(x)} = \\lim_{x \\to c} \\frac{f^{\\prime}(x)}{g^{\\prime}(x)}.\n\\]\n\n\n6.2.2 The Jacobian Determinant\nIn univariate calculus, we used \\(u\\)-substitution2 as the “inverse” of the Chain Rule for derivatives. As you should recall from multivariable calculus, the multi-dimensional version of \\(u\\)-substitution involves a matrix of derivatives in all possible directions. If you need a reminder on what matrices3 are or what a determinant4 is, then I apologize that such material is beyond the scope of this text.\nConsider a function \\(f(x,y)\\) that we are integrating with respect to both \\(x\\) and \\(y\\). When we change variables from \\(x,y\\) to some other variables, say \\(u,v\\), then we use the Jacobian Determinant as the value to substitute in the place of \\(dydx\\) or \\(dxdy\\) (we assume that they can be reversed). This determinant for two dimensions (including the absolute value to ensure that the area is always positive) is then: \\[\n|\\textbf{J}| \\equiv \\det\\! \\begin{bmatrix}\n  \\frac{\\partial x}{\\partial u} & \\frac{\\partial x}{\\partial v} \\\\\n  \\frac{\\partial y}{\\partial u} & \\frac{\\partial y}{\\partial v}\n\\end{bmatrix} =\n  \\left| \\frac{\\partial x}{\\partial u} \\frac{\\partial y}{\\partial v} - \\frac{\\partial x}{\\partial v} \\frac{\\partial y}{\\partial u} \\right|.\n\\]",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Formal Foundations: The Gamma and Beta Functions</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/theory_gamma_function_20250707.html#the-gamma-function",
+    "href": "chapters/theory_gamma_function_20250707.html#the-gamma-function",
+    "title": "6  Formal Foundations: The Gamma and Beta Functions",
+    "section": "6.3 The Gamma Function",
+    "text": "6.3 The Gamma Function\nFor a complex number \\(z = a + bi\\) (except for the negative integers), the Weierstrass’s Definition of the Gamma Function is \\[\n\\Gamma(z) \\equiv \\frac{e^{-\\gamma z}}{z} \\prod_{n = 1}^{\\infty} \\left( 1 + \\frac{z}{n} \\right)^{-1} e^{\\frac{z}{n}},\n\\] where \\(\\gamma \\approx 0.577\\) is the Euler-Mascheroni constant. This is (in my experience) the most complex form of the Gamma function. In contrast, if \\(z\\) can be written as a non-negative integer \\(n\\), then we get the simplest form of all: \\[\n\\Gamma(n) \\equiv (n - 1)!.\n\\]\nHowever, we don’t need the “most” or the “least” complex versions of this function. Instead, we need a version with the flexibility to handle any \\(z \\in \\mathbb{R}^+\\), so we will dive deep into the “common form” of the Gamma Function: \\[\n\\Gamma(z) = \\int_0^{\\infty} t^{z - 1}e^{-t}dt,\\ z \\in \\mathbb{R}^+.\n\\]",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Formal Foundations: The Gamma and Beta Functions</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/theory_gamma_function_20250707.html#integer-form-of-the-lower-incomplete-gamma-function",
+    "href": "chapters/theory_gamma_function_20250707.html#integer-form-of-the-lower-incomplete-gamma-function",
+    "title": "6  Formal Foundations: The Gamma and Beta Functions",
+    "section": "6.4 Integer Form of the Lower Incomplete Gamma Function",
+    "text": "6.4 Integer Form of the Lower Incomplete Gamma Function\nLet \\(\\alpha, x \\in \\mathbb{R}^+\\). Then we define the lower complete Gamma Function as \\[\n\\gamma(\\alpha,x) \\equiv \\int_0^x t^{\\alpha - 1} e^{-t} dt.\n\\]\nNow, restrict \\(\\alpha \\ni \\alpha \\in 0 \\cup \\mathbb{N}\\), then we can “simplify” the above integral as \\[\n\\gamma(\\alpha,x) = (\\alpha - 1)! \\left[ 1 - e^{-x} \\sum_{k = 0}^{\\alpha - 1} \\frac{x^k}{k!} \\right].\n\\]\nThe first result has stumped me. I have not been able to figure out how to prove it. So, even though I usually tell my students to “never give up”, I’m giving up (for now) on trying to figure out how to prove this. Therefore, I am quoting the US National Institute of Standards and Technology’s Digital Library of Mathematical Functions, specifically chapter 8, section 4, equation 7. This book says that equation is true, and I’m just going to trust it.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Formal Foundations: The Gamma and Beta Functions</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/theory_gamma_function_20250707.html#product-of-gamma-functions",
+    "href": "chapters/theory_gamma_function_20250707.html#product-of-gamma-functions",
+    "title": "6  Formal Foundations: The Gamma and Beta Functions",
+    "section": "6.5 Product of Gamma Functions",
+    "text": "6.5 Product of Gamma Functions\nLet \\(a,b \\in \\mathbb{R}^+\\). We will show that \\[\n\\Gamma(a) \\times \\Gamma(b) = \\int_0^{\\infty} \\int_0^1 (uv)^{a - 1} (u - uv)^{b - 1} e^{-u} dvdu.\n\\]\nProof: First, we want to find another way to express the quantity \\(\\Gamma(a) \\times \\Gamma(b)\\), which is a product of single integrals, as a double integral. Notice that all the values with \\(t\\) are constant with respect to \\(s\\), and vice versa, so: \\[\n\\begin{aligned}\n\\Gamma(a) \\times \\Gamma(b) &\\equiv \\left[ \\int_0^{\\infty} t^{a - 1} e^{-t} dt \\right] \\times \\left[ \\int_0^{\\infty} s^{b - 1} e^{-s} ds \\right] \\\\\n&= \\int_0^{\\infty} \\int_0^{\\infty} t^{a - 1} s^{b - 1} e^{-(t + s)} dtds.\n\\end{aligned}\n\\]\nNext, we want to transform from variables in \\(\\mathbb{R}^+ \\times \\mathbb{R}^+\\) to variables in \\(\\mathbb{R}^+ \\times (0,1)\\). For our change of variables, we target the \\(\\exp[-(t+s)]\\) component first, because exponentials are more challenging to integrate than polynomials. So, let \\(u = t + s\\). We know that \\(t,s \\in \\mathbb{R}^+\\), so \\(u \\in \\mathbb{R}^+\\).\nNow, the next variable, \\(v\\), needs to have two properties: 1) \\(v \\in (0,1)\\), and 2) the product \\(uv\\) needs to be a really simple polynomial. One candidate is \\(v = t/(t + s)\\). For property (1), let’s fix \\(s\\) as any arbitrary value in \\(\\mathbb{R}^+\\). Now consider these limits (the second limit by L’Hospital’s Rule): \\[\n\\begin{aligned}\n&\\lim_{t\\to 0} \\frac{t}{t+s} = \\frac{0}{s} = 0, \\\\\n&\\lim_{t\\to\\infty} \\frac{t}{t+s} = \\lim_{t\\to\\infty} \\frac{\\frac{d}{dt} (t)}{\\frac{d}{dt} (t + s)} = \\lim_{t\\to\\infty} \\frac{1}{1+0} = 1.\n\\end{aligned}\n\\] For property (2), we note that \\(uv = [t + s][t/(t + s)] = t\\), which is a very simple polynomial.\nWe change these variables, so \\[\nv = \\frac{t}{t + s} = \\frac{t}{u} \\Rightarrow t = uv.\n\\] Moreover, \\[\nu = t + s = uv + s \\Rightarrow s = u - uv.\n\\]\nNow, we find the determinant of the Jacobian matrix: \\[\n\\begin{aligned}\n|\\textbf{J}| &\\equiv \\det\\! \\begin{bmatrix}\n  \\frac{\\partial t}{\\partial u} & \\frac{\\partial t}{\\partial v} \\\\\n  \\frac{\\partial s}{\\partial u} & \\frac{\\partial s}{\\partial v}\n\\end{bmatrix} \\\\\n&= \\det\\! \\begin{bmatrix}\n  \\frac{\\partial}{\\partial u} (uv) & \\frac{\\partial}{\\partial v} (uv) \\\\\n  \\frac{\\partial}{\\partial u} (u - uv) & \\frac{\\partial}{\\partial v} (u - uv)\n\\end{bmatrix} \\\\\n&= \\det\\! \\begin{bmatrix}\n  v & u \\\\\n  1 - v & -u\n\\end{bmatrix} \\\\\n&= \\left| (v)(-u) - (u)(1 - v) \\right| \\\\\n&= \\left| -uv - u + uv \\right| \\\\\n&= u.\n\\end{aligned}\n\\]\nTherefore, taking \\(t = uv\\), \\(s = u - uv\\), and \\(dtds = udvdu\\), we have \\[\n\\begin{aligned}\n\\Gamma(a) \\times \\Gamma(b) &= \\int_0^{\\infty} \\int_0^{\\infty} t^{a - 1} s^{b - 1} e^{-(t + s)} dtds \\\\\n&= \\int_{u = 0}^{\\infty} \\int_{v = 0}^1 [uv]^{a - 1} [u - uv]^{b - 1} e^{-[u]} [udvdu],\n\\end{aligned}\n\\] which completes our proof.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Formal Foundations: The Gamma and Beta Functions</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/theory_gamma_function_20250707.html#the-complete-beta-function",
+    "href": "chapters/theory_gamma_function_20250707.html#the-complete-beta-function",
+    "title": "6  Formal Foundations: The Gamma and Beta Functions",
+    "section": "6.6 The Complete Beta Function",
+    "text": "6.6 The Complete Beta Function\nYou may be thinking, “why did we just do all that changing of variables? We still have two integrals to deal with!” And you aren’t wrong. However, this new double integral can be simplified to yield the Complete Beta Function. Let’s pick back up where we left off, and collect all the like terms together: \\[\n\\begin{aligned}\n\\Gamma(a) \\times \\Gamma(b) &= \\int_{u = 0}^{\\infty} \\int_{v = 0}^1 (uv)^{a - 1} [u(1 - v)]^{b - 1} e^{-u} udvdu \\\\\n&= \\int_{u = 0}^{\\infty} \\int_{v = 0}^1 u^{a - 1} u^{b - 1} u^1 e^{-u} \\times v^{a - 1} (1 - v)^{b - 1} dvdu \\\\\n&= \\int_{u = 0}^{\\infty} u^{a - 1 + b - 1 + 1} e^{-u} du \\times \\int_{v = 0}^1 v^{a - 1} (1 - v)^{b - 1} dv \\\\\n&= \\int_{0}^{\\infty} u^{a + b - 1} e^{-u} du \\times \\int_{0}^1 v^{a - 1} (1 - v)^{b - 1} dv \\\\\n&= \\Gamma(a + b) \\int_{0}^1 v^{a - 1} (1 - v)^{b - 1} dv \\\\\n\\Longrightarrow \\frac{\\Gamma(a) \\times \\Gamma(b)}{\\Gamma(a + b)} &= \\int_{0}^1 v^{a - 1} (1 - v)^{b - 1} dv,\n\\end{aligned}\n\\] which is the definition of the Beta Function.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Formal Foundations: The Gamma and Beta Functions</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/theory_gamma_function_20250707.html#alternate-form-of-the-beta-function-over-mathbbr",
+    "href": "chapters/theory_gamma_function_20250707.html#alternate-form-of-the-beta-function-over-mathbbr",
+    "title": "6  Formal Foundations: The Gamma and Beta Functions",
+    "section": "6.7 Alternate form of the Beta Function over \\(\\mathbb{R}^+\\)",
+    "text": "6.7 Alternate form of the Beta Function over \\(\\mathbb{R}^+\\)\nWhile the above form of the Beta Function over \\((0,1)\\) is useful, sometimes we need a variant which we can integrate over the entire positive real line (particularly for the Central \\(F\\) Distribution). We will let \\[\nt = \\frac{1}{1 + s} \\Rightarrow \\frac{dt}{ds} = \\frac{-1}{(1 + s)^2} \\Rightarrow dt = -\\frac{1}{(1 + s)^2}ds.\n\\] Therefore, \\[\ns = \\frac{1}{t} - 1,\\ t \\in (0,1).\n\\]\nFor the bounds of integration, we have that as \\(t\\to 0^+\\), \\(s \\to +\\infty\\).5 Also, as \\(t\\to 1\\), \\(s\\to 0\\). Thus, \\[\n\\begin{aligned}\n\\frac{\\Gamma(a) \\times \\Gamma(b)}{\\Gamma(a + b)} &= \\int_{t = 0}^1 t^{a - 1} (1 - t)^{b - 1} dt \\\\\n&= \\int_{\\infty}^{s = 0} \\left[ \\frac{1}{1 + s} \\right]^{a - 1} \\left[ 1 - \\frac{1}{1 + s} \\right]^{b - 1} \\left[ -\\frac{1}{(1 + s)^2}ds \\right] \\\\\n&= (-1) \\int_{s = 0}^{\\infty} \\frac{1}{(1 + s)^{a - 1}} \\frac{1}{(1 + s)^2} \\left[ \\frac{1 + s}{1 + s} - \\frac{1}{1 + s} \\right]^{b - 1} (-1) ds \\\\\n&= \\int_{s = 0}^{\\infty} \\frac{1}{(1 + s)^{a + 1}} \\left[ \\frac{s}{1 + s} \\right]^{b - 1} ds \\\\\n&= \\int_{s = 0}^{\\infty} \\frac{1}{(1 + s)^{a + 1}} \\frac{s^{b - 1}}{(1 + s)^{b - 1}} ds \\\\\n&= \\int_{s = 0}^{\\infty} \\frac{s^{b - 1}}{(1 + s)^{a + b}} ds.\n\\end{aligned}\n\\]",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Formal Foundations: The Gamma and Beta Functions</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/theory_gamma_function_20250707.html#the-gamma-difference-equation",
+    "href": "chapters/theory_gamma_function_20250707.html#the-gamma-difference-equation",
+    "title": "6  Formal Foundations: The Gamma and Beta Functions",
+    "section": "6.8 The Gamma Difference Equation",
+    "text": "6.8 The Gamma Difference Equation",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Formal Foundations: The Gamma and Beta Functions</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/theory_gamma_function_20250707.html#footnotes",
+    "href": "chapters/theory_gamma_function_20250707.html#footnotes",
+    "title": "6  Formal Foundations: The Gamma and Beta Functions",
+    "section": "",
+    "text": "https://en.wikipedia.org/wiki/Indeterminate_form↩︎\nhttps://www.math.ucdavis.edu/~kouba/CalcTwoDIRECTORY/usubdirectory/USubstitution.html↩︎\nhttps://en.wikipedia.org/wiki/Matrix_(mathematics)↩︎\nhttps://en.wikipedia.org/wiki/Determinant↩︎\n\\(t\\to 0^+\\) means “as \\(t\\) approaches 0 from the right” (the positive side)↩︎",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Formal Foundations: The Gamma and Beta Functions</span>"
+    ]
+  },
+  {
     "objectID": "chapters/gamma_20250310.html",
     "href": "chapters/gamma_20250310.html",
-    "title": "6  The Gamma Distribution",
+    "title": "7  The Gamma Distribution",
     "section": "",
-    "text": "6.1 Deriving the Distribution",
+    "text": "7.1 Deriving the Distribution, Overview",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/gamma_20250310.html#formal-foundations",
+    "href": "chapters/gamma_20250310.html#formal-foundations",
+    "title": "7  The Gamma Distribution",
+    "section": "7.2 Formal Foundations",
+    "text": "7.2 Formal Foundations\n\n7.2.1 Leibniz’ Integral Rule\n\n\n7.2.2 Integrating like a Statistician",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/gamma_20250310.html#deriving-the-distribution-the-erlang-distribution",
+    "href": "chapters/gamma_20250310.html#deriving-the-distribution-the-erlang-distribution",
+    "title": "7  The Gamma Distribution",
+    "section": "7.3 Deriving the Distribution: The Erlang Distribution",
+    "text": "7.3 Deriving the Distribution: The Erlang Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/gamma_20250310.html#deriving-the-distribution-the-gamma-distribution",
+    "href": "chapters/gamma_20250310.html#deriving-the-distribution-the-gamma-distribution",
+    "title": "7  The Gamma Distribution",
+    "section": "7.4 Deriving the Distribution: The Gamma Distribution",
+    "text": "7.4 Deriving the Distribution: The Gamma Distribution",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/gamma_20250310.html#example-random-samples",
     "href": "chapters/gamma_20250310.html#example-random-samples",
-    "title": "6  The Gamma Distribution",
-    "section": "6.2 Example Random Samples",
-    "text": "6.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxSymm &lt;- rgamma(n = 500, shape = 10, scale = 1)\nsamplesSymm_ls &lt;- list(\n  n5   = xSymm[1:5],\n  n30  = xSymm[1:30],\n  n60  = xSymm[1:60],\n  n500 = xSymm\n)\n\nxSkew &lt;- rgamma(n = 500, shape = 0.9, scale = 3)\nsamplesSkew_ls &lt;- list(\n  n5   = xSkew[1:5],\n  n30  = xSkew[1:30],\n  n60  = xSkew[1:60],\n  n500 = xSkew\n)\n\nrange_num &lt;- range(c(xSymm, xSkew))\n\nrm(xSymm, xSkew)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSymm_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSkew_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
+    "title": "7  The Gamma Distribution",
+    "section": "7.5 Example Random Samples",
+    "text": "7.5 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxSymm &lt;- rgamma(n = 500, shape = 10, scale = 1)\nsamplesSymm_ls &lt;- list(\n  n5   = xSymm[1:5],\n  n30  = xSymm[1:30],\n  n60  = xSymm[1:60],\n  n500 = xSymm\n)\n\nxSkew &lt;- rgamma(n = 500, shape = 0.9, scale = 3)\nsamplesSkew_ls &lt;- list(\n  n5   = xSkew[1:5],\n  n30  = xSkew[1:30],\n  n60  = xSkew[1:60],\n  n500 = xSkew\n)\n\nrange_num &lt;- range(c(xSymm, xSkew))\n\nrm(xSymm, xSkew)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSymm_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSkew_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/gamma_20250310.html#show-that-this-is-a-distribution",
     "href": "chapters/gamma_20250310.html#show-that-this-is-a-distribution",
-    "title": "6  The Gamma Distribution",
-    "section": "6.3 Show that this is a Distribution",
-    "text": "6.3 Show that this is a Distribution",
+    "title": "7  The Gamma Distribution",
+    "section": "7.6 Show that this is a Distribution",
+    "text": "7.6 Show that this is a Distribution",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/gamma_20250310.html#derive-the-moment-generating-function",
     "href": "chapters/gamma_20250310.html#derive-the-moment-generating-function",
-    "title": "6  The Gamma Distribution",
-    "section": "6.4 Derive the Moment Generating Function",
-    "text": "6.4 Derive the Moment Generating Function",
+    "title": "7  The Gamma Distribution",
+    "section": "7.7 Derive the Moment Generating Function",
+    "text": "7.7 Derive the Moment Generating Function",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/gamma_20250310.html#method-of-moments-estimates-from-observed-data",
     "href": "chapters/gamma_20250310.html#method-of-moments-estimates-from-observed-data",
-    "title": "6  The Gamma Distribution",
-    "section": "6.5 Method of Moments Estimates from Observed Data",
-    "text": "6.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n6.5.1 \\(\\mathbb{E}[k]\\)\n\n\n6.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n6.5.3 Solving the System",
+    "title": "7  The Gamma Distribution",
+    "section": "7.8 Method of Moments Estimates from Observed Data",
+    "text": "7.8 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n7.8.1 \\(\\mathbb{E}[k]\\)\n\n\n7.8.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n7.8.3 Solving the System",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/gamma_20250310.html#maximum-likelihood-estimators",
     "href": "chapters/gamma_20250310.html#maximum-likelihood-estimators",
-    "title": "6  The Gamma Distribution",
-    "section": "6.6 Maximum Likelihood Estimators",
-    "text": "6.6 Maximum Likelihood Estimators",
+    "title": "7  The Gamma Distribution",
+    "section": "7.9 Maximum Likelihood Estimators",
+    "text": "7.9 Maximum Likelihood Estimators",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/gamma_20250310.html#exercises",
     "href": "chapters/gamma_20250310.html#exercises",
-    "title": "6  The Gamma Distribution",
-    "section": "6.7 Exercises",
-    "text": "6.7 Exercises",
+    "title": "7  The Gamma Distribution",
+    "section": "7.10 Exercises",
+    "text": "7.10 Exercises",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>The Gamma Distribution</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/beta_20250310.html",
     "href": "chapters/beta_20250310.html",
-    "title": "7  The Beta Distribution",
+    "title": "8  The Beta Distribution",
     "section": "",
-    "text": "7.1 Deriving the Distribution",
+    "text": "8.1 Deriving the Distribution",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Beta Distribution</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Beta Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/beta_20250310.html#example-random-samples",
     "href": "chapters/beta_20250310.html#example-random-samples",
-    "title": "7  The Beta Distribution",
-    "section": "7.2 Example Random Samples",
-    "text": "7.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxSymm &lt;- rbeta(n = 500, shape1 = 10, shape2 = 10)\nsamplesSymm_ls &lt;- list(\n  n10  = xSymm[1:10],\n  n30  = xSymm[1:30],\n  n60  = xSymm[1:60],\n  n500 = xSymm\n)\n\nxSkew &lt;- rbeta(n = 500, shape1 = 5, shape2 = 1.5)\nsamplesSkew_ls &lt;- list(\n  n10  = xSkew[1:10],\n  n30  = xSkew[1:30],\n  n60  = xSkew[1:60],\n  n500 = xSkew\n)\n\nrange_num &lt;- c(0, 1)\n\nrm(xSymm, xSkew)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSymm_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSkew_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
+    "title": "8  The Beta Distribution",
+    "section": "8.2 Example Random Samples",
+    "text": "8.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxSymm &lt;- rbeta(n = 500, shape1 = 10, shape2 = 10)\nsamplesSymm_ls &lt;- list(\n  n10  = xSymm[1:10],\n  n30  = xSymm[1:30],\n  n60  = xSymm[1:60],\n  n500 = xSymm\n)\n\nxSkew &lt;- rbeta(n = 500, shape1 = 5, shape2 = 1.5)\nsamplesSkew_ls &lt;- list(\n  n10  = xSkew[1:10],\n  n30  = xSkew[1:30],\n  n60  = xSkew[1:60],\n  n500 = xSkew\n)\n\nrange_num &lt;- c(0, 1)\n\nrm(xSymm, xSkew)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSymm_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSkew_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Beta Distribution</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Beta Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/beta_20250310.html#show-that-this-is-a-distribution",
     "href": "chapters/beta_20250310.html#show-that-this-is-a-distribution",
-    "title": "7  The Beta Distribution",
-    "section": "7.3 Show that this is a Distribution",
-    "text": "7.3 Show that this is a Distribution",
+    "title": "8  The Beta Distribution",
+    "section": "8.3 Show that this is a Distribution",
+    "text": "8.3 Show that this is a Distribution",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Beta Distribution</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Beta Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/beta_20250310.html#derive-the-moment-generating-function",
     "href": "chapters/beta_20250310.html#derive-the-moment-generating-function",
-    "title": "7  The Beta Distribution",
-    "section": "7.4 Derive the Moment Generating Function",
-    "text": "7.4 Derive the Moment Generating Function",
+    "title": "8  The Beta Distribution",
+    "section": "8.4 Derive the Moment Generating Function",
+    "text": "8.4 Derive the Moment Generating Function",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Beta Distribution</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Beta Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/beta_20250310.html#method-of-moments-estimates-from-observed-data",
     "href": "chapters/beta_20250310.html#method-of-moments-estimates-from-observed-data",
-    "title": "7  The Beta Distribution",
-    "section": "7.5 Method of Moments Estimates from Observed Data",
-    "text": "7.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n7.5.1 \\(\\mathbb{E}[k]\\)\n\n\n7.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n7.5.3 Solving the System",
+    "title": "8  The Beta Distribution",
+    "section": "8.5 Method of Moments Estimates from Observed Data",
+    "text": "8.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n8.5.1 \\(\\mathbb{E}[k]\\)\n\n\n8.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n8.5.3 Solving the System",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Beta Distribution</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Beta Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/beta_20250310.html#maximum-likelihood-estimators",
     "href": "chapters/beta_20250310.html#maximum-likelihood-estimators",
-    "title": "7  The Beta Distribution",
-    "section": "7.6 Maximum Likelihood Estimators",
-    "text": "7.6 Maximum Likelihood Estimators",
+    "title": "8  The Beta Distribution",
+    "section": "8.6 Maximum Likelihood Estimators",
+    "text": "8.6 Maximum Likelihood Estimators",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Beta Distribution</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Beta Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/beta_20250310.html#exercises",
     "href": "chapters/beta_20250310.html#exercises",
-    "title": "7  The Beta Distribution",
-    "section": "7.7 Exercises",
-    "text": "7.7 Exercises",
+    "title": "8  The Beta Distribution",
+    "section": "8.7 Exercises",
+    "text": "8.7 Exercises",
     "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Beta Distribution</span>"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Beta Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/normal_20250310.html",
     "href": "chapters/normal_20250310.html",
-    "title": "8  The Normal Distribution",
+    "title": "9  The Normal Distribution",
     "section": "",
-    "text": "8.1 Deriving the Distribution",
+    "text": "9.1 Deriving the Distribution",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Normal Distribution</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Normal Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/normal_20250310.html#example-random-samples",
     "href": "chapters/normal_20250310.html#example-random-samples",
-    "title": "8  The Normal Distribution",
-    "section": "8.2 Example Random Samples",
-    "text": "8.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxStandard &lt;- rnorm(n = 1000, mean = 0, sd = 1)\nsamplesStd_ls &lt;- list(\n  n5    = xStandard[1:5],\n  n30   = xStandard[1:30],\n  n60   = xStandard[1:60],\n  n1000 = xStandard\n)\n\nxShift &lt;- rnorm(n = 1000, mean = 1, sd = 2)\nsamplesShifted_ls &lt;- list(\n  n5    = xShift[1:5],\n  n30   = xShift[1:30],\n  n60   = xShift[1:60],\n  n1000 = xShift\n)\n\nrange_num &lt;- range(c(xStandard, xShift))\n\nrm(xSymm, xSkew)\nWarning in rm(xSymm, xSkew): object 'xSymm' not found\nWarning in rm(xSymm, xSkew): object 'xSkew' not found\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesStd_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n1000, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesShifted_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesShifted_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesShifted_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesShifted_ls$n1000, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
+    "title": "9  The Normal Distribution",
+    "section": "9.2 Example Random Samples",
+    "text": "9.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxStandard &lt;- rnorm(n = 1000, mean = 0, sd = 1)\nsamplesStd_ls &lt;- list(\n  n5    = xStandard[1:5],\n  n30   = xStandard[1:30],\n  n60   = xStandard[1:60],\n  n1000 = xStandard\n)\n\nxShift &lt;- rnorm(n = 1000, mean = 1, sd = 2)\nsamplesShifted_ls &lt;- list(\n  n5    = xShift[1:5],\n  n30   = xShift[1:30],\n  n60   = xShift[1:60],\n  n1000 = xShift\n)\n\nrange_num &lt;- range(c(xStandard, xShift))\n\nrm(xSymm, xSkew)\nWarning in rm(xSymm, xSkew): object 'xSymm' not found\nWarning in rm(xSymm, xSkew): object 'xSkew' not found\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesStd_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n1000, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesShifted_ls$n5, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesShifted_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesShifted_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesShifted_ls$n1000, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Normal Distribution</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Normal Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/normal_20250310.html#show-that-this-is-a-distribution",
     "href": "chapters/normal_20250310.html#show-that-this-is-a-distribution",
-    "title": "8  The Normal Distribution",
-    "section": "8.3 Show that this is a Distribution",
-    "text": "8.3 Show that this is a Distribution",
+    "title": "9  The Normal Distribution",
+    "section": "9.3 Show that this is a Distribution",
+    "text": "9.3 Show that this is a Distribution",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Normal Distribution</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Normal Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/normal_20250310.html#derive-the-moment-generating-function",
     "href": "chapters/normal_20250310.html#derive-the-moment-generating-function",
-    "title": "8  The Normal Distribution",
-    "section": "8.4 Derive the Moment Generating Function",
-    "text": "8.4 Derive the Moment Generating Function",
+    "title": "9  The Normal Distribution",
+    "section": "9.4 Derive the Moment Generating Function",
+    "text": "9.4 Derive the Moment Generating Function",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Normal Distribution</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Normal Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/normal_20250310.html#method-of-moments-estimates-from-observed-data",
     "href": "chapters/normal_20250310.html#method-of-moments-estimates-from-observed-data",
-    "title": "8  The Normal Distribution",
-    "section": "8.5 Method of Moments Estimates from Observed Data",
-    "text": "8.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n8.5.1 \\(\\mathbb{E}[k]\\)\n\n\n8.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n8.5.3 Solving the System",
+    "title": "9  The Normal Distribution",
+    "section": "9.5 Method of Moments Estimates from Observed Data",
+    "text": "9.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n9.5.1 \\(\\mathbb{E}[k]\\)\n\n\n9.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n9.5.3 Solving the System",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Normal Distribution</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Normal Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/normal_20250310.html#maximum-likelihood-estimators",
     "href": "chapters/normal_20250310.html#maximum-likelihood-estimators",
-    "title": "8  The Normal Distribution",
-    "section": "8.6 Maximum Likelihood Estimators",
-    "text": "8.6 Maximum Likelihood Estimators",
+    "title": "9  The Normal Distribution",
+    "section": "9.6 Maximum Likelihood Estimators",
+    "text": "9.6 Maximum Likelihood Estimators",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Normal Distribution</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Normal Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/normal_20250310.html#exercises",
     "href": "chapters/normal_20250310.html#exercises",
-    "title": "8  The Normal Distribution",
-    "section": "8.7 Exercises",
-    "text": "8.7 Exercises",
+    "title": "9  The Normal Distribution",
+    "section": "9.7 Exercises",
+    "text": "9.7 Exercises",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Normal Distribution</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Normal Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/chi_square_20250310.html",
     "href": "chapters/chi_square_20250310.html",
-    "title": "9  The Central Chi Squared Distribution",
+    "title": "10  The Central Chi Squared Distribution",
     "section": "",
-    "text": "9.1 Deriving the Distribution",
+    "text": "10.1 Deriving the Distribution",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/chi_square_20250310.html#example-random-samples",
     "href": "chapters/chi_square_20250310.html#example-random-samples",
-    "title": "9  The Central Chi Squared Distribution",
-    "section": "9.2 Example Random Samples",
-    "text": "9.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxSymm &lt;- rchisq(n = 500, df = 40)\nsamplesSymm_ls &lt;- list(\n  n10  = xSymm[1:10],\n  n30  = xSymm[1:30],\n  n60  = xSymm[1:60],\n  n500 = xSymm\n)\n\nxSkew &lt;- rchisq(n = 500, df = 4)\nsamplesSkew_ls &lt;- list(\n  n10  = xSkew[1:10],\n  n30  = xSkew[1:30],\n  n60  = xSkew[1:60],\n  n500 = xSkew\n)\n\nrange_num &lt;- range(c(xSymm, xSkew))\n\nrm(xSymm, xSkew)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSymm_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSkew_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
+    "title": "10  The Central Chi Squared Distribution",
+    "section": "10.2 Example Random Samples",
+    "text": "10.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxSymm &lt;- rchisq(n = 500, df = 40)\nsamplesSymm_ls &lt;- list(\n  n10  = xSymm[1:10],\n  n30  = xSymm[1:30],\n  n60  = xSymm[1:60],\n  n500 = xSymm\n)\n\nxSkew &lt;- rchisq(n = 500, df = 4)\nsamplesSkew_ls &lt;- list(\n  n10  = xSkew[1:10],\n  n30  = xSkew[1:30],\n  n60  = xSkew[1:60],\n  n500 = xSkew\n)\n\nrange_num &lt;- range(c(xSymm, xSkew))\n\nrm(xSymm, xSkew)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSymm_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSymm_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesSkew_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesSkew_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/chi_square_20250310.html#show-that-this-is-a-distribution",
     "href": "chapters/chi_square_20250310.html#show-that-this-is-a-distribution",
-    "title": "9  The Central Chi Squared Distribution",
-    "section": "9.3 Show that this is a Distribution",
-    "text": "9.3 Show that this is a Distribution",
+    "title": "10  The Central Chi Squared Distribution",
+    "section": "10.3 Show that this is a Distribution",
+    "text": "10.3 Show that this is a Distribution",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/chi_square_20250310.html#derive-the-moment-generating-function",
     "href": "chapters/chi_square_20250310.html#derive-the-moment-generating-function",
-    "title": "9  The Central Chi Squared Distribution",
-    "section": "9.4 Derive the Moment Generating Function",
-    "text": "9.4 Derive the Moment Generating Function",
+    "title": "10  The Central Chi Squared Distribution",
+    "section": "10.4 Derive the Moment Generating Function",
+    "text": "10.4 Derive the Moment Generating Function",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/chi_square_20250310.html#method-of-moments-estimates-from-observed-data",
     "href": "chapters/chi_square_20250310.html#method-of-moments-estimates-from-observed-data",
-    "title": "9  The Central Chi Squared Distribution",
-    "section": "9.5 Method of Moments Estimates from Observed Data",
-    "text": "9.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n9.5.1 \\(\\mathbb{E}[k]\\)\n\n\n9.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n9.5.3 Solving the System",
+    "title": "10  The Central Chi Squared Distribution",
+    "section": "10.5 Method of Moments Estimates from Observed Data",
+    "text": "10.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n10.5.1 \\(\\mathbb{E}[k]\\)\n\n\n10.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n10.5.3 Solving the System",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/chi_square_20250310.html#maximum-likelihood-estimators",
     "href": "chapters/chi_square_20250310.html#maximum-likelihood-estimators",
-    "title": "9  The Central Chi Squared Distribution",
-    "section": "9.6 Maximum Likelihood Estimators",
-    "text": "9.6 Maximum Likelihood Estimators",
+    "title": "10  The Central Chi Squared Distribution",
+    "section": "10.6 Maximum Likelihood Estimators",
+    "text": "10.6 Maximum Likelihood Estimators",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/chi_square_20250310.html#exercises",
     "href": "chapters/chi_square_20250310.html#exercises",
-    "title": "9  The Central Chi Squared Distribution",
-    "section": "9.7 Exercises",
-    "text": "9.7 Exercises",
+    "title": "10  The Central Chi Squared Distribution",
+    "section": "10.7 Exercises",
+    "text": "10.7 Exercises",
     "crumbs": [
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/students_t_20250310.html",
     "href": "chapters/students_t_20250310.html",
-    "title": "10  The Student’s t Distribution",
+    "title": "11  The Student’s t Distribution",
     "section": "",
-    "text": "10.1 Deriving the Distribution",
+    "text": "11.1 Deriving the Distribution",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Student's t Distribution</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/students_t_20250310.html#example-random-samples",
     "href": "chapters/students_t_20250310.html#example-random-samples",
-    "title": "10  The Student’s t Distribution",
-    "section": "10.2 Example Random Samples",
-    "text": "10.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxStd &lt;- rt(n = 500, df = 300)\nsamplesStd_ls &lt;- list(\n  n10  = xStd[1:10],\n  n30  = xStd[1:30],\n  n60  = xStd[1:60],\n  n500 = xStd\n)\n\nxDiffuse &lt;- rt(n = 500, df = 3)\nsamplesDiffuse_ls &lt;- list(\n  n10  = xDiffuse[1:10],\n  n30  = xDiffuse[1:30],\n  n60  = xDiffuse[1:60],\n  n500 = xDiffuse\n)\n\nrange_num &lt;- range(c(xStd, xDiffuse))\n\nrm(xStd, xDiffuse)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesStd_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
+    "title": "11  The Student’s t Distribution",
+    "section": "11.2 Example Random Samples",
+    "text": "11.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\nxStd &lt;- rt(n = 500, df = 300)\nsamplesStd_ls &lt;- list(\n  n10  = xStd[1:10],\n  n30  = xStd[1:30],\n  n60  = xStd[1:60],\n  n500 = xStd\n)\n\nxDiffuse &lt;- rt(n = 500, df = 3)\nsamplesDiffuse_ls &lt;- list(\n  n10  = xDiffuse[1:10],\n  n30  = xDiffuse[1:30],\n  n60  = xDiffuse[1:60],\n  n500 = xDiffuse\n)\n\nrange_num &lt;- range(c(xStd, xDiffuse))\n\nrm(xStd, xDiffuse)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesStd_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesStd_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesDiffuse_ls$n500, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Student's t Distribution</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/students_t_20250310.html#show-that-this-is-a-distribution",
     "href": "chapters/students_t_20250310.html#show-that-this-is-a-distribution",
-    "title": "10  The Student’s t Distribution",
-    "section": "10.3 Show that this is a Distribution",
-    "text": "10.3 Show that this is a Distribution",
+    "title": "11  The Student’s t Distribution",
+    "section": "11.3 Show that this is a Distribution",
+    "text": "11.3 Show that this is a Distribution",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Student's t Distribution</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/students_t_20250310.html#derive-the-moment-generating-function",
     "href": "chapters/students_t_20250310.html#derive-the-moment-generating-function",
-    "title": "10  The Student’s t Distribution",
-    "section": "10.4 Derive the Moment Generating Function",
-    "text": "10.4 Derive the Moment Generating Function",
+    "title": "11  The Student’s t Distribution",
+    "section": "11.4 Derive the Moment Generating Function",
+    "text": "11.4 Derive the Moment Generating Function",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Student's t Distribution</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/students_t_20250310.html#method-of-moments-estimates-from-observed-data",
     "href": "chapters/students_t_20250310.html#method-of-moments-estimates-from-observed-data",
-    "title": "10  The Student’s t Distribution",
-    "section": "10.5 Method of Moments Estimates from Observed Data",
-    "text": "10.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n10.5.1 \\(\\mathbb{E}[k]\\)\n\n\n10.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n10.5.3 Solving the System",
+    "title": "11  The Student’s t Distribution",
+    "section": "11.5 Method of Moments Estimates from Observed Data",
+    "text": "11.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n11.5.1 \\(\\mathbb{E}[k]\\)\n\n\n11.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n11.5.3 Solving the System",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Student's t Distribution</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/students_t_20250310.html#maximum-likelihood-estimators",
     "href": "chapters/students_t_20250310.html#maximum-likelihood-estimators",
-    "title": "10  The Student’s t Distribution",
-    "section": "10.6 Maximum Likelihood Estimators",
-    "text": "10.6 Maximum Likelihood Estimators",
+    "title": "11  The Student’s t Distribution",
+    "section": "11.6 Maximum Likelihood Estimators",
+    "text": "11.6 Maximum Likelihood Estimators",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Student's t Distribution</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/students_t_20250310.html#exercises",
     "href": "chapters/students_t_20250310.html#exercises",
-    "title": "10  The Student’s t Distribution",
-    "section": "10.7 Exercises",
-    "text": "10.7 Exercises",
+    "title": "11  The Student’s t Distribution",
+    "section": "11.7 Exercises",
+    "text": "11.7 Exercises",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Student's t Distribution</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/f_20250310.html",
     "href": "chapters/f_20250310.html",
-    "title": "11  The Central F Distribution",
+    "title": "12  The Central F Distribution",
     "section": "",
-    "text": "11.1 Deriving the Distribution",
+    "text": "12.1 Deriving the Distribution",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Central F Distribution</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/f_20250310.html#example-random-samples",
     "href": "chapters/f_20250310.html#example-random-samples",
-    "title": "11  The Central F Distribution",
-    "section": "11.2 Example Random Samples",
-    "text": "11.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\n# F for a well-posed linear model [p = 5, n = 100]\nxWP &lt;- rf(n = 1000, df1 = 4, df2 = 99)\nsamplesWP_ls &lt;- list(\n  n10   = xWP[1:10],\n  n30   = xWP[1:30],\n  n60   = xWP[1:60],\n  n1000 = xWP\n)\n\n# F for a poorly-posed linear model [p = 25, n = 100]\nxPP &lt;- rf(n = 1000, df1 = 24, df2 = 99)\nsamplesPP_ls &lt;- list(\n  n10   = xPP[1:10],\n  n30   = xPP[1:30],\n  n60   = xPP[1:60],\n  n1000 = xPP\n)\n\nrange_num &lt;- range(c(xWP, xPP))\n\nrm(xWP, xPP)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesWP_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesWP_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesWP_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesWP_ls$n1000, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesPP_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesPP_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesPP_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesPP_ls$n1000, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
+    "title": "12  The Central F Distribution",
+    "section": "12.2 Example Random Samples",
+    "text": "12.2 Example Random Samples\n\n\nCode\nset.seed(20150516)\n\n# F for a well-posed linear model [p = 5, n = 100]\nxWP &lt;- rf(n = 1000, df1 = 4, df2 = 99)\nsamplesWP_ls &lt;- list(\n  n10   = xWP[1:10],\n  n30   = xWP[1:30],\n  n60   = xWP[1:60],\n  n1000 = xWP\n)\n\n# F for a poorly-posed linear model [p = 25, n = 100]\nxPP &lt;- rf(n = 1000, df1 = 24, df2 = 99)\nsamplesPP_ls &lt;- list(\n  n10   = xPP[1:10],\n  n30   = xPP[1:30],\n  n60   = xPP[1:60],\n  n1000 = xPP\n)\n\nrange_num &lt;- range(c(xWP, xPP))\n\nrm(xWP, xPP)\n\n\n\n\nCode\nPlotSharedDensity &lt;- function(x, range_x, bandwidth = \"nrd0\") {\n  \n  xDens_ls &lt;- density(x, bw = bandwidth)\n  xHist_ls &lt;- hist(x, plot = FALSE)\n  yLargest_num &lt;- max(max(xDens_ls$y), max(xHist_ls$density))\n  \n  hist(\n    x, prob = TRUE,\n    xlim = range_x, ylim = c(0, yLargest_num)\n  )\n  lines(xDens_ls, col = 4, lwd = 2)\n  \n}\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesWP_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesWP_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesWP_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesWP_ls$n1000, range_x = range_num\n)\n\npar(mfrow = c(1, 1))\n\n# , bandwidth = 0.005\n\n\n\n\n\n\n\n\n\n\n\nCode\npar(mfrow = c(2, 2))\n\nPlotSharedDensity(\n  x = samplesPP_ls$n10, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesPP_ls$n30, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesPP_ls$n60, range_x = range_num\n)\nPlotSharedDensity(\n  x = samplesPP_ls$n1000, range_x = range_num\n)\n\npar(mfrow = c(1, 1))",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Central F Distribution</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/f_20250310.html#show-that-this-is-a-distribution",
     "href": "chapters/f_20250310.html#show-that-this-is-a-distribution",
-    "title": "11  The Central F Distribution",
-    "section": "11.3 Show that this is a Distribution",
-    "text": "11.3 Show that this is a Distribution",
+    "title": "12  The Central F Distribution",
+    "section": "12.3 Show that this is a Distribution",
+    "text": "12.3 Show that this is a Distribution",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Central F Distribution</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/f_20250310.html#derive-the-moment-generating-function",
     "href": "chapters/f_20250310.html#derive-the-moment-generating-function",
-    "title": "11  The Central F Distribution",
-    "section": "11.4 Derive the Moment Generating Function",
-    "text": "11.4 Derive the Moment Generating Function",
+    "title": "12  The Central F Distribution",
+    "section": "12.4 Derive the Moment Generating Function",
+    "text": "12.4 Derive the Moment Generating Function",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Central F Distribution</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/f_20250310.html#method-of-moments-estimates-from-observed-data",
     "href": "chapters/f_20250310.html#method-of-moments-estimates-from-observed-data",
-    "title": "11  The Central F Distribution",
-    "section": "11.5 Method of Moments Estimates from Observed Data",
-    "text": "11.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n11.5.1 \\(\\mathbb{E}[k]\\)\n\n\n11.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n11.5.3 Solving the System",
+    "title": "12  The Central F Distribution",
+    "section": "12.5 Method of Moments Estimates from Observed Data",
+    "text": "12.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n12.5.1 \\(\\mathbb{E}[k]\\)\n\n\n12.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n12.5.3 Solving the System",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Central F Distribution</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/f_20250310.html#maximum-likelihood-estimators",
     "href": "chapters/f_20250310.html#maximum-likelihood-estimators",
-    "title": "11  The Central F Distribution",
-    "section": "11.6 Maximum Likelihood Estimators",
-    "text": "11.6 Maximum Likelihood Estimators",
+    "title": "12  The Central F Distribution",
+    "section": "12.6 Maximum Likelihood Estimators",
+    "text": "12.6 Maximum Likelihood Estimators",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Central F Distribution</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
   },
   {
     "objectID": "chapters/f_20250310.html#exercises",
     "href": "chapters/f_20250310.html#exercises",
-    "title": "11  The Central F Distribution",
-    "section": "11.7 Exercises",
-    "text": "11.7 Exercises",
+    "title": "12  The Central F Distribution",
+    "section": "12.7 Exercises",
+    "text": "12.7 Exercises",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Central F Distribution</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
   }
 ]
