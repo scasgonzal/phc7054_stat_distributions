@@ -234,7 +234,71 @@ $$
 
 
 
-## The Gamma Difference Equation
+## The Gamma Continued Recurrence Equation
+If we have the Gamma function of a sum, where one summand is an integer, then we can factor the Gamma function into a product of the integer part and the Gamma function of the non-integer part. This is an extension of the [Gamma recurrence relationship](https://dlmf.nist.gov/5.5) (which we will prove below) that $\Gamma(z + 1) = z\Gamma(z)$. That is, for $a\in\mathbb{R}^+$ and $k\in\mathbb{N}$
+$$
+\Gamma(a + k) = \Gamma(a)\prod_{j = 0}^{k - 1} (a + j).
+$$
+
+**Proof**: If $a$ is an integer, then the result follows directly from the definition of the factorial.
+$$
+\begin{aligned}
+\Gamma(a+k) &\equiv (a+k-1)! \\
+&= (a+k-1)(a+k-2)\ldots(a+k-[k-1])(a+k-k)(a-1)! \\
+&= \left\{ (a+[k - 1])(a+[k - 2])\ldots(a+[1])(a+[0]) \right\} \times (a - 1)! \\
+&= \left\{ \prod_{j = 0}^{k - 1} (a+j) \right\} \times (a - 1)! \\
+&= \Gamma(a) \left\{ \prod_{j = 0}^{k - 1} (a+j) \right\}.
+\end{aligned}
+$$
+If $a\in\mathbb{R}^+$ but not an integer, then the factorial operator is not defined. But, we assumed that $k\in\mathbb{N}$, so we can assume that $k$ is fixed at some arbitrary positive integer and use a general "Proof by Induction" strategy.
+
+For the **base case**, let's set up **integration by parts** and let $k = 1$. Recall that integration by parts decomposes the integral of a product as $\int udv = uv - \int vdu$. For the integral below, let $u = t^{a} \Rightarrow du = (a)t^{a - 1}dt$. We have the remaining portion as $e^{-t}dt = dv\Rightarrow v = -e^{-t}$. Thus,
+$$
+\begin{aligned}
+\Gamma(a+1) &= \int_0^{\infty} t^{(a+1)-1}e^{-t}dt \\
+&= \lim_{\psi\to\infty} \left[ t^a \right] \left[ -e^{-t} \right]_0^{\psi} - \int_0^{\infty} \left[ -e^{-t} \right] \left[ at^{a - 1}dt \right] \\
+&= \left[ \lim_{\psi\to\infty} \left(-[\psi]^a e^{-[\psi]}\right) - \left(-[0]^a e^{-[0]}\right) \right] + a \int_0^{\infty} t^{a - 1}e^{-t}dt \\
+&= \left[ \lim_{\psi\to\infty} -\frac{\psi^a}{e^{\psi}}  - 0 \right] + a\Gamma(a) \\ 
+&= a\Gamma(a) - \lim_{\psi\to\infty} \frac{\psi^a}{e^{\psi}}.
+\end{aligned}
+$$
+Now, recall L'Hospital's Rule. We see that we are very close to showing the result for $k = 1$. We see that $\psi^a/e^{\psi}$ is an **indeterminant form**; even more interesting, the first derivative of the top divided by the first derivative of the bottom also yields an indeterminant form: $(a\psi^{a-1})/e^{\psi}$. In fact, this ratio will be in indeterminant form for the first $a$ derivatives of $\psi^a$. However, taking repeated derivatives of this polynomial will eventially yield a constant. On the other hand, taking repeated derivatives of $e^{\psi}$ yields $e^{\psi}$. We see that 
+$$
+\begin{aligned}
+\Gamma(a+1) &= a\Gamma(a) - \lim_{\psi\to\infty} \frac{\psi^a}{e^{\psi}} \\
+&= a\Gamma(a) - \lim_{\psi\to\infty} \frac{ \frac{d^a}{d\psi^a} \psi^a }{ \frac{d^a}{d\psi^a} e^{\psi} } \\
+&= a\Gamma(a) - \lim_{\psi\to\infty} \frac{ a! }{ e^{\psi} } \\
+&= a\Gamma(a) - \frac{ a! }{ \lim_{\psi\to\infty} e^{\psi} } \\
+&= a\Gamma(a) - 0.
+\end{aligned}
+$$
+Therefore, this limit converges to 0. So, for the base case that $k = 1$, $\Gamma(a+1) = (a+1-1)\Gamma(a+1-1) = a\Gamma(a)$. Thus, we have shown the **Gamma Recurrence** relationship (as we promised).
+
+The **hypothesis** is that $\Gamma(a+k) = (a+k-1)\Gamma(a+k-1)$. Now we move to the **induction**. Similar to before, we let $u = t^{a+k} \Rightarrow du = (a+k)t^{a + k - 1}dt$. We have the remaining portion as $e^{-t}dt = dv\Rightarrow v = -e^{-t}$. Thus,
+$$
+\begin{aligned}
+\Gamma(a+k+1) &= \int_0^{\infty} t^{(a+k+1)-1}e^{-t}dt \\
+&= \lim_{\psi\to\infty} \left[ t^{a+k} \right] \left[ -e^{-t} \right]_0^{\psi} - \int_0^{\infty} \left[ -e^{-t} \right] \left[ (a+k)t^{a + k - 1}dt \right] \\
+&= \left[ \lim_{\psi\to\infty} \left(-[\psi]^{a+k} e^{-[\psi]}\right) - \left(-[0]^{a+k} e^{-[0]}\right) \right] + (a+k) \int_0^{\infty} t^{a + k - 1}e^{-t}dt \\
+&= \left[ \lim_{\psi\to\infty} -\frac{\psi^{a+k}}{e^{\psi}}  - 0 \right] + (a+k) \Gamma(a+k) \\ 
+&= (a+k) \Gamma(a+k) - \lim_{\psi\to\infty} \frac{\psi^{a+k}}{e^{\psi}} \\
+&= (a+k) \Gamma(a+k),
+\end{aligned}
+$$
+which completes the induction step. Now, we recursively apply the hypothesis and induction until we reach the base case:
+$$
+\begin{aligned}
+\Gamma(a+k) &= (a+k-1) \Gamma(a+k-1) \\
+&= (a+k-1)(a+k-2)\Gamma(a+k-2) \\
+&\ \ \vdots \\
+&= \left\{ (a+[k - 1])(a+[k - 2])\ldots(a+[1])(a+[0]) \right\} \Gamma(a) \\
+&= \left\{ \prod_{j = 0}^{k - 1} (a+j) \right\} \Gamma(a) \\
+&= \Gamma(a) \left\{ \prod_{j = 0}^{k - 1} (a+j) \right\},
+\end{aligned}
+$$
+which completes our proof.
+
+
 
 
 </br>
