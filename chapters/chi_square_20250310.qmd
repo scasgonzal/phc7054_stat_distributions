@@ -178,4 +178,9 @@ Let's generate some random data...
 
 ## Exercises
 
+To be determined.
+
+
+## Footnotes 
+
 

@@ -384,6 +384,28 @@ $$
 $$
 
 ### Solving the System
+Based on the sample we saw above, $\bar{x}$ = `r round(mean(Gammat_num),3)` and $s^2$ = `r round(var(Gammat_num),3)`. We then solve the following system:
+$$
+\begin{aligned}
+(1)&\qquad \bar{x} = \frac{\alpha}{\lambda} \Rightarrow \alpha = \bar{x}\lambda, \\
+(2)&\qquad s^2 = \frac{\alpha}{\lambda^2} \Rightarrow \alpha = s^2\lambda^2.
+\end{aligned}
+$$
+So,
+$$
+\bar{x}\lambda = s^2\lambda^2 \Rightarrow \bar{x} = s^2\lambda \Rightarrow \hat{\lambda}_{MoM} = \frac{\bar{x}}{s^2}.
+$$
+Substituting this back into Equation (1), we have
+$$
+\hat{\alpha}_{MoM} = \bar{x}\left[\frac{\bar{x}}{s^2}\right] = \frac{\bar{x}^2}{s^2}.
+$$
+We calculate these from the data we "observed": 
+```{r}
+(lambdaHat_MoM <- mean(Gammat_num) / var(Gammat_num))
+(alphaHat_MoM <- mean(Gammat_num)^2 / var(Gammat_num))
+```
+
+Thus, our Method of Moments estimates are $\hat{\lambda}_{MoM}$ = `r round(lambdaHat_MoM, 3)` and $\hat{\alpha}_{MoM}$ = `r round(alphaHat_MoM, 3)`, while the true values were $\lambda = 5$ and $\alpha = 3$. In my simulations, the Method of Moments estimates didn't get "good" until I had over 70 samples.
 
 
 </br>
@@ -391,12 +413,48 @@ $$
 
 
 ## Maximum Likelihood Estimators
+Assume that we have observed a sample of waiting times $\textbf{t} = (t_1, t_2, \ldots, t_n)$ which were generated from a Gamma waiting process.
 
+
+### The Log-Likelihood Function
+Then,
+$$
+\begin{aligned}
+\mathcal{L}(\alpha,\lambda|\textbf{t}) &= \prod_{i = 1}^n \frac{\lambda^{\alpha}}{\Gamma(\alpha)} t_i^{\alpha - 1} e^{-\lambda t_i} \\
+\Longrightarrow \ell(\alpha,\lambda|\textbf{t}) &= \log \left[ \prod_{i = 1}^n \frac{\lambda^{\alpha}}{\Gamma(\alpha)} t_i^{\alpha - 1} e^{-\lambda t_i} \right] \\
+&= \sum_{i = 1}^n \log \left[ \frac{\lambda^{\alpha}}{\Gamma(\alpha)} t_i^{\alpha - 1} e^{-\lambda t_i} \right] \\
+&= \sum_{i = 1}^n \left[ \alpha\log(\lambda) - \log(\Gamma(\alpha)) + (\alpha - 1)\log(t_i) - \lambda t_i \right] \\
+&= n\alpha\log(\lambda) - n\log(\Gamma(\alpha)) + (\alpha - 1) \sum_{i = 1}^n \log(t_i) - \lambda \sum_{i = 1}^n t_i \\
+&= n\alpha\log(\lambda) - n\log(\Gamma(\alpha)) + (\alpha - 1) \sum_{i = 1}^n \log(t_i) - n\lambda\bar{t},
+\end{aligned}
+$$
+which we then have to take partial derivatives of with respect to both $\lambda$ and $\alpha$.
+
+
+### MLE for $\lambda$
+The (much) simpler case is when we know how many "events", $\alpha$, the observers were waiting for when they recorded $\textbf{t}$. If $\alpha$ is known, then 
+$$
+\begin{aligned}
+\ell(\alpha,\lambda|\textbf{t}) &= n\alpha\log(\lambda) - n\log(\Gamma(\alpha)) + (\alpha - 1) \sum_{i = 1}^n \log(t_i) - n\lambda\bar{t} \\
+\Longrightarrow \frac{\partial}{\partial\lambda} \ell(\alpha,\lambda|\textbf{t}) &= \frac{\partial}{\partial\lambda} \left[ n\alpha\log(\lambda) - n\log(\Gamma(\alpha)) + (\alpha - 1) \sum_{i = 1}^n \log(t_i) - n\lambda\bar{t} \right] \\
+&= \frac{n\alpha}{\lambda} - 0 + 0 - n\bar{t} \\
+\Longrightarrow 0 &\overset{\text{set}}{=} \frac{n\alpha}{\hat{\lambda}} - n\bar{t} \\
+\Longrightarrow n\bar{t} &= \frac{n\alpha}{\hat{\lambda}} \\
+\Longrightarrow \bar{t} &= \frac{\alpha}{\hat{\lambda}} \\
+\Longrightarrow \hat{\lambda} &= \frac{\alpha}{\bar{t}}.
+\end{aligned}
+$$
+Moreover, we see quickly that the second derivative with respect to $\lambda$ is $-n\alpha\lambda^{-2} < 0$, so $\hat{\lambda}$ maximizes the likelihood. If we knew that the observers who collected the data were recording waiting times until they had observed three successes, then we can estimate the rate: $\hat{\lambda}_{MLE}$ = `r round(3 / mean(Gammat_num), 3)`.
 
 </br>
 
 
 
 ## Exercises
+
+To be determined.
+
+
+## Footnotes 
 
 
