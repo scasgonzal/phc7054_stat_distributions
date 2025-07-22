@@ -24,7 +24,7 @@
     "href": "chapters/bernoulli_20250310.html#deriving-the-distribution",
     "title": "1  The Bernoulli Distribution",
     "section": "",
-    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.\n\n\n1.1.1 An Example Sample from the Bernoulli Distribution\nNow let’s use R to take \\(n = 100\\) random samples from a Bernoulli Distribution with \\(p = 0.35\\), but we will only inspect the first five (for now):\n\nmyBernSample &lt;- rbinom(n = 100, size = 1, prob = 0.35)\nmyBernSample[1:5]\n[1] 0 1 0 0 0\n\nWe now pretend that we only know the results for the first five coin flips. We have flipped one coin five times, with the results \\(\\{\\)Heads, Tails, Heads, Tails, Tails\\(\\}\\).",
+    "text": "The Bernoulli Probability Mass Function is denoted \\(f_{\\text{Bern}}\\); \\(f\\) is a function, and its argument \\(k\\) is discrete. The domain of \\(f\\) is 0 or 1 (\\(k\\) can only have the values in the set \\(\\mathcal{S} = \\{0,1\\}\\)).\nFor any \\(k \\in \\mathcal{S}\\), \\(f(k|p) \\ge 0\\); this is the range of \\(f\\). This means that \\(f\\) maps from the set \\(\\mathcal{S}\\) to the set of all non-negative real numbers, which is symbolically denoted as \\(f:\\mathcal{S} \\to \\mathbb{R}_{\\ge}\\).\nThe probability of a “head” (success) is the only parameter of \\(f\\), and it is fixed at some value \\(p\\), which must be a real number between 0 and 1.\n\n\n1.1.1 An Example Sample from the Bernoulli Distribution\nNow let’s use R to take \\(n = 100\\) random samples from a Bernoulli Distribution with \\(p = 0.35\\), but we will only inspect the first five (for now):\n\nmyBernSample &lt;- rbinom(n = 100, size = 1, prob = 0.35)\nmyBernSample[1:5]\n[1] 1 1 0 0 1\n\nWe now pretend that we only know the results for the first five coin flips. We have flipped one coin five times, with the results \\(\\{\\)Heads, Tails, Heads, Tails, Tails\\(\\}\\).",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>The Bernoulli Distribution</span>"
     ]
@@ -684,7 +684,7 @@
     "href": "chapters/gamma_20250310.html#maximum-likelihood-estimators",
     "title": "7  The Gamma Distribution",
     "section": "7.9 Maximum Likelihood Estimators",
-    "text": "7.9 Maximum Likelihood Estimators\nAssume that we have observed a sample of waiting times \\(\\textbf{t} = (t_1, t_2, \\ldots, t_n)\\) which were generated from a Gamma waiting process.\n\n7.9.1 The Log-Likelihood Function\nThen, \\[\n\\begin{aligned}\n\\mathcal{L}(\\alpha,\\lambda|\\textbf{t}) &= \\prod_{i = 1}^n \\frac{\\lambda^{\\alpha}}{\\Gamma(\\alpha)} t_i^{\\alpha - 1} e^{-\\lambda t_i} \\\\\n\\Longrightarrow \\ell(\\alpha,\\lambda|\\textbf{t}) &= \\log \\left[ \\prod_{i = 1}^n \\frac{\\lambda^{\\alpha}}{\\Gamma(\\alpha)} t_i^{\\alpha - 1} e^{-\\lambda t_i} \\right] \\\\\n&= \\sum_{i = 1}^n \\log \\left[ \\frac{\\lambda^{\\alpha}}{\\Gamma(\\alpha)} t_i^{\\alpha - 1} e^{-\\lambda t_i} \\right] \\\\\n&= \\sum_{i = 1}^n \\left[ \\alpha\\log(\\lambda) - \\log(\\Gamma(\\alpha)) + (\\alpha - 1)\\log(t_i) - \\lambda t_i \\right] \\\\\n&= n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - \\lambda \\sum_{i = 1}^n t_i \\\\\n&= n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - n\\lambda\\bar{t},\n\\end{aligned}\n\\] which we then have to take partial derivatives of with respect to both \\(\\lambda\\) and \\(\\alpha\\).\n\n\n7.9.2 MLE for \\(\\lambda\\)\nThe (much) simpler case is when we know how many “events”, \\(\\alpha\\), the observers were waiting for when they recorded \\(\\textbf{t}\\). If \\(\\alpha\\) is known, then \\[\n\\begin{aligned}\n\\ell(\\alpha,\\lambda|\\textbf{t}) &= n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - n\\lambda\\bar{t} \\\\\n\\Longrightarrow \\frac{\\partial}{\\partial\\lambda} \\ell(\\alpha,\\lambda|\\textbf{t}) &= \\frac{\\partial}{\\partial\\lambda} \\left[ n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - n\\lambda\\bar{t} \\right] \\\\\n&= \\frac{n\\alpha}{\\lambda} - 0 + 0 - n\\bar{t} \\\\\n\\Longrightarrow 0 &\\overset{\\text{set}}{=} \\frac{n\\alpha}{\\hat{\\lambda}} - n\\bar{t} \\\\\n\\Longrightarrow n\\bar{t} &= \\frac{n\\alpha}{\\hat{\\lambda}} \\\\\n\\Longrightarrow \\bar{t} &= \\frac{\\alpha}{\\hat{\\lambda}} \\\\\n\\Longrightarrow \\hat{\\lambda} &= \\frac{\\alpha}{\\bar{t}}.\n\\end{aligned}\n\\] Moreover, we see quickly that the second derivative with respect to \\(\\lambda\\) is \\(-n\\alpha\\lambda^{-2} &lt; 0\\), so \\(\\hat{\\lambda}\\) maximizes the likelihood. If we knew that the observers who collected the data were recording waiting times until they had observed three successes, then we can estimate the rate: \\(\\hat{\\lambda}_{MLE}\\) = 3.691.",
+    "text": "7.9 Maximum Likelihood Estimators\nAssume that we have observed a sample of waiting times \\(\\textbf{t} = (t_1, t_2, \\ldots, t_n)\\) which were generated from a Gamma waiting process.\n\n7.9.1 The Log-Likelihood Function\nThen, \\[\n\\begin{aligned}\n\\mathcal{L}(\\alpha,\\lambda|\\textbf{t}) &= \\prod_{i = 1}^n \\frac{\\lambda^{\\alpha}}{\\Gamma(\\alpha)} t_i^{\\alpha - 1} e^{-\\lambda t_i} \\\\\n\\Longrightarrow \\ell(\\alpha,\\lambda|\\textbf{t}) &= \\log \\left[ \\prod_{i = 1}^n \\frac{\\lambda^{\\alpha}}{\\Gamma(\\alpha)} t_i^{\\alpha - 1} e^{-\\lambda t_i} \\right] \\\\\n&= \\sum_{i = 1}^n \\log \\left[ \\frac{\\lambda^{\\alpha}}{\\Gamma(\\alpha)} t_i^{\\alpha - 1} e^{-\\lambda t_i} \\right] \\\\\n&= \\sum_{i = 1}^n \\left[ \\alpha\\log(\\lambda) - \\log(\\Gamma(\\alpha)) + (\\alpha - 1)\\log(t_i) - \\lambda t_i \\right] \\\\\n&= n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - \\lambda \\sum_{i = 1}^n t_i \\\\\n&= n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - n\\lambda\\bar{t},\n\\end{aligned}\n\\] which we then have to take partial derivatives of with respect to both \\(\\lambda\\) and \\(\\alpha\\).\n\n\n7.9.2 MLE for \\(\\lambda\\)\nThe (much) simpler case is when we know how many “events”, \\(\\alpha\\), the observers were waiting for when they recorded \\(\\textbf{t}\\). If \\(\\alpha\\) is known, then \\[\n\\begin{aligned}\n\\ell(\\alpha,\\lambda|\\textbf{t}) &= n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - n\\lambda\\bar{t} \\\\\n\\Longrightarrow \\frac{\\partial}{\\partial\\lambda} \\ell(\\alpha,\\lambda|\\textbf{t}) &= \\frac{\\partial}{\\partial\\lambda} \\left[ n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - n\\lambda\\bar{t} \\right] \\\\\n&= \\frac{n\\alpha}{\\lambda} - 0 + 0 - n\\bar{t} \\\\\n\\Longrightarrow 0 &\\overset{\\text{set}}{=} \\frac{n\\alpha}{\\hat{\\lambda}} - n\\bar{t} \\\\\n\\Longrightarrow n\\bar{t} &= \\frac{n\\alpha}{\\hat{\\lambda}} \\\\\n\\Longrightarrow \\bar{t} &= \\frac{\\alpha}{\\hat{\\lambda}} \\\\\n\\Longrightarrow \\hat{\\lambda} &= \\frac{\\alpha}{\\bar{t}}.\n\\end{aligned}\n\\] Moreover, we see quickly that the second derivative with respect to \\(\\lambda\\) is \\(-n\\alpha\\lambda^{-2} &lt; 0\\), so \\(\\hat{\\lambda}\\) maximizes the likelihood. If we knew that the observers who collected the data were recording waiting times until they had observed three successes, then we can estimate the rate: \\(\\hat{\\lambda}_{MLE}\\) = 3.691.\n\n\n7.9.3 MLE for \\(\\alpha\\)\nIf \\(\\alpha\\) is unknown, we start with the same log-likelikelihood as above, but quickly run out of “algebra” to do: \\[\n\\begin{aligned}\n\\ell(\\alpha,\\lambda|\\textbf{t}) &= n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - n\\lambda\\bar{t} \\\\\n\\Longrightarrow \\frac{\\partial}{\\partial\\alpha} \\ell(\\alpha,\\lambda|\\textbf{t}) &= \\frac{\\partial}{\\partial\\alpha} \\left[ n\\alpha\\log(\\lambda) - n\\log(\\Gamma(\\alpha)) + (\\alpha - 1) \\sum_{i = 1}^n \\log(t_i) - n\\lambda\\bar{t} \\right] \\\\\n&= n\\log(\\lambda) - n \\frac{\\partial}{\\partial\\alpha} \\log(\\Gamma(\\alpha)) + \\sum_{i = 1}^n \\log(t_i) \\\\\n&= n\\log(\\lambda) - n \\frac{\\partial}{\\partial\\alpha} \\log(\\Gamma(\\alpha)) + n\\overline{\\log(t)},\n\\end{aligned}\n\\] where \\(\\overline{\\log(t)}\\) denotes the average of the natural logarithms of the observed times (it’s still a fixed quantity).\nWhen we set this equal to 0, we have two “routes” to estimate a solution for this problem. The first option uses the derivative of the natural logarithm of the Gamma Function, known as the Digamma Function11, and symbolized \\(\\varphi(\\alpha)\\). Then, \\[\n\\begin{aligned}\n0 &\\overset{\\text{set}}{=} n\\log(\\lambda) - n \\frac{\\partial}{\\partial\\alpha} \\log(\\Gamma(\\alpha)) + n\\overline{\\log(t)} \\\\\n&= \\log(\\lambda) - \\varphi(\\alpha) + \\overline{\\log(t)} \\\\\n\\Longrightarrow \\varphi(\\alpha) &= \\log(\\lambda) + \\overline{\\log(t)}.\n\\end{aligned}\n\\] This would require numerical routines to estimate a solution for \\(\\hat{\\alpha}\\).\nThe second option is to leave the derivative with respect to \\(\\alpha\\) and work with the resulting differential equation. Thankfully this differential equation is in the form \\(y^{\\prime} = C\\) with respect to \\(\\alpha\\): \\[\n\\begin{aligned}\n0 &\\overset{\\text{set}}{=} n\\log(\\lambda) - n \\frac{\\partial}{\\partial\\alpha} \\log(\\Gamma(\\alpha)) + n\\overline{\\log(t)} \\\\\n\\Longrightarrow \\frac{\\partial}{\\partial\\alpha} \\log(\\Gamma(\\alpha)) &= \\log(\\lambda) + \\overline{\\log(t)} \\\\\n\\Longrightarrow \\log(\\Gamma(\\alpha)) &= \\alpha\\left( \\log(\\lambda) + \\alpha\\overline{\\log(t)} \\right) + C.\n\\end{aligned}\n\\] We also need numerical routines to solve this. But the difficult part here is that we don’t know what kind of boundary conditions the Gamma Distribution has. Thus, it’s very challenging to solve for C here, and any numerical solutions would depend on it. For a discussion of numerical routines related to the MLEs for the Gamma with both parameters unknown, see https://tminka.github.io/papers/minka-gamma.pdf.",
     "crumbs": [
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
@@ -704,7 +704,7 @@
     "href": "chapters/gamma_20250310.html#footnotes",
     "title": "7  The Gamma Distribution",
     "section": "",
-    "text": "https://en.wikipedia.org/wiki/Erlang_distribution↩︎\nhttps://en.wikipedia.org/wiki/Gamma_distribution↩︎\nhttps://www.clayford.net/statistics/deriving-the-gamma-distribution/↩︎\nhttps://en.wikipedia.org/wiki/Fundamental_theorem_of_calculus↩︎\nhttps://en.wikipedia.org/wiki/Leibniz_integral_rule↩︎\nhttps://tutorial.math.lamar.edu/classes/calci/defnofdefiniteintegral.aspx↩︎\nhttps://en.wikipedia.org/wiki/Improper_integral↩︎\nhttps://en.wikipedia.org/wiki/Kernel_(statistics)#Bayesian_statistics↩︎\nhttps://www.chegg.com/homework-help/questions-and-answers/722-solve-following-integrals-without-calculus-recognizing-integrand-related-known-probabi-q43101946↩︎\nhttps://en.wikipedia.org/wiki/Operator_(mathematics)#Linear_operators↩︎",
+    "text": "https://en.wikipedia.org/wiki/Erlang_distribution↩︎\nhttps://en.wikipedia.org/wiki/Gamma_distribution↩︎\nhttps://www.clayford.net/statistics/deriving-the-gamma-distribution/↩︎\nhttps://en.wikipedia.org/wiki/Fundamental_theorem_of_calculus↩︎\nhttps://en.wikipedia.org/wiki/Leibniz_integral_rule↩︎\nhttps://tutorial.math.lamar.edu/classes/calci/defnofdefiniteintegral.aspx↩︎\nhttps://en.wikipedia.org/wiki/Improper_integral↩︎\nhttps://en.wikipedia.org/wiki/Kernel_(statistics)#Bayesian_statistics↩︎\nhttps://www.chegg.com/homework-help/questions-and-answers/722-solve-following-integrals-without-calculus-recognizing-integrand-related-known-probabi-q43101946↩︎\nhttps://en.wikipedia.org/wiki/Operator_(mathematics)#Linear_operators↩︎\nhttps://en.wikipedia.org/wiki/Digamma_function↩︎",
     "crumbs": [
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Gamma Distribution</span>"
     ]
@@ -780,6 +780,16 @@
     ]
   },
   {
+    "objectID": "chapters/beta_20250310.html#footnotes",
+    "href": "chapters/beta_20250310.html#footnotes",
+    "title": "8  The Beta Distribution",
+    "section": "8.8 Footnotes",
+    "text": "8.8 Footnotes",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Beta Distribution</span>"
+    ]
+  },
+  {
     "objectID": "chapters/normal_20250310.html",
     "href": "chapters/normal_20250310.html",
     "title": "9  The Normal Distribution",
@@ -844,7 +854,17 @@
     "href": "chapters/normal_20250310.html#exercises",
     "title": "9  The Normal Distribution",
     "section": "9.7 Exercises",
-    "text": "9.7 Exercises",
+    "text": "9.7 Exercises\nTo be determined.",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Normal Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/normal_20250310.html#footnotes",
+    "href": "chapters/normal_20250310.html#footnotes",
+    "title": "9  The Normal Distribution",
+    "section": "9.8 Footnotes",
+    "text": "9.8 Footnotes",
     "crumbs": [
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>The Normal Distribution</span>"
     ]
@@ -914,7 +934,17 @@
     "href": "chapters/chi_square_20250310.html#exercises",
     "title": "10  The Central Chi Squared Distribution",
     "section": "10.7 Exercises",
-    "text": "10.7 Exercises",
+    "text": "10.7 Exercises\nTo be determined.",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/chi_square_20250310.html#footnotes",
+    "href": "chapters/chi_square_20250310.html#footnotes",
+    "title": "10  The Central Chi Squared Distribution",
+    "section": "10.8 Footnotes",
+    "text": "10.8 Footnotes",
     "crumbs": [
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>The Central Chi Squared Distribution</span>"
     ]
@@ -984,7 +1014,17 @@
     "href": "chapters/students_t_20250310.html#exercises",
     "title": "11  The Student’s t Distribution",
     "section": "11.7 Exercises",
-    "text": "11.7 Exercises",
+    "text": "11.7 Exercises\nTo be determined.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/students_t_20250310.html#footnotes",
+    "href": "chapters/students_t_20250310.html#footnotes",
+    "title": "11  The Student’s t Distribution",
+    "section": "11.8 Footnotes",
+    "text": "11.8 Footnotes",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
@@ -1054,19 +1094,19 @@
     "href": "chapters/f_20250310.html#exercises",
     "title": "12  The Central F Distribution",
     "section": "12.7 Exercises",
-    "text": "12.7 Exercises",
+    "text": "12.7 Exercises\nTo be determined.",
     "crumbs": [
       "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
   },
   {
-    "objectID": "chapters/beta_20250310.html#footnotes",
-    "href": "chapters/beta_20250310.html#footnotes",
-    "title": "8  The Beta Distribution",
-    "section": "8.8 Footnotes",
-    "text": "8.8 Footnotes",
+    "objectID": "chapters/f_20250310.html#footnotes",
+    "href": "chapters/f_20250310.html#footnotes",
+    "title": "12  The Central F Distribution",
+    "section": "12.8 Footnotes",
+    "text": "12.8 Footnotes",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>The Beta Distribution</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
   }
 ]

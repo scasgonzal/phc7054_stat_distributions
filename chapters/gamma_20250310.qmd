@@ -446,6 +446,41 @@ $$
 $$
 Moreover, we see quickly that the second derivative with respect to $\lambda$ is $-n\alpha\lambda^{-2} < 0$, so $\hat{\lambda}$ maximizes the likelihood. If we knew that the observers who collected the data were recording waiting times until they had observed three successes, then we can estimate the rate: $\hat{\lambda}_{MLE}$ = `r round(3 / mean(Gammat_num), 3)`.
 
+
+### MLE for $\alpha$
+If $\alpha$ is unknown, we start with the same log-likelikelihood as above, but quickly run out of "algebra" to do:
+$$
+\begin{aligned}
+\ell(\alpha,\lambda|\textbf{t}) &= n\alpha\log(\lambda) - n\log(\Gamma(\alpha)) + (\alpha - 1) \sum_{i = 1}^n \log(t_i) - n\lambda\bar{t} \\
+\Longrightarrow \frac{\partial}{\partial\alpha} \ell(\alpha,\lambda|\textbf{t}) &= \frac{\partial}{\partial\alpha} \left[ n\alpha\log(\lambda) - n\log(\Gamma(\alpha)) + (\alpha - 1) \sum_{i = 1}^n \log(t_i) - n\lambda\bar{t} \right] \\
+&= n\log(\lambda) - n \frac{\partial}{\partial\alpha} \log(\Gamma(\alpha)) + \sum_{i = 1}^n \log(t_i) \\
+&= n\log(\lambda) - n \frac{\partial}{\partial\alpha} \log(\Gamma(\alpha)) + n\overline{\log(t)},
+\end{aligned}
+$$
+where $\overline{\log(t)}$ denotes the average of the natural logarithms of the observed times (it's still a fixed quantity).
+
+
+When we set this equal to 0, we have two "routes" to estimate a solution for this problem. The first option uses the derivative of the natural logarithm of the Gamma Function, known as the **Digamma Function**^[https://en.wikipedia.org/wiki/Digamma_function], and symbolized $\varphi(\alpha)$. Then,
+$$
+\begin{aligned}
+0 &\overset{\text{set}}{=} n\log(\lambda) - n \frac{\partial}{\partial\alpha} \log(\Gamma(\alpha)) + n\overline{\log(t)} \\
+&= \log(\lambda) - \varphi(\alpha) + \overline{\log(t)} \\ 
+\Longrightarrow \varphi(\alpha) &= \log(\lambda) + \overline{\log(t)}.
+\end{aligned}
+$$
+This would require numerical routines to estimate a solution for $\hat{\alpha}$.
+
+The second option is to leave the derivative with respect to $\alpha$ and work with the resulting differential equation. Thankfully this differential equation is in the form $y^{\prime} = C$ with respect to $\alpha$:
+$$
+\begin{aligned}
+0 &\overset{\text{set}}{=} n\log(\lambda) - n \frac{\partial}{\partial\alpha} \log(\Gamma(\alpha)) + n\overline{\log(t)} \\
+\Longrightarrow \frac{\partial}{\partial\alpha} \log(\Gamma(\alpha)) &= \log(\lambda) + \overline{\log(t)} \\
+\Longrightarrow \log(\Gamma(\alpha)) &= \alpha\left( \log(\lambda) + \alpha\overline{\log(t)} \right) + C.
+\end{aligned}
+$$
+We also need numerical routines to solve this. But the difficult part here is that we don't know what kind of boundary conditions the Gamma Distribution has. Thus, it's very challenging to solve for C here, and any numerical solutions would depend on it. For a discussion of numerical routines related to the MLEs for the Gamma with both parameters unknown, see <https://tminka.github.io/papers/minka-gamma.pdf>.
+
+
 </br>
 
 
