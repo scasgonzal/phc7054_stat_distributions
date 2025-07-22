@@ -459,7 +459,7 @@ $$
 $$
 where $\overline{\log(t)}$ denotes the average of the natural logarithms of the observed times (it's still a fixed quantity).
 
-
+#### Regular Solution
 When we set this equal to 0, we have two "routes" to estimate a solution for this problem. The first option uses the derivative of the natural logarithm of the Gamma Function, known as the **Digamma Function**^[https://en.wikipedia.org/wiki/Digamma_function], and symbolized $\varphi(\alpha)$. Then,
 $$
 \begin{aligned}
@@ -468,17 +468,74 @@ $$
 \Longrightarrow \varphi(\alpha) &= \log(\lambda) + \overline{\log(t)}.
 \end{aligned}
 $$
-This would require numerical routines to estimate a solution for $\hat{\alpha}$.
+This would require numerical routines to estimate a solution for $\hat{\alpha}$. Here's what the Digamma function looks like:
+```{r}
+x <- c(0.25, 0.5, 0.75, 1:30)
+plot(
+  x = x,
+  y = digamma(x)
+)
+```
 
-The second option is to leave the derivative with respect to $\alpha$ and work with the resulting differential equation. Thankfully this differential equation is in the form $y^{\prime} = C$ with respect to $\alpha$:
+So, we have that $\hat{\lambda} = \alpha/\bar{t}$ and $\varphi(\hat{\alpha}) = \log(\lambda) + \overline{\log(t)}$. That's two equations and two unknowns, which we might be able to approximate a solution to.
+
+
+#### Another (Probably Bad) Option
+The second option is a **work in progress**, and I'm not sure it's even viable. I'm including it here to show some of my thought process. We will leave the derivative with respect to $\alpha$ and work with the resulting differential equation. Thankfully this differential equation is in the form $y^{\prime} = C$ with respect to $\alpha$:
 $$
 \begin{aligned}
 0 &\overset{\text{set}}{=} n\log(\lambda) - n \frac{\partial}{\partial\alpha} \log(\Gamma(\alpha)) + n\overline{\log(t)} \\
 \Longrightarrow \frac{\partial}{\partial\alpha} \log(\Gamma(\alpha)) &= \log(\lambda) + \overline{\log(t)} \\
-\Longrightarrow \log(\Gamma(\alpha)) &= \alpha\left( \log(\lambda) + \alpha\overline{\log(t)} \right) + C.
+\Longrightarrow \log(\Gamma(\alpha)) &= \alpha\left( \log(\lambda) + \overline{\log(t)} \right) + C.
 \end{aligned}
 $$
-We also need numerical routines to solve this. But the difficult part here is that we don't know what kind of boundary conditions the Gamma Distribution has. Thus, it's very challenging to solve for C here, and any numerical solutions would depend on it. For a discussion of numerical routines related to the MLEs for the Gamma with both parameters unknown, see <https://tminka.github.io/papers/minka-gamma.pdf>.
+We also need numerical routines to solve this. But the difficult part here is that we know very little about what kind of boundary conditions the Gamma Distribution has. We know that when $\alpha = 1$, the Gamma Distribution reduces back to the Exponential Distribution, and we know that the MLE for $\lambda$ in the Exponential Distribution is $(\bar{t})^{-1}$, which we can substitute in to solve for C:^[Go back to the MLE section of the Exponential Distribution chapter: <https://gabriel.quarto.pub/stat-distributions-primer/chapters/exponential_20250310.html#maximum-likelihood-estimators>]
+$$
+\begin{aligned}
+\log(\Gamma([1])) &= [1]\left( \log(\bar{t}^{-1}) + \overline{\log(t)} \right) + C \\
+\Longrightarrow \log(1) &= \log(\bar{t}^{-1}) + \overline{\log(t)} + C \\
+\Longrightarrow 0 &= -\log(\bar{t}) + \overline{\log(t)} + C \\
+\Longrightarrow C &= \log(\bar{t}) - \overline{\log(t)}.
+\end{aligned}
+$$
+Therefore, we would use a numerical routine to find $\hat{\alpha}$ as the solution to
+$$
+\begin{aligned}
+\log(\Gamma(\alpha)) &= \alpha\left( \log(\lambda) + \overline{\log(t)} \right) + \log(\bar{t}) - \overline{\log(t)} \\
+&= \alpha\left( -\log(\bar{t}) + \overline{\log(t)} \right) + \log(\bar{t}) - \overline{\log(t)} \\
+&= -\alpha\left( \log(\bar{t}) - \overline{\log(t)} \right) + \log(\bar{t}) - \overline{\log(t)} \\
+&= -\alpha K + K \\
+&= K(1 - \alpha),
+\end{aligned}
+$$
+where $K = \log(\bar{t}) - \overline{\log(t)}$. Now what does this $K$ look like? For fixed $\alpha$, we can generate vectors $\textbf{t}$ with increasing $\lambda$. Then we can plot the values of $\log(\bar{t}) - \overline{\log(t)}$ (on a log scale for $\lambda$).
+```{r}
+set.seed(20150516)
+
+x_df <- purrr::map(
+  .x = c(seq(0.01, 0.99, length.out = 30), 1:30),
+  .f = ~{
+    gammaSamp_num <- rgamma(10000, shape = 5, rate = .x)
+    tibble(
+      lambda = .x,
+      logTbar = log(mean(gammaSamp_num)),
+      barLogT = mean(log(gammaSamp_num))
+    ) %>% 
+      mutate(difference = logTbar - barLogT)
+  }
+) %>% 
+  bind_rows() 
+
+ggplot(data = x_df) +
+  aes(x = lambda, y = difference) + 
+  scale_x_log10() + 
+  geom_hline(yintercept = 0) +
+  geom_point()
+```
+
+We can see that $\forall\lambda\ K > 0$.
+
+For a discussion of numerical routines related to the MLEs for the Gamma with both parameters unknown, see <https://tminka.github.io/papers/minka-gamma.pdf>.
 
 
 </br>
