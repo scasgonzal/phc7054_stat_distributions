@@ -54,6 +54,7 @@ Now let's use R to take $n = 100$ random samples from a Bernoulli Distribution w
 ```{r}
 #| label: rand-bernoulli-samp
 #| code-fold: false
+set.seed(20150516)
 myBernSample <- rbinom(n = 100, size = 1, prob = 0.35)
 myBernSample[1:5]
 ```
@@ -310,7 +311,7 @@ ggplot(data = results_df) +
   geom_line(aes(y = CIub))
 ```
 
-As we can see, we need between 85-90 coin flips before we can be 95% sure that the coin is "not fair" (that the true value of $p\ne 0.5$). Also, we see that the confidence intervals are degenerate for a few of the samples with $n\le 5$ (that the bounds of the confidence interval for $p$ are outside $[0,1]$, which is impossible).
+As we can see, we need between 40-45 coin flips before we can be 95% sure that the coin is "not fair" (that the true value of $p\ne 0.5$). Also, we see that the confidence intervals are degenerate for a few of the samples with $n\le 5$ (that the bounds of the confidence interval for $p$ are outside $[0,1]$, which is impossible).
 
 ### Making the Most Use of our Data
 For the computer, flipping additional coins to create new data is trivially inexpensive. However, in real life, collecting one additional sample may be of enormous cost to the research team. In these cases, it doesn't help us that we would theoretically be able to reject the claim that $p = 0.5$ at some point in the future (with more samples), we need to be able to make a statement about the **likelihood** that the coin is fair with the samples we have right now. Let the event $\{$Heads, Tails, Heads, Tails, Tails$\}$ be encoded $\textbf{x} = (1,0,1,0,0)$. Thus, we apply the **multiplication rule** of independent events for these five coin flips, and define the **likelihood function** of $p$ given the observed data:

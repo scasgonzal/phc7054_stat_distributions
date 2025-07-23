@@ -36,7 +36,82 @@ options(dplyr.summarise.inform = FALSE)
 
 
 
+## Formal Foundations: Marginalizing a Likelihood
+So far in our chapters, we have created quite a few likelihood functions. When we introduced likelihoods at the very beginning^[<https://gabriel.quarto.pub/stat-distributions-primer/chapters/bernoulli_20250310.html#the-likelihood-function>], we were careful to state that likelihoods are **not probability functions**. However, we know two things:
+
+1) likelihood functions are always non-negative (recall that the products of any number of non-negative numbers will still be non-negative), and 
+2) for well-behaved distributions, the area under the likelihood function will be finite (for a single finite data point from any well-behaved distribution, the parameter estimate for that data point will also be finite, and the product of finite values is finite).
+
+Because the likelihood function is non-negative and the area under this curve is finite, we can turn it into a distribution by a process called finding the **marginal likelihood**^[<https://en.wikipedia.org/wiki/Marginal_likelihood>] and dividing the likelihood function by this marginal likelihood.
+
+More formally, consider a probability function $f(x|\boldsymbol{\theta})$ with some finite but unknown parameter vector $\boldsymbol{\theta} \in\mathbb{R}_p$. Further, consider an independent and identical sample, $\textbf{x}$, of size $n$ from this distribution, represented as $x_i \overset{iid}{\sim} f(x|\boldsymbol\theta),\ i = 1, 2, \ldots, n$. The resulting likelihood is
+$$
+\mathcal{L}(\boldsymbol\theta|\textbf{x}) = \prod_{i = 1}^n f(x_i|\boldsymbol\theta).
+$$
+In order to transform $\mathcal{L}$ into a probability function, we must divide by the integral of $\mathcal{L}$ over the **support**^[<https://en.wikipedia.org/wiki/Support_(mathematics)#Support_of_a_distribution>] (all possible values) of $\boldsymbol\theta$, where $\mathcal{S}(\boldsymbol\theta)$ represents this support. For some distributions, especially those with a mixture of discrete and continuous parameters^[For example, the Negative Binomial distribution has parameter vector $\langle n,p \rangle$ when $n$ is unknown, where $p\in (0,1)$ and $n\in\mathbb{N}$.], this support, $\mathcal{S}(\boldsymbol\theta)$, may be quite complex. 
+
+Given this setup, the marginal likelihood is defined as
+$$
+m(\boldsymbol\theta|\textbf{x}) = \int_{\mathcal{S}(\boldsymbol\theta)} \mathcal{L}(\boldsymbol\theta|\textbf{x}) \pi(\boldsymbol\theta) d\boldsymbol\theta.
+$$
+This $\pi(\boldsymbol\theta)$ may come as a surprise, as we haven't defined what it is. In **Bayesian Statistics**^[<https://en.wikipedia.org/wiki/Bayesian_statistics>], this $\pi(\boldsymbol\theta)$ is known as a **prior distribution**^[<https://en.wikipedia.org/wiki/Prior_probability>]. In the context of Bayesian inference, this prior distribution represents all the expert knowledge about the unknown parameter vector $\boldsymbol\theta$ that was known **before** the sample $\textbf{x}$ was collected. However, for this class, we will make the statement that we don't know much, if anything, about $\boldsymbol\theta$, so we set $\pi(\boldsymbol\theta) = 1$. Then, for our examples,
+$$
+m(\boldsymbol\theta|\textbf{x}) = \int_{\mathcal{S}(\boldsymbol\theta)} \mathcal{L}(\boldsymbol\theta|\textbf{x}) d\boldsymbol\theta.
+$$
+
+Finally, in order to transform the likelihood function of $\boldsymbol\theta$ into a probability function of $\boldsymbol\theta$, we will divide the likelihood by its integral. So, the probability function of $\boldsymbol\theta$ given the observed data $\textbf{x}$ is 
+$$
+f(\boldsymbol\theta|\textbf{x}) = \frac{\mathcal{L}(\boldsymbol\theta|\textbf{x})}{m(\boldsymbol\theta|\textbf{x})} = \frac{\mathcal{L}(\boldsymbol\theta|\textbf{x})}{\int_{\mathcal{S}(\boldsymbol\theta)} \mathcal{L}(\boldsymbol\theta|\textbf{x}) d\boldsymbol\theta}.
+$$
+We comment that distributions derived this way are true statistical distributions because they will always be non-negative, and an integral divided by itself equals 1 (so the total probability will be 1 by definition). In practice, this integral may be impossible to solve, so often numerical routines are used to estimate $f$ directly. Such topics are beyond the scope of this course.
+
+
+</br>
+
+
+
 ## Deriving the Distribution
+We will begin this process by considering an independent and identical sample $\textbf{x}$, with size $n$, from an Binomial Distribution (with $p$ unknown); that is $x_i \overset{iid}{\sim} \text{Binom}(N, p),\ i = 1, 2, \ldots, n$. Further, we will take a play from the Negative Binomial distribution, and let $r_i$ and $k_i$ denote the number of successes and failures in Binomial sample $i$, respectively. Thus, 
+$$
+\begin{align}
+\mathcal{L}(p|\textbf{x}) &= \prod_{i = 1}^n {N \choose x_i} p^{x_i} (1 - p)^{N - x_i} \\
+\Longrightarrow \mathcal{L}(p|\textbf{r},\textbf{k}) &= \prod_{i = 1}^n {r_i + k_i \choose k_i} p^{k_i} (1 - p)^{r_i} \\
+&= \left[ \prod_{i = 1}^n {r_i + k_i \choose k_i} \right] \times \left[ \prod_{i = 1}^n p^{k_i} \right] \times \left[ \prod_{i = 1}^n (1 - p)^{r_i} \right] \\
+&= \left[ \prod_{i = 1}^n {r_i + k_i \choose k_i} \right] p^{S_k} (1 - p)^{S_r},
+\end{align}
+$$
+where
+$$
+S_k = \sum_{i = 1}^n k_i,\ \text{and}\ S_r = \sum_{i = 1}^n r_i.
+$$
+
+As we discussed in our Formal Foundations section, we can **marginalize** this likelihood to create a probability function $f$, of the parameter $p$, given the **sufficient statistics**^[<https://en.wikipedia.org/wiki/Sufficient_statistic>] of the observed data $S_k$ and $S_r$. That is,
+$$
+\begin{align}
+f(p|S_r, S_k) &= \frac{\mathcal{L}(p|\textbf{r},\textbf{k})}{m(p|\textbf{r},\textbf{k})} \\
+&= \frac{\mathcal{L}(p|\textbf{r},\textbf{k})}{\int_{\mathcal{S}(p)} \mathcal{L}(p|\textbf{r},\textbf{k}) dp } \\
+&= \frac{ \left[ \prod_{i = 1}^n {r_i + k_i \choose k_i} \right] p^{S_k} (1 - p)^{S_r} }{\int_0^1 \left[ \prod_{i = 1}^n {r_i + k_i \choose k_i} \right] p^{S_k} (1 - p)^{S_r} dp } \\
+&= \frac{ \left[ \prod_{i = 1}^n {r_i + k_i \choose k_i} \right] p^{S_k} (1 - p)^{S_r} }{ \left[ \prod_{i = 1}^n {r_i + k_i \choose k_i} \right] \int_0^1 p^{S_k} (1 - p)^{S_r} dp } \\
+&= \frac{ p^{S_k} (1 - p)^{S_r} }{ \int_0^1 p^{S_k} (1 - p)^{S_r} dp } \\
+&= \frac{ p^{(S_k + 1) - 1} (1 - p)^{(S_r + 1) - 1} }{ \int_0^1 p^{(S_k + 1) - 1} (1 - p)^{(S_r + 1) - 1} dp } \\
+&= \frac{ p^{\alpha - 1} (1 - p)^{\beta - 1} }{ \int_0^1 p^{\alpha - 1} (1 - p)^{\beta - 1} dp },
+\end{align}
+$$
+where $\alpha = S_k + 1$ (1 plus the total number of failures in the $n$ Binomial trials) and $\beta = S_r + 1$ (1 plus the total number of successes in the $n$ Binomial trials).
+
+This integral in the denominator should look familiar: it is the definition of the **Complete Beta Function**, which we covered in the "Formal Foundatations" chapter on the Gamma and Beta functions. Thus,
+$$
+\begin{align}
+f(p|S_r, S_k) &= \frac{ p^{\alpha - 1} (1 - p)^{\beta - 1} }{ \int_0^1 p^{\alpha - 1} (1 - p)^{\beta - 1} dp } \\
+&= \left[ \int_0^1 p^{\alpha - 1} (1 - p)^{\beta - 1} dp \right]^{-1} p^{\alpha - 1} (1 - p)^{\beta - 1} \\
+&= \left[ \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)} \right]^{-1} p^{\alpha - 1} (1 - p)^{\beta - 1} \\
+&= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} p^{\alpha - 1} (1 - p)^{\beta - 1},
+\end{align}
+$$
+which is the standard form of the Beta Distribution with $p\in(0,1)$.
+
+What are the allowed values for $\alpha$ and $\beta$? Because we derived the Beta Distribution as the probability function of the Binomial Distribution's parameter $p$, we had an added restriction that $S_r$ and $S_k$ were non-negative integers (that is, $S_r,\ S_k \in 0\cup\mathbb{N} = 0, 1, 2, 3, \ldots$). This would impose the restriction that $\alpha = S_k + 1$ and $\beta = S_r + 1$ must be elements of $\mathbb{N} = 1, 2, 3, \ldots$ (not including 0). However, notice that the form of $f$ above uses Gamma functions, so it does not require that $\alpha$ and $\beta$ be restricted to the integers. What would it mean to have fractional/decimal counts of successes or failures? Well, some games allow for ties, which could be counted as half a success and half a failure. Other experiments could involve **Likert-scale**^[<https://en.wikipedia.org/wiki/Likert_scale>] responses, where "strongly disagree" maps to 0, "strongly agree" maps to 1, but the values in between map to various fractions between 0 and 1.^[See this discussion for more details: <https://math.stackexchange.com/questions/4244890/intuition-of-beta-distribution-with-less-than-one-parameters>] Thus, we state that $\alpha$ and $\beta$ simply need to be non-negative real numbers ($\alpha,\beta\in\mathbb{R}^+$).
+
 
 
 </br>
@@ -139,6 +214,7 @@ par(mfrow = c(1, 1))
 
 
 ## Show that this is a Distribution
+Given all our work to derive this distribution, showing that it is a distribution is directly by the definition of the **Complete Beta Function**.
 
 
 </br>
