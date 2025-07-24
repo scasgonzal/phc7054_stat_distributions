@@ -343,7 +343,7 @@ Gammat_num * 60
 So, for these 7 independent trials where the waiting times $T$ have an identical Gamma distribution with rate of 5 patients per hour, we wait `r round(Gammat_num * 60, 1)` minutes to see the third patient.
 
 
-### $\mathbb{E}[k]$
+### $\mathbb{E}[t]$
 Consider
 $$
 \begin{aligned}
@@ -358,7 +358,7 @@ M_t(s) &= \left( 1 - \frac{s}{\lambda} \right)^{-\alpha} \\
 $$
 
 
-### $\mathbb{E}[k^2]$ and $\text{Var}[k]$
+### $\mathbb{E}[t^2]$ and $\text{Var}[t]$
 Similarly,
 $$
 \begin{aligned}

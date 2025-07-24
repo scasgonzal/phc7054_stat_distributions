@@ -258,7 +258,7 @@ Expt_num * 60
 So, for these 7 independent trials where the waiting times $T$ have an identical Exponential distribution with rate of 5 patients per hour, we wait `r round(Expt_num * 60, 1)` minutes to see the first patient.
 
 
-### $\mathbb{E}[k]$
+### $\mathbb{E}[t]$
 Consider
 $$
 \begin{aligned}
@@ -273,7 +273,7 @@ M_t(s) &= \lambda(\lambda - s)^{-1} \\
 $$
 
 
-### $\mathbb{E}[k^2]$ and $\text{Var}[k]$
+### $\mathbb{E}[t^2]$ and $\text{Var}[t]$
 We continue:
 $$
 \begin{aligned}

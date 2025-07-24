@@ -81,7 +81,7 @@ This is an extension of **Fubini's Theorem**^[<https://en.wikipedia.org/wiki/Fub
 
 
 ## Deriving the Distribution
-We will begin this process by considering an independent and identical sample $\textbf{x}$, with size $n$, from an Binomial Distribution (with $p$ unknown); that is $x_i \overset{iid}{\sim} \text{Binom}(N, p),\ i = 1, 2, \ldots, n$. Further, we will take a play from the Negative Binomial distribution, and let $r_i$ and $k_i$ denote the number of successes and failures in Binomial sample $i$, respectively. Thus, 
+We will begin this process by considering an independent and identical sample $\textbf{x}$, with size $n$, from an Binomial Distribution (with $p$ unknown); that is $x_i \overset{iid}{\sim} \text{Binom}(N, p),\ i = 1, 2, \ldots, n$. Further, we will take a play from the Negative Binomial distribution, and let $k_i$ and $r_i$ denote the number of successes and failures in Binomial sample $i$, respectively. Thus, 
 $$
 \begin{align}
 \mathcal{L}(p|\textbf{x}) &= \prod_{i = 1}^n {N \choose x_i} p^{x_i} (1 - p)^{N - x_i} \\
@@ -107,9 +107,9 @@ f(p|S_r, S_k) &= \frac{\mathcal{L}(p|\textbf{r},\textbf{k})}{m(p|\textbf{r},\tex
 &= \frac{ p^{\alpha - 1} (1 - p)^{\beta - 1} }{ \int_0^1 p^{\alpha - 1} (1 - p)^{\beta - 1} dp },
 \end{align}
 $$
-where $\alpha = S_k + 1$ (1 plus the total number of failures in the $n$ Binomial trials) and $\beta = S_r + 1$ (1 plus the total number of successes in the $n$ Binomial trials).
+where $\alpha = S_k + 1$ (1 plus the total number of successes in the $n$ Binomial trials) and $\beta = S_r + 1$ (1 plus the total number of failures in the $n$ Binomial trials).
 
-This integral in the denominator should look familiar: it is the definition of the **Complete Beta Function**, which we covered in the "Formal Foundatations" chapter on the Gamma and Beta functions. Thus,
+This integral in the denominator should look familiar: it is the definition of the **Complete Beta Function**, which we covered in the "Formal Foundations" chapter on the Gamma and Beta functions. Thus,
 $$
 \begin{align}
 f(p|S_r, S_k) &= \frac{ p^{\alpha - 1} (1 - p)^{\beta - 1} }{ \int_0^1 p^{\alpha - 1} (1 - p)^{\beta - 1} dp } \\
@@ -120,7 +120,7 @@ f(p|S_r, S_k) &= \frac{ p^{\alpha - 1} (1 - p)^{\beta - 1} }{ \int_0^1 p^{\alpha
 $$
 which is the standard form of the Beta Distribution with $p\in(0,1)$.
 
-What are the allowed values for $\alpha$ and $\beta$? Because we derived the Beta Distribution as the probability function of the Binomial Distribution's parameter $p$, we had an added restriction that $S_r$ and $S_k$ were non-negative integers (that is, $S_r,\ S_k \in 0\cup\mathbb{N} = 0, 1, 2, 3, \ldots$). This would impose the restriction that $\alpha = S_k + 1$ and $\beta = S_r + 1$ must be elements of $\mathbb{N} = 1, 2, 3, \ldots$ (not including 0). However, notice that the form of $f$ above uses Gamma functions, so it does not require that $\alpha$ and $\beta$ be restricted to the integers. What would it mean to have fractional/decimal counts of successes or failures? Well, some games allow for ties, which could be counted as half a success and half a failure. Other experiments could involve **Likert-scale**^[<https://en.wikipedia.org/wiki/Likert_scale>] responses, where "strongly disagree" maps to 0, "strongly agree" maps to 1, but the values in between map to various fractions between 0 and 1.^[See this discussion for more details: <https://math.stackexchange.com/questions/4244890/intuition-of-beta-distribution-with-less-than-one-parameters>] Thus, we state that $\alpha$ and $\beta$ simply need to be non-negative real numbers ($\alpha,\beta\in\mathbb{R}^+$).
+What are the allowed values for $\alpha$ and $\beta$? Because we derived the Beta Distribution as the probability function of the Binomial Distribution's parameter $p$, we had an added restriction that $S_k$ and $S_r$ were non-negative integers (that is, $S_k,\ S_r \in 0\cup\mathbb{N} = 0, 1, 2, 3, \ldots$). This would impose the restriction that $\alpha = S_k + 1$ and $\beta = S_r + 1$ must be elements of $\mathbb{N} = 1, 2, 3, \ldots$ (not including 0). However, notice that the form of $f$ above uses Gamma functions, so it does not require that $\alpha$ and $\beta$ be restricted to the integers. What would it mean to have fractional/decimal counts of successes or failures? Well, some games allow for ties, which could be counted as half a success and half a failure. Other experiments could involve **Likert-scale**^[<https://en.wikipedia.org/wiki/Likert_scale>] responses, where "strongly disagree" maps to 0, "strongly agree" maps to 1, but the values in between map to various fractions between 0 and 1.^[See this discussion for more details: <https://math.stackexchange.com/questions/4244890/intuition-of-beta-distribution-with-less-than-one-parameters>] Thus, we state that $\alpha$ and $\beta$ simply need to be non-negative real numbers ($\alpha,\beta\in\mathbb{R}^+$).
 
 
 
@@ -273,16 +273,165 @@ which is the standard form of the Beta Distribution's MGF. We "peeled off" the f
 
 
 ## Method of Moments Estimates from Observed Data
-Let's generate some random data...
 
 
-### $\mathbb{E}[k]$
+### Effect of $\alpha$ and $\beta$ on Sampled Probabilities
+Following our Binomial example with probability of success $p_0 = 0.35$, let's create a probability distribution from which this $p_0$ is the most likely value. For the Beta Distribution, the formula for the **mode**^[For continuous distributions, the mode is the most likely value.] is known, so we set it equal to 0.35, and we will have a **frontier**^[A constrained set of possible values, inspired by the concept of a *production frontier* in economics. See  <https://en.wikipedia.org/wiki/Production%E2%80%93possibility_frontier>] where one unknown variable can be written as a function of another:
+$$
+\begin{aligned}
+0.35 &= \frac{\alpha - 1}{\alpha + \beta - 2} \\
+\Longrightarrow 0.35\alpha + 0.35\beta - 0.7 &= \alpha - 1 \\
+\Longrightarrow 0.35\beta &= 0.65\alpha - 0.3 \\
+\Longrightarrow \beta(\alpha) = \frac{13}{7}\alpha + \frac{6}{7}.
+\end{aligned}
+$$
+Notice that if we pick a value for one parameter of the Beta Distribution, while holding the mode constant, then the other value is determined.
+
+Let's pick a range of values for $\alpha$, calculate the corresponding values of $\beta$, and then look at the distribution of values as $\alpha$ and $\beta$ increase.
+```{r}
+#| fig-height: 6
+alpha_num <- 2^seq(from = 0, to = 6, length.out = 6)
+beta_num <- (13/7) * alpha_num + (6/7)
+
+set.seed(20150516)
+
+par(mfrow = c(3, 2))
+for (i in seq_along(alpha_num)) {
+  hist(
+    x = rbeta(n = 10000, shape1 = alpha_num[i], beta_num[i]),
+    xlim = c(0, 1),
+    main = paste0(
+      "alpha = ", round(alpha_num[i], 2),
+      "; beta = ", round(beta_num[i], 2)
+    ),
+    xlab = NULL
+  )
+  abline(v = 0.35, col = "red", lwd = 2)
+}
+par(mfrow = c(1,1))
+```
+
+Notice that for small values of $\alpha$, the mode of the distribution is not the desired 0.35. However, as $\alpha$ grows larger, the mode both gets closer to 0.35 *and* the distribution gets tighter around the desired value of 0.35.
+
+The intuition for this goes back to the motivating derivation of the Beta Distribution. The parameters $\alpha$ and $\beta$ represent the total number of successes and failures, respectfully, in repeated independent Binomial experiments. The more total successes and failures we've observed, the more *information* we have about the true value of $p$. Therefore, the distribution must shrink and become more narrow around the intended value of $p_0 = 0.35$. In practice, larger parameters of the Beta Distribution represent *more prior information* known about the probability of success, $p$.
 
 
-### $\mathbb{E}[k^2]$ and $\text{Var}[k]$
+### A "Random Sample" of Probabilities
+Let's generate some random data. Before we do this, we should think critically about this exercise. When, if ever, is it truly possible to "observe" a probability? We can observe successes and failures, but in the health science context, I can't think of any case where we could actually take a random sample of probabilities themselves. However, this somewhat nonsensical step is necessary to move forward with our examples for the Method of Moments estimators and also to describe the forms of the solutions to the MLE exercises. So, we will press onward.
+
+We will assume that we already know that in prior independent Binomial experiments, we observed a total of 64 successes and 120 failures. Let's assume that we somehow "observed" $n = 12$ probabilities from a Beta distribution with $\alpha =  64 + 1$ and $\beta = 120 + 1$. This would yield a theoretical mode value of $(65 - 1)/(65 + 121 - 2) \approx 0.348$. We can sample these values as shown below:
+```{r}
+set.seed(20150516)
+alphaParam_int <- 65
+betaParam_int <- 121
+(p_num <- rbeta(n = 12, shape1 = alphaParam_int, shape2 = betaParam_int))
+```
+Thus, the 12 "observed" probabilities are `r round(p_num, 3)`.
+
+
+### $\mathbb{E}[p]$
+Let's get to work:
+$$
+\begin{aligned}
+M_p(t) &= 1 + \sum_{k = 1}^{\infty} \frac{t^k}{k!} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \\
+\Longrightarrow M^{\prime}_p(t) &= 0 + \frac{\partial}{\partial t} \sum_{k = 1}^{\infty} \frac{t^k}{k!} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \\
+&= \sum_{k = 1}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{\partial}{\partial t} \frac{t^k}{k!} \\
+&= \sum_{k = 1}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{kt^{k - 1}}{k!} \\
+&= \sum_{k = 1}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 1}}{(k - 1)!} \\
+&\qquad\text{\emph{``Peel off''}}\ k = 1\ldots \\
+&= \left\{ \left[ \prod_{j = 0}^{[1] - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{[1] - 1}}{([1] - 1)!} \right\} + \sum_{k = 2}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 1}}{(k - 1)!} \\
+&= \left\{ \left[ \frac{\alpha + 0}{\alpha + \beta + 0} \right] \frac{t^0}{0!} \right\} + \sum_{k = 2}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 1}}{(k - 1)!} \\
+&= \frac{\alpha}{\alpha + \beta} + \sum_{k = 2}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 1}}{(k - 1)!} \\
+\Longrightarrow M^{\prime}_p(0) &= \frac{\alpha}{\alpha + \beta} + \sum_{k = 2}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{[0]^{k - 1}}{(k - 1)!} \\
+&= \frac{\alpha}{\alpha + \beta} + 0 \\
+&= \mathbb{E}[p].
+\end{aligned}
+$$
+
+
+### $\mathbb{E}[p^2]$ and $\text{Var}[p]$
+Similarly,
+$$
+\begin{aligned}
+M^{\prime}_p(t) &= \frac{\alpha}{\alpha + \beta} + \sum_{k = 2}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 1}}{(k - 1)!} \\
+\Longrightarrow M^{\prime\prime}_p(t) &= \frac{\partial}{\partial t} \left\{ \frac{\alpha}{\alpha + \beta} + \sum_{k = 2}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 1}}{(k - 1)!} \right\} \\
+&= 0 + \sum_{k = 2}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{\partial}{\partial t} \frac{t^{k - 1}}{(k - 1)!} \\
+&= \sum_{k = 2}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{(k - 1)t^{k - 2}}{(k - 1)!} \\
+&= \sum_{k = 2}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 2}}{(k - 2)!} \\
+&\qquad\text{\emph{``Peel off''}}\ k = 2\ldots \\
+&= \left\{ \left[ \prod_{j = 0}^{[2] - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{[2] - 2}}{([2] - 2)!} \right\} + \sum_{k = 3}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 2}}{(k - 2)!} \\
+&= \left\{ \left[ \prod_{j = 0}^1 \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^0}{0!} \right\} + \sum_{k = 3}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 2}}{(k - 2)!} \\
+&= \left\{ \left[ \frac{\alpha + 0}{\alpha + \beta + 0} \times \frac{\alpha + 1}{\alpha + \beta + 1} \right] [1] \right\} + \sum_{k = 3}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 2}}{(k - 2)!} \\
+&= \left[ \frac{\alpha}{\alpha + \beta} \frac{\alpha + 1}{\alpha + \beta + 1} \right] + \sum_{k = 3}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{t^{k - 2}}{(k - 2)!} \\
+\Longrightarrow M^{\prime\prime}_p(0) &= \left[ \frac{\alpha}{\alpha + \beta} \frac{\alpha + 1}{\alpha + \beta + 1} \right] + \sum_{k = 3}^{\infty} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right] \frac{[0]^{k - 2}}{(k - 2)!} \\ 
+&= \left[ \frac{\alpha}{\alpha + \beta} \frac{\alpha + 1}{\alpha + \beta + 1} \right] + 0 \\ 
+&= \mathbb{E}[p^2].
+\end{aligned}
+$$
+
+Thus,
+$$
+\begin{aligned}
+\text{Var}[p] &= \mathbb{E}[p^2] - \left[\mathbb{E}[p]\right]^2 \\
+&= \left[ \frac{\alpha}{\alpha + \beta} \frac{\alpha + 1}{\alpha + \beta + 1} \right] - \left[ \frac{\alpha}{\alpha + \beta} \right]^2 \\
+&= \frac{\alpha(\alpha + 1)}{(\alpha + \beta)(\alpha + \beta + 1)}\frac{(\alpha + \beta)}{(\alpha + \beta)} - \frac{\alpha^2}{(\alpha + \beta)^2}\frac{(\alpha + \beta + 1)}{(\alpha + \beta + 1)} \\
+&= \frac{\alpha(\alpha + 1)(\alpha + \beta) - \alpha^2(\alpha + \beta + 1)}{(\alpha + \beta)^2(\alpha + \beta + 1)} \\
+&= \frac{\alpha(\alpha^2 + \alpha\beta + \alpha + \beta) - (\alpha^3 + \alpha^2\beta + \alpha^2)}{(\alpha + \beta)^2(\alpha + \beta + 1)} \\
+&= \frac{(\alpha^3 + \alpha^2\beta + \alpha^2) + \alpha\beta - (\alpha^3 + \alpha^2\beta + \alpha^2)}{(\alpha + \beta)^2(\alpha + \beta + 1)} \\
+&= \frac{\alpha\beta}{(\alpha + \beta)^2(\alpha + \beta + 1)} \\
+\end{aligned}
+$$
+
 
 
 ### Solving the System
+After these derivations, we have the following system of equations:
+$$
+\bar{p} = \frac{\alpha}{\alpha + \beta};\ s^2 = \frac{\alpha\beta}{(\alpha + \beta)^2(\alpha + \beta + 1)}.
+$$
+Let's solve the first equation for $\beta$, since it only appears once:
+$$
+\begin{aligned}
+\bar{p} &= \frac{\alpha}{\alpha + \beta} \\
+\Longrightarrow \alpha\bar{p} + \beta\bar{p} &= \alpha \\
+\Longrightarrow \beta\bar{p} &= \alpha - \alpha\bar{p} \\
+\Longrightarrow \beta &= \frac{\alpha}{\bar{p}} - \alpha.
+\end{aligned}
+$$
+
+We will now substitute this value for $\beta$, which depends on the known value of $\bar{p}$ and the unknown value of $\alpha$, into the second equation:
+$$
+\begin{aligned}
+s^2 &= \frac{\alpha\beta}{(\alpha + \beta)^2(\alpha + \beta + 1)} \\
+&= \frac{\alpha\left[ \frac{\alpha}{\bar{p}} - \alpha \right]}{\left(\alpha + \left[ \frac{\alpha}{\bar{p}} - \alpha \right]\right)^2 \left(\alpha + \left[ \frac{\alpha}{\bar{p}} - \alpha \right] + 1\right)} \\
+&= \frac{ \alpha^2\left[ \frac{1}{\bar{p}} - 1 \right] }{\left( \frac{\alpha}{\bar{p}} \right)^2 \left( \frac{\alpha}{\bar{p}} + 1 \right)} \\
+&= \frac{ \alpha^2\left[ \frac{1}{\bar{p}} - 1 \right] }{ \alpha^2 \left( \frac{\alpha}{\bar{p}^3} + \frac{1}{\bar{p}^2} \right)} \times \frac{\bar{p}^3}{\bar{p}^3} \\
+&= \frac{ \left[ 1 - \bar{p} \right] \bar{p}^2 }{ \frac{\alpha\bar{p}^3}{\bar{p}^3} + \frac{\bar{p}^3}{\bar{p}^2} } \\
+&= \frac{ (1 - \bar{p})\bar{p}^2 }{\alpha + \bar{p}} \\
+\Longrightarrow s^2(\alpha + \bar{p}) &= (1 - \bar{p})\bar{p}^2 \\
+\Longrightarrow s^2\alpha &= (1 - \bar{p})\bar{p}^2 - s^2\bar{p} \\
+\Longrightarrow \hat{\alpha} &= (1 - \bar{p})\frac{\bar{p}^2}{s^2} - \bar{p}.
+\end{aligned}
+$$
+
+Finally, we can substitute this estimate for $\alpha$, which is entirely in terms of the known quantities $\bar{p}$ and $s^2$, back into the first equation that we solved for $\beta$. Thus,
+$$
+\begin{aligned}
+\beta &= \frac{\alpha}{\bar{p}} - \alpha \\
+&= \left[ \alpha \right]\left[ \frac{1}{\bar{p}} - 1 \right] \\
+\Longrightarrow \hat{\beta} &= \left[ (1 - \bar{p})\frac{\bar{p}^2}{s^2} - \bar{p} \right] \left[ \frac{1}{\bar{p}} - 1 \right].
+\end{aligned}
+$$
+
+Now that we have these two equations in terms of the known quantities, we can find the Method of Moments estimates for $\alpha$ and $\beta$ given the $n = 12$ "observed" data points:
+```{r}
+pBar <- mean(p_num)
+pS2 <- var(p_num)
+
+(alphaHat_MoM <- (1 - pBar)*(pBar^2 / pS2) - pBar^2)
+(betaHat_MoM <- alphaHat_MoM * (1 / pBar - 1))
+```
+So, while the true parameter values used to generate this sample of $n = 12$ probabilities were $\alpha$ = `r alphaParam_int` and $\beta$ = `r betaParam_int`, our Method of Moments estimates are $\hat{\alpha}$ = `r round(alphaHat_MoM, 1)` and $\hat{\beta}$ = `r round(betaHat_MoM, 1)`.
 
 
 </br>
