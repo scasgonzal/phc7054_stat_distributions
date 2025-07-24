@@ -36,7 +36,10 @@ options(dplyr.summarise.inform = FALSE)
 
 
 
-## Formal Foundations: Marginalizing a Likelihood
+## Formal Foundations
+
+
+### Marginalizing a Likelihood
 So far in our chapters, we have created quite a few likelihood functions. When we introduced likelihoods at the very beginning^[<https://gabriel.quarto.pub/stat-distributions-primer/chapters/bernoulli_20250310.html#the-likelihood-function>], we were careful to state that likelihoods are **not probability functions**. However, we know two things:
 
 1) likelihood functions are always non-negative (recall that the products of any number of non-negative numbers will still be non-negative), and 
@@ -65,6 +68,13 @@ f(\boldsymbol\theta|\textbf{x}) = \frac{\mathcal{L}(\boldsymbol\theta|\textbf{x}
 $$
 We comment that distributions derived this way are true statistical distributions because they will always be non-negative, and an integral divided by itself equals 1 (so the total probability will be 1 by definition). In practice, this integral may be impossible to solve, so often numerical routines are used to estimate $f$ directly. Such topics are beyond the scope of this course.
 
+
+### Fubini's Theorem
+One small piece of theory we will need below is to swap the order of integration and summation (which we have done quite loosely up to this point). Basically, if we have two properties: 1) that $f \ge 0$, and $F < \infty$, then 
+$$
+\int \sum_n f_n(x) dx = \sum_n \int f_n(x) dx.
+$$
+This is an extension of **Fubini's Theorem**^[<https://en.wikipedia.org/wiki/Fubini%27s_theorem>] which allows us to swap the order of summation and integration, as long as the function $f$ is non-negative and the integral converges. Note that if $f$ is a probability function of a statistical distribution, then we have both properties automatically.
 
 </br>
 
@@ -214,7 +224,16 @@ par(mfrow = c(1, 1))
 
 
 ## Show that this is a Distribution
-Given all our work to derive this distribution, showing that it is a distribution is directly by the definition of the **Complete Beta Function**.
+Given all our work to derive this distribution, we can show that it is a distribution directly. First, note that because $p\in(0,1)$ and $\alpha,\beta > 0$, we have that $f(p|\alpha,\beta) > 0$. Then, starting with the Riemann-Stieltjes integral and applying the definition of the **Complete Beta Function**^[Covered in our Formal Foundations chapter on the Gamma and Beta functions] we have
+$$
+\begin{align}
+\int_{\mathcal{S}(p)} dF(p|\alpha,\beta) &= \int_0^1 \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} p^{\alpha - 1} (1 - p)^{\beta - 1} dp \\
+&= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \int_0^1 p^{\alpha - 1} (1 - p)^{\beta - 1} dp \\
+&= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \left[ \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)} \right] \\
+&= 1.
+\end{align}
+$$
+Therefore, the Beta Distribution is a proper distribution.
 
 
 </br>
@@ -222,6 +241,31 @@ Given all our work to derive this distribution, showing that it is a distributio
 
 
 ## Derive the Moment Generating Function
+When I was in grad school, some of my professors ignored deriving the Moment Generating Function of the Beta Distribution. When you look at its form in the back of a statistical theory textbook, you can probably see why (it's unpleasant). However, we are going to derive it anyway. Many derivations you might find online involve using the **Kummer's Function of the First Kind**^[<https://mathworld.wolfram.com/ConfluentHypergeometricFunctionoftheFirstKind.html>], which requires even more theoretical foundations to cover than I would ever want to write. Instead, we will opt for a longer derivation, but one that uses Formal Foundations that we have already covered, namely the Riemann-Stieljes Integral (that you should be comfortable with by now), the **MacLaurin Series**^[<https://gabriel.quarto.pub/stat-distributions-primer/chapters/negative_binomial_20250310.html#taylormaclaurin-series>] of $e^x$, swapping the order of integration and summation via **Fubini's Theorem**,^[<https://en.wikipedia.org/wiki/Fubini%27s_theorem>] the definition of the **Complete Beta Function**,^[<https://gabriel.quarto.pub/stat-distributions-primer/chapters/theory_gamma_function_20250707.html#the-complete-beta-function>] and the **Continued Recurrence Property** of the Gamma Function.^[<https://gabriel.quarto.pub/stat-distributions-primer/chapters/theory_gamma_function_20250707.html#the-gamma-continued-recurrence-equation>]
+
+Let's begin:
+$$
+\begin{aligned}
+M_p(t) &= \int_{\mathcal{S}(p)} e^{tp}dF(p|\alpha,\beta) \\
+&= \int_0^1 e^{tp} \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} p^{\alpha - 1} (1 - p)^{\beta - 1} dp \\
+&\qquad\text{\emph{MacLaurin Series of }} e^{tp} \text{\emph{...}} \\
+&= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \int_0^1 \left[ \sum_{k = 0}^{\infty} \frac{(tp)^k}{k!} \right] p^{\alpha - 1} (1 - p)^{\beta - 1} dp \\
+&= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \int_0^1 \sum_{k = 0}^{\infty} \frac{t^k}{k!} p^k p^{\alpha - 1} (1 - p)^{\beta - 1} dp \\
+&\qquad\text{\emph{Fubini's Theorem...}} \\
+&= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \sum_{k = 0}^{\infty} \int_0^1 \frac{t^k}{k!} p^k p^{\alpha - 1} (1 - p)^{\beta - 1} dp \\
+&= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \sum_{k = 0}^{\infty} \frac{t^k}{k!} \int_0^1 p^{\alpha + k - 1} (1 - p)^{\beta - 1} dp \\
+&\qquad\text{\emph{Defn. of Beta Function...}} \\
+&= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \sum_{k = 0}^{\infty} \frac{t^k}{k!} \left[ \frac{\Gamma(\alpha + k)\Gamma(\beta)}{\Gamma(\alpha + \beta + k)} \right] \\
+&= \sum_{k = 0}^{\infty} \frac{t^k}{k!} \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha + \beta + k)} \frac{\Gamma(\alpha + k)}{\Gamma(\alpha)} \right] \\
+&\qquad\text{\emph{``Peel off'' the first summand...}} \\
+&= \frac{t^0}{0!} \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha + \beta + 0)} \frac{\Gamma(\alpha + 0)}{\Gamma(\alpha)} \right] + \sum_{k = 1}^{\infty} \frac{t^k}{k!} \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha + \beta + k)} \frac{\Gamma(\alpha + k)}{\Gamma(\alpha)} \right] \\
+&\qquad\text{\emph{Gamma Function Recurrence Property...}} \\
+&= 1 + \sum_{k = 1}^{\infty} \frac{t^k}{k!} \left[ \frac{\Gamma(\alpha + \beta)}{ \prod_{j = 0}^{k - 1} (\alpha + \beta + j) \Gamma(\alpha + \beta) } \frac{ \prod_{j = 0}^{k - 1} (\alpha + j) \Gamma(\alpha) }{\Gamma(\alpha)} \right] \\
+&= 1 + \sum_{k = 1}^{\infty} \frac{t^k}{k!} \left[ \frac{1}{ \prod_{j = 0}^{k - 1} (\alpha + \beta + j) } \frac{ \prod_{j = 0}^{k - 1} (\alpha + j) }{1} \right] \\
+&= 1 + \sum_{k = 1}^{\infty} \frac{t^k}{k!} \left[ \prod_{j = 0}^{k - 1} \frac{\alpha + j}{\alpha + \beta + j} \right],
+\end{aligned}
+$$
+which is the standard form of the Beta Distribution's MGF. We "peeled off" the first summand (incrementing from $k = 0$ to $k = 1$) to make taking the first derivative easier. When we are ready to take the second derivative, we will "peel off" the second summand (incrementing from $k = 1$ to $k = 2$) then.
 
 
 </br>
