@@ -441,9 +441,64 @@ So, while the true parameter values used to generate this sample of $n = 12$ pro
 We have similar qualms here as in the Method of Moments section, in that it's a strange thing to think about "observing" probabilities. However, we can still work through some of the MLE steps for the Beta Distribution. Let $\textbf{p} = p_1, p_2, \ldots, p_n$ be an independent and identical sample from a Beta Distribution with unknown parameters $\alpha$ and $\beta$. We start with the Likelihood function:
 $$
 \begin{aligned}
-\mathcal{L}(\alpha, \beta|\textbf{p}) = \prod_{i = n}^n \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} p_i^{\alpha - 1} (1 - p_i)^{\beta - 1}
+\mathcal{L}(\alpha, \beta|\textbf{p}) &= \prod_{i = n}^n \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} p_i^{\alpha - 1} (1 - p_i)^{\beta - 1} \\
+\Longrightarrow \ell(\alpha, \beta|\textbf{p}) &= \sum_{i = 1}^n \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} p_i^{\alpha - 1} (1 - p_i)^{\beta - 1} \right] \\ 
+&= \sum_{i = 1}^n \left\{ \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \right] + \log \left[ p_i^{\alpha - 1} \right] + \log \left[ (1 - p_i)^{\beta - 1} \right] \right\} \\
+&= n\log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \right] + (\alpha - 1) \sum_{i = 1}^n \log(p_i) + (\beta - 1)\sum_{i = 1}^n \log(1 - p_i).
 \end{aligned}
 $$
+
+We immediately see two problems:
+
+1) We are taking the partial derivatives with respect to $\alpha$ and $\beta$, which are inside of Gamma functions, so we will not have a closed-form solution regardless.
+2) The $\Gamma(\alpha + \beta)$ term is a single Gamma function with both $\alpha$ and $\beta$ inside, so any partial derivatives with respect to one variable will still contain the other variable. These parameters cannot be estimated independently.
+
+The partial derivative with respect to $\alpha$ is found by:
+$$
+\begin{aligned}
+\ell(\alpha, \beta|\textbf{p}) &= n\log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \right] + (\alpha - 1) \sum_{i = 1}^n \log(p_i) + (\beta - 1)\sum_{i = 1}^n \log(1 - p_i) \\
+&= n\log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)} \right] - n\log \left[ \Gamma(\beta) \right] + (\alpha - 1) \sum_{i = 1}^n \log(p_i) + (\beta - 1)\sum_{i = 1}^n \log(1 - p_i) \\
+\Longrightarrow \frac{\partial}{\partial \alpha} \ell(\alpha, \beta|\textbf{p}) &= n \frac{\partial}{\partial \alpha} \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)} \right] - [0] + \sum_{i = 1}^n \log(p_i) + [0] \\
+&= n \frac{\partial}{\partial \alpha} \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)} \right] + n\overline{\log(p)} \\
+0 &\overset{\text{set}}{=} n \frac{\partial}{\partial \alpha} \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)} \right] + n\overline{\log(p)} \\
+\Longrightarrow -\overline{\log(p)} &= \frac{\partial}{\partial \alpha} \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)} \right].
+\end{aligned}
+$$
+We can't get much further than this analytically. If either $\alpha$ or $beta$ are known to be an integer (for instance, if we know that these parameters truly represent integer counts of successes and failures in prior studies), then we can employ the **Continued Recurrence Property** of the Gamma Function as follows (but it doesn't make the problem much easier):
+$$
+\begin{aligned}
+-\overline{\log(p)} &= \frac{\partial}{\partial \alpha} \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)} \right] \\
+&= \frac{\partial}{\partial \alpha} \log \left[ \frac{\Gamma(\alpha) \prod_{j = 0}^{\beta - 1} (\alpha + j)}{\Gamma(\alpha)} \right] \\
+&= \frac{\partial}{\partial \alpha} \log \left[ \prod_{j = 0}^{\beta - 1} (\alpha + j) \right] \\
+&= \frac{\partial}{\partial \alpha} \sum_{j = 0}^{\beta - 1} \log (\alpha + j) \\
+&= \sum_{j = 0}^{\beta - 1} \frac{\partial}{\partial \alpha} \log (\alpha + j) \\
+&= \sum_{j = 0}^{\beta - 1} \frac{1}{\alpha + j} \\
+&= \frac{1}{\alpha} + \frac{1}{\alpha + 1} + \ldots + \frac{1}{\alpha + \beta - 1}.
+\end{aligned}
+$$
+Now, this may *look* easier to work with (and it is easier computationally, because this is a smooth, positive, decreasing function for $\alpha > 0$), but notice that the unknown parameter $\beta$ is now in the **support** of the computation for $\alpha$. So, we are still in a situation where we need to estimate one parameter first in order to approximate a value for the second. If we have a guess for $\beta$ then this becomes a manageable coding problem to estimate $\alpha$. Also, note that because $p\in(0,1)$, $-\overline{\log(p)} \in (0,\infty)$, so there will be a solution to the problem.
+
+The partial derivative with respect to $\beta$ is almost identical, so I will skip some of the same steps we saw above:
+$$
+\begin{aligned}
+\ell(\alpha, \beta|\textbf{p}) &= n\log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \right] + (\alpha - 1) \sum_{i = 1}^n \log(p_i) + (\beta - 1)\sum_{i = 1}^n \log(1 - p_i) \\
+&= n\log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\beta)} \right] - n\log \left[ \Gamma(\alpha) \right] + (\alpha - 1) \sum_{i = 1}^n \log(p_i) + (\beta - 1)\sum_{i = 1}^n \log(1 - p_i) \\
+\Longrightarrow \frac{\partial}{\partial \beta} \ell(\alpha, \beta|\textbf{p}) &= n \frac{\partial}{\partial \beta} \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\beta)} \right] - [0] + [0] + \sum_{i = 1}^n \log(1 - p_i) \\
+&= n \frac{\partial}{\partial \beta} \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\beta)} \right] + n\overline{\log(1 - p)} \\
+0 &\overset{\text{set}}{=} n \frac{\partial}{\partial \beta} \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\beta)} \right] + n\overline{\log(1 - p)} \\
+\Longrightarrow -\overline{\log(1 - p)} &= \frac{\partial}{\partial \beta} \log \left[ \frac{\Gamma(\alpha + \beta)}{\Gamma(\beta)} \right] \\
+&\qquad\text{\emph{Assuming one parameter can be an integer...}} \\
+&= \frac{\partial}{\partial \beta} \log \left[ \frac{\Gamma(\beta) \prod_{j = 0}^{\alpha - 1} (\beta + j)}{\Gamma(\beta)} \right] \\
+&= \frac{\partial}{\partial \beta} \sum_{j = 0}^{\alpha - 1} \log (\beta + j) \\
+&= \sum_{j = 0}^{\alpha - 1} \frac{1}{\beta + j}.
+\end{aligned}
+$$
+
+We now have a system of two equations and two unknowns (assuming that we can limit $\alpha$ and $\beta$ to the integers---if we cannot, then we have to use the **Digamma** functions^[<https://en.wikipedia.org/wiki/Digamma_function>]). That system is:
+$$
+-\overline{\log(p)} = \sum_{j = 0}^{\beta - 1} \frac{1}{\alpha + j};\quad -\overline{\log(1 - p)} = \sum_{j = 0}^{\alpha - 1} \frac{1}{\beta + j}.
+$$
+Theoretically, we could solve this numerically. Often, we would use the Method of Moments estimates as the initial values for $\alpha$ and $\beta$.
 
 
 </br>
@@ -452,7 +507,19 @@ $$
 
 ## Exercises
 
-To be determined.
+
+### The Uniform Distribution
+The Continuous Uniform Distribution over $(0,1)$ is a special case of the Beta Distribution with $\alpha = 1$ and $\beta = 1$.
+
+1. Show that the Uniform Distribution is a proper distribution.
+2. Show that the MGF is $M_p(t) = \frac{1}{t}(e^t - 1)$.
+3. Find $\mathbb{E}[p]$ and $\text{Var}[p]$.
+
+
+### Computational Solution to the MLEs
+Try to write some code that will estimate $\alpha$ and $\beta$ from a vector of known "observed" probabilities, $\textbf{p}$. 
+
+Other exercises to be determined.
 
 
 ## Footnotes 
