@@ -1,0 +1,65 @@
+---
+title: "Formal Foundations: Trigonometric Derivatives and the Saddlepoint Test"
+author: "Gabriel J. Odom"
+date: last-modified
+format:
+  html:
+    embed-resources: false
+    code-fold: true
+knitr:
+  opts_chunk:        ########## set global options ############
+    collapse: true   # keep code from blocks together (if shown)
+    echo: true       # show code
+    message: true    # show messages
+    warning: true    # show warnings
+    error: true      # show error messages
+    comment: ""      # don't show ## with printed output
+    dpi: 100         # image resolution (typically 300 for publication)
+    fig-width: 6.5   # figure width
+    fig-height: 4.0  # figure height
+    R.options:    
+      digits: 3    # round to three digits
+editor: source
+---
+
+```{r, tidyverse-tidymodels}
+#| echo: false
+
+library(conflicted)
+suppressPackageStartupMessages(library(tidymodels))
+tidymodels_prefer()
+suppressPackageStartupMessages(library(tidyverse))
+
+# suppress "`summarise()` has grouped output by " messages
+options(dplyr.summarise.inform = FALSE)
+```
+
+
+
+## Overview
+To prepare for the derivation of the Normal Distribution, we need a refresher on derivatives of trigonometric functions (and a few identities of trigonometric functions as well.) Also, for the maximum likelihood estimators that we've seen so far, the likelihood functions were either 1) **univariate** (having only one unknown parameter), like the Binomial or Exponential Distributions, or 2) **bivariate** (having two unknown parameters), but were so complicated that no closed form solution for the MLEs existed. However, for the Normal Distribution, we will have a bivariate likelihood (with both $\mu$ and $\sigma^2$ unknown), but we will be able get a closed-form system of two equations for these two unknowns which **can** be solved analytically. This means that we need a version of the **Second Derivative Test** that works for bivariate functions; this is called the **Saddlepoint Test**.
+
+</br>
+
+
+
+## Trigonometric Functions and the Unit Circle
+
+</br>
+
+
+
+## Trigonometric Derivatives
+
+</br>
+
+
+
+## The Saddlepoint Test
+
+</br>
+
+
+
+## Footnotes
+
