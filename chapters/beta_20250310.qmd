@@ -433,12 +433,17 @@ pS2 <- var(p_num)
 ```
 So, while the true parameter values used to generate this sample of $n = 12$ probabilities were $\alpha$ = `r alphaParam_int` and $\beta$ = `r betaParam_int`, our Method of Moments estimates are $\hat{\alpha}$ = `r round(alphaHat_MoM, 1)` and $\hat{\beta}$ = `r round(betaHat_MoM, 1)`.
 
-
 </br>
 
 
 
 ## Maximum Likelihood Estimators
+We have similar qualms here as in the Method of Moments section, in that it's a strange thing to think about "observing" probabilities. However, we can still work through some of the MLE steps for the Beta Distribution. Let $\textbf{p} = p_1, p_2, \ldots, p_n$ be an independent and identical sample from a Beta Distribution with unknown parameters $\alpha$ and $\beta$. We start with the Likelihood function:
+$$
+\begin{aligned}
+\mathcal{L}(\alpha, \beta|\textbf{p}) = \prod_{i = n}^n \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} p_i^{\alpha - 1} (1 - p_i)^{\beta - 1}
+\end{aligned}
+$$
 
 
 </br>

@@ -18,7 +18,6 @@ book:
     - chapters/gamma_20250310.qmd
     - chapters/beta_20250310.qmd
     - chapters/normal_20250310.qmd
-    - chapters/chi_square_20250310.qmd
     - chapters/students_t_20250310.qmd
     - chapters/f_20250310.qmd
     - references.qmd

@@ -544,7 +544,13 @@ For a discussion of numerical routines related to the MLEs for the Gamma with bo
 
 ## Exercises
 
-To be determined.
+The $\chi^2$ Distribution is a special case of the Gamma Distribution with $\alpha = \nu/2$ and $\lambda = 1/2$.
+
+1. Use "integration like a statistician" to show that the $\chi^2_{\nu}$ Distribution is a proper distribution.
+2. Show that the MGF is $M_t(s) = (1 - 2s)^{-\nu/2}$.
+3. Think about the $\nu$ parameter of this distribution. In what cases would $\nu$ be unknown?
+
+Other exercises to be determined.
 
 
 ## Footnotes 
