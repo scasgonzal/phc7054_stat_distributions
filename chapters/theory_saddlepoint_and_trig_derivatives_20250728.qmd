@@ -45,11 +45,158 @@ To prepare for the derivation of the Normal Distribution, we need a refresher on
 
 ## Trigonometric Functions and the Unit Circle
 
+
+### The Unit Circle
+This is the [**Unit Circle**](https://etc.usf.edu/clipart/43200/43216/unit-circle8_43216.htm), and it is crucial for our understanding of basic trigonometric functions.^[<https://en.wikipedia.org/wiki/Unit_circle>] The radius of the unit circle is 1, and we mostly use it to create **right triangles**^[<https://en.wikipedia.org/wiki/Right_triangle>] where the hypotenuse^[Longest side] is the radius of the circle.
+
+![](../figs/unit-circle-reference-angles.gif)
+
+
+### Sines and Cosines
+Let's draw a triangle within this unit circle (image from [this high school maths website](https://flexbooks.ck12.org/cbook/ck-12-precalculus-concepts-2.0/section/5.1/primary/lesson/the-unit-circle-pcalc/)).
+
+![](../figs/unit_circle_w_triangle.png)
+
+We now have a right triangle from the origin to the edge of the unit circle. The **sine** function takes in the angle, often symbolized by $\theta$, and returns the height of this triangle. Technically speaking, the sine function returns the ratio of the height of the triangle to its hypotenuse, but the hypotenuse of these triangles will be the radius of the unit circle, i.e. 1. The **cosine** function takes in this same angle and returns the width of this triangle. Because of this relationship, we often describe the unit circle relationship on the $\langle x, y \rangle$ plane with $x = \cos(\theta)$ and $y = \sin(\theta)$. The common mnemonic device to remember this is "SOH-CAH-TOA" (pronounced "sow kuh towuh" in American English):
+
+- **S**ine: **O**pposite side (height) divided by **H**ypotenuse
+- **C**osine: **A**djacent side (width) divided by **H**ypotenuse
+- **T**angent: **O**pposite side (height) divided by **A**djacent side (width)
+
+Let's calculate these values in R. Unfortunately, the trigonometric functions do not allow for input in degrees, so we must convert from degrees to **radians**.^[<https://en.wikipedia.org/wiki/Radian>] The formulae to convert between degrees and radians (and back) are
+$$
+\text{Rad} = \text{Degrees}\times\frac{\pi}{180};\ \ \text{Degrees} = \text{Rad}\times\frac{180}{\pi}.
+$$
+
+Let's use the R `sin()` and `cos()` functions to confirm that a $30^{\circ}$ triangle has a height of 0.5 and a width of $\frac{1}{2}\sqrt{3}$:
+```{r}
+rads30_num <- 30 * pi / 180
+sin(rads30_num)
+cos(rads30_num)
+sqrt(3)/2
+```
+
+One other important piece of information to know about these two functions is their graph over all $360^{\circ}$ of a circle. Here is the sine:
+```{r}
+degrees_int <- 1:360
+rads_num <- degrees_int * pi / 180
+plot(
+  x = degrees_int, y = sin(rads_num),
+  main = "The Sine Function",
+  xaxt = "n", xlab = "Degrees", ylab = "Sine"
+)
+axis(side = 1, at = seq(0, 360, by = 45))
+abline(h = 0)
+```
+And here is the cosine:
+```{r}
+plot(
+  x = degrees_int, y = cos(rads_num),
+  main = "The Cosine Function",
+  xaxt = "n", xlab = "Degrees", ylab = "Cosine"
+)
+axis(side = 1, at = seq(0, 360, by = 45))
+abline(h = 0)
+```
+
+
+
+### The Tangent Function
+Now, there is one other main function in trigonometry that we mentioned but haven't discussed: the **tangent**. From the calculus perspective, the term "tangent" refers to a straight line with the slope that's equal to a curve at a particular point. For a refresher, go back to the Formal Foundations section on the Limit Definition of the Derivative in the Poisson Distribution lesson. For trigonometry, the term "tangent" refers to a function relating the angle of a triangle to the ratio of its height and width. Using R, let's confirm that this ratio for this triangle above is $(1/2) \div (\frac{1}{2}\sqrt{3})$:
+```{r}
+tan(rads30_num)
+(1/2) / (sqrt(3)/2)
+```
+
+Recall that the width of these triangles will oscillate from a maximum of 1 (when the angle is a multiple of $180^{\circ}$) to a width of 0 (when the angle is half of a multiple of $180^{\circ}$). Therefore, because the tangent is defined by the ratio of height to width, the tangent will be undefined (due to division by 0) when when the angle is half of a multiple of $180^{\circ}$. Let's plot the tangent as well:
+```{r}
+plot(
+  x = degrees_int, y = tan(rads_num), ylim = c(-5, 5),
+  main = "The Tangent Function",
+  xaxt = "n", xlab = "Degrees", ylab = "Tangent"
+)
+axis(side = 1, at = seq(0, 360, by = 45))
+abline(v = c(90, 270))
+```
+
+
+### Inverse Trigonometric Functions
+As with almost all mathematical operators, the trigonometric functions have **inverse** functions.^[<https://en.wikipedia.org/wiki/Inverse_function#Standard_inverse_functions>] These are functions that "undo" the effects of the original function. For example, if $f(x) = \sqrt{x}$, then $g(x) = x^2$ "undoes" the effects of $f$. For the trigonometric functions, these inverse functions are called the "arc" functions and defined as follows:
+$$
+\begin{aligned}
+\arcsin(\sin(\theta)) &= \theta, \\
+\arccos(\cos(\theta)) &= \theta, \\
+\arctan(\tan(\theta)) &= \theta.
+\end{aligned}
+$$
+So, these "arc" functions "undo" their corresponding trigonometric functions. These often come up when solving equations for an angle $\theta$. For example:
+$$
+\begin{aligned}
+\sin(\theta) &= \frac{\text{height}}{\text{width}} \\
+\Longrightarrow \arcsin(\sin(\theta)) &= \arcsin\left( \frac{\text{height}}{\text{width}} \right) \\
+\Longrightarrow \theta &= \arcsin\left( \frac{\text{height}}{\text{width}} \right).
+\end{aligned}
+$$
+
+We will also graph these three functions, but we remark that their domains will be different. For sine and cosine, the domain was $[0^{\circ}, 360^{\circ}]$; the range was $[-1,1]$. For tangent, the domain was $[0^{\circ}, 360^{\circ}]$ *except for* the vertical asymptotes at $\{90^{\circ}, 270^{\circ}\}$; the range was $(-\infty, \infty)$. Also, as before, R uses radians instead of degrees, so we will also have to transform back the results to degrees.
+
+Let's plot these inverse trigonometric functions, but pay special attention to their domains and ranges. Let's start with the arcsine (using the `asin()` function):
+```{r}
+triangleHeights_num <- seq(-1, 1, length.out = 101)
+thetaRads_num <- asin(triangleHeights_num)
+plot(
+  x = triangleHeights_num, y = 180 * thetaRads_num / pi, ylim = c(-90, 90),
+  main = "The Arcsine Function",
+  xaxt = "n", xlab = "Triangle Heights",
+  yaxt = "n", ylab = "Generating Angle"
+)
+axis(side = 1, at = seq(-1, 1, length.out = 9))
+axis(side = 2, at = seq(-90, 90, by = 30))
+abline(h = 0)
+```
+Similarly, we can plot the arccosine (using the `acos()` function):
+```{r}
+triangleWidths_num <- seq(-1, 1, length.out = 101)
+thetaRads_num <- acos(triangleWidths_num)
+plot(
+  x = triangleWidths_num, y = 180 * thetaRads_num / pi, ylim = c(0, 180),
+  main = "The Arccosine Function",
+  xaxt = "n", xlab = "Triangle Widths",
+  yaxt = "n", ylab = "Generating Angle"
+)
+axis(side = 1, at = seq(-1, 1, length.out = 9))
+axis(side = 2, at = seq(0, 180, by = 30))
+abline(h = 0)
+```
+Finally, for the arctangent, because this function takes the ratio of triangle heights and widths as its input, the domain of possible values includes the entire Real line. However, the range of the function is only from $(-90^{\circ}, 90^{\circ})$. We now plot the this function (using the `atan()` function):
+```{r}
+triangleTan_num <- seq(-4, 4, length.out = 81)
+thetaRads_num <- atan(triangleTan_num)
+plot(
+  x = triangleTan_num, y = 180 * thetaRads_num / pi, ylim = c(-90, 90),
+  main = "The Arctangent Function",
+  xaxt = "n", xlab = "Triangle (Height / Width)",
+  yaxt = "n", ylab = "Generating Angle"
+)
+axis(side = 1, at = seq(-4, 4, length.out = 9))
+axis(side = 2, at = seq(-180, 180, by = 45))
+abline(h = 0)
+```
+
+
 </br>
 
 
 
 ## Trigonometric Derivatives
+Now that we've had a basic refresher on the trigonometric functions, we want to get some intuition for the well-known trigonometric derivatives. These derivatives are
+$$
+\begin{aligned}
+\frac{d}{d\theta} \sin(\theta) &= \cos(\theta), \\
+\frac{d}{d\theta} \cos(\theta) &= -\sin(\theta), \\
+\frac{d}{d\theta} \tan(\theta) &= 1 + \tan^2(\theta).
+\end{aligned}
+$$
 
 </br>
 
