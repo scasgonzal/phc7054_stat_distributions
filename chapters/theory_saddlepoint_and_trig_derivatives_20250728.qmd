@@ -47,7 +47,7 @@ To prepare for the derivation of the Normal Distribution, we need a refresher on
 
 
 ### The Unit Circle
-This is the [**Unit Circle**](https://etc.usf.edu/clipart/43200/43216/unit-circle8_43216.htm), and it is crucial for our understanding of basic trigonometric functions.^[<https://en.wikipedia.org/wiki/Unit_circle>] The radius of the unit circle is 1, and we mostly use it to create **right triangles**^[<https://en.wikipedia.org/wiki/Right_triangle>] where the hypotenuse^[Longest side] is the radius of the circle.
+This is the [**Unit Circle**](https://etc.usf.edu/clipart/43200/43216/unit-circle8_43216.htm), and it is crucial for our understanding of basic trigonometric functions.^[<https://en.wikipedia.org/wiki/Unit_circle>] The radius of the unit circle is 1, and we mostly use it to create **right triangles**^[<https://en.wikipedia.org/wiki/Right_triangle>] where the hypotenuse^[The name for the longest side of a triangle] is the radius of the circle.
 
 ![](../figs/unit-circle-reference-angles.gif)
 
@@ -57,11 +57,20 @@ Let's draw a triangle within this unit circle (image from [this high school math
 
 ![](../figs/unit_circle_w_triangle.png)
 
-We now have a right triangle from the origin to the edge of the unit circle. The **sine** function takes in the angle, often symbolized by $\theta$, and returns the height of this triangle. Technically speaking, the sine function returns the ratio of the height of the triangle to its hypotenuse, but the hypotenuse of these triangles will be the radius of the unit circle, i.e. 1. The **cosine** function takes in this same angle and returns the width of this triangle. Because of this relationship, we often describe the unit circle relationship on the $\langle x, y \rangle$ plane with $x = \cos(\theta)$ and $y = \sin(\theta)$. The common mnemonic device to remember this is "SOH-CAH-TOA" (pronounced "sow kuh towuh" in American English):
+We now have a right triangle from the origin to the edge of the unit circle. The **sine** function takes in the angle, often symbolized by $\theta$, and returns the height of this triangle. Technically speaking, the sine function returns the ratio of the height of the triangle to its hypotenuse, but the hypotenuse of these triangles will be the radius of the unit circle, i.e. 1. The **cosine** function takes in this same angle and returns the width of this triangle. Because of this relationship, we often describe the unit circle relationship on the $\langle x, y \rangle$ plane with $x = \cos(\theta)$ and $y = \sin(\theta)$. Also, applying the standard algebraic formula for a circle, we arrive at the most famous trigonometric identity:
+$$
+\begin{aligned}
+r^2 &= x^2 + y^2 \\
+\Longrightarrow 1 &= x^2 + y^2 \\
+\Longrightarrow 1 &= \cos^2(\theta) + \sin^2(\theta).
+\end{aligned}
+$$
 
-- **S**ine: **O**pposite side (height) divided by **H**ypotenuse
-- **C**osine: **A**djacent side (width) divided by **H**ypotenuse
-- **T**angent: **O**pposite side (height) divided by **A**djacent side (width)
+> The common mnemonic device to remember this is "SOH-CAH-TOA" (pronounced "sow kuh towuh" in American English):
+> 
+> - **S**ine: **O**pposite side (height) divided by **H**ypotenuse
+> - **C**osine: **A**djacent side (width) divided by **H**ypotenuse
+> - **T**angent: **O**pposite side (height) divided by **A**djacent side (width)
 
 Let's calculate these values in R. Unfortunately, the trigonometric functions do not allow for input in degrees, so we must convert from degrees to **radians**.^[<https://en.wikipedia.org/wiki/Radian>] The formulae to convert between degrees and radians (and back) are
 $$
@@ -195,6 +204,119 @@ $$
 \frac{d}{d\theta} \sin(\theta) &= \cos(\theta), \\
 \frac{d}{d\theta} \cos(\theta) &= -\sin(\theta), \\
 \frac{d}{d\theta} \tan(\theta) &= 1 + \tan^2(\theta).
+\end{aligned}
+$$
+
+
+### Derivatives of Sine and Cosine
+Rather than going through the deep dive^[Read Prof. R. Brown's supplemental proof on this: <https://math.jhu.edu/~brown/courses/f11/Concepts/Section3.3.pdf>] needed to prove these derivatives, we will simply plot the slope of the sine function at many very small intervals. First, recall the graph of the sine (this time in radians):
+```{r}
+plot(
+  x = rads_num, y = sin(rads_num),
+  main = "The Sine Function",
+  xaxt = "n", xlab = "Radians", ylab = "Sine"
+)
+axis(side = 1, at = seq(0, 2*pi, by = pi/4))
+abline(h = 0)
+```
+We already see that the slope at 0 is 1, the slope at $\pi/2$ is 0, the slope at $\pi$ is negative 1, the slope at $3\pi/2$ is 0 again, and the slope at $2\pi$ is 1 again. (Also, since we don't care about the angles themselves, I'm going to leave the computing in radians. It won't matter to the shape of the curve.) Here are those points plotted (with the cosine curve in green):
+```{r}
+plot(
+  x = seq(0, 2 * pi, length.out = 5), y = c(1, 0, -1, 0, 1),
+  xaxt = "n", xlab = "Radians", xlim = c(0, 2*pi),
+  yaxt = "n", ylab = "Slopes", ylim = c(-1, 1),
+  main = "Slopes of the Sine Function"
+)
+axis(side = 1, at = seq(0, 2*pi, by = pi/4))
+axis(side = 2, at = seq(-1, 1, by = 0.5))
+curve(cos(x), add = TRUE, col = "darkgreen", lwd = 2)
+```
+
+Let's write a function to calculate these slopes at more than these five simple points. (And we want the computer to calculate slopes for us.) I'm going to start very "rough", and evaluate the slope at only 9 points:
+```{r}
+nPoints_int <- 9
+radsSparse_num <- seq(0, 2 * pi, length.out = nPoints_int + 1)
+sineSlopes_num <- vector(mode = "numeric", length = nPoints_int)
+midpoints_num <- vector(mode = "numeric", length = nPoints_int)
+
+for (x in seq_len(nPoints_int)) {
+  
+  deltaY <- sin(radsSparse_num[x + 1]) - sin(radsSparse_num[x])
+  deltaTheta <- radsSparse_num[x + 1] - radsSparse_num[x]
+  
+  sineSlopes_num[x] <- deltaY / deltaTheta
+  midpoints_num[x]  <- (radsSparse_num[x + 1] + radsSparse_num[x]) / 2
+  
+}
+
+plot(
+  x = midpoints_num, y = sineSlopes_num,
+  xaxt = "n", xlab = "Radians", xlim = c(0, 2*pi),
+  yaxt = "n", ylab = "Slopes", ylim = c(-1, 1),
+  main = "Slopes of the Sine Function"
+)
+axis(side = 1, at = seq(0, 2*pi, by = pi/4))
+axis(side = 2, at = seq(-1, 1, by = 0.5))
+curve(cos(x), add = TRUE, col = "darkgreen", lwd = 2)
+```
+
+Because the computer is doing all the work, let's increase to 99 points:
+```{r}
+nPoints_int <- 99
+radsSparse_num <- seq(0, 2 * pi, length.out = nPoints_int + 1)
+sineSlopes_num <- vector(mode = "numeric", length = nPoints_int)
+midpoints_num <- vector(mode = "numeric", length = nPoints_int)
+
+for (x in seq_len(nPoints_int)) {
+  
+  deltaY <- sin(radsSparse_num[x + 1]) - sin(radsSparse_num[x])
+  deltaTheta <- radsSparse_num[x + 1] - radsSparse_num[x]
+  
+  sineSlopes_num[x] <- deltaY / deltaTheta
+  midpoints_num[x]  <- (radsSparse_num[x + 1] + radsSparse_num[x]) / 2
+  
+}
+
+plot(
+  x = midpoints_num, y = sineSlopes_num,
+  xaxt = "n", xlab = "Radians", xlim = c(0, 2*pi),
+  yaxt = "n", ylab = "Slopes", ylim = c(-1, 1),
+  main = "Slopes of the Sine Function"
+)
+axis(side = 1, at = seq(0, 2*pi, by = pi/4))
+axis(side = 2, at = seq(-1, 1, by = 0.5))
+curve(cos(x), add = TRUE, col = "darkgreen", lwd = 2)
+```
+
+As we can see, as the difference between each angle shrinks (i.e. as $\Delta\theta \to 0$), the slopes of the lines tangent to the sine function approach the values given by the cosine function. Not to belabour the point, but we can apply the exact same effort to show that the derivative of the cosine function is $-1$ times the sine function. This line of reasoning is not a proof (for a formal proof, see the [link to Prof. Brown's notes](https://math.jhu.edu/~brown/courses/f11/Concepts/Section3.3.pdf) that I also included in the footnote above), but it does help us understand what is going on a bit better.
+
+
+### Derivative of Tangent
+Now that we have the derivative of $\sin(\theta)$ and $\cos(\theta)$, the derivative of $\tan(\theta)$ is far more straightforward, using the **Quotient Rule** and the two derivatives we just reviewed:
+$$
+\begin{aligned}
+\frac{d}{d\theta} \tan(\theta) &= \frac{d}{d\theta} \frac{\sin(\theta)}{\cos(\theta)} \\
+&= \frac{\cos(\theta) \frac{d}{d\theta} \sin(\theta) - \sin(\theta) \frac{d}{d\theta} \cos(\theta)}{[\cos(\theta)]^2} \\
+&= \frac{\cos(\theta) \times [\cos(\theta)] - \sin(\theta) \times [-\sin(\theta)]}{\cos^2(\theta)} \\
+&= \frac{\cos^2(\theta) + \sin^2(\theta)}{\cos^2(\theta)} \\
+&= \frac{\cos^2(\theta)}{\cos^2(\theta)} + \frac{\sin^2(\theta)}{\cos^2(\theta)} \\
+&= 1 + \tan^2(\theta).
+\end{aligned}
+$$
+
+
+### Derivative of the Arctangent
+This derivative is more non-traditional (that is, creative). Let's begin by letting $\arctan(x) = \theta$, which implies that $\tan(\theta) = x$. Then,^[Note that it's "bad form" to manipulate a string of equations on the left hand side, but I'm doing it anyway.]
+$$
+\begin{aligned}
+\frac{d}{dx} \tan(\theta) &= \frac{d}{dx}x \\
+\qquad\text{\emph{Chain rule...}}& \\
+\Longrightarrow \left( 1 + \tan^2(\theta) \right) \frac{d\theta}{dx} &= 1 \\
+\left( 1 + [\tan(\theta)]^2 \right) \frac{d[\theta]}{dx} &= 1 \\
+\qquad\text{\emph{Substitute back in...}}& \\
+\left( 1 + [x]^2 \right) \frac{d[\arctan(x)]}{dx} &= 1 \\
+\Longrightarrow \frac{\left( 1 + x^2 \right)}{\left( 1 + x^2 \right)} \frac{d}{dx}\arctan(x) &= \frac{1}{1 + x^2} \\
+\Longrightarrow \frac{d}{dx}\arctan(x) &= \frac{1}{1 + x^2}.
 \end{aligned}
 $$
 
