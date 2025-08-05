@@ -36,7 +36,7 @@ options(dplyr.summarise.inform = FALSE)
 
 
 
-## Deriving the Distribution
+## Deriving the Error Distribution
 The Normal Distribution (also called the Gaussian Distribution after **Carl Friedrich Gauss**^[<https://wikipedia.org/wiki/Carl_Friedrich_Gauss>]) is first and foremost the "mistakes" distribution. Gauss derived this distribution to explain the discrepencies between multiple junior (or even senior) astronomers' reported planetary positions. As a quick note, *this derivation is absolutely monstrous* (Gauss' genius was orders of magnitude beyond my intelligence). We will follow the general premise of Prof. Xi Chen's translation and understanding of Gauss' original notes (and Prof. Chen's comprehensive understanding of the history of mathematics and statistics); he published his thoughts in his blog "Not a Rocket Scientist" in [his 27 January 2023 post](https://notarocketscientist.xyz/posts/2023-01-27-how-gauss-derived-the-normal-distribution/).
 
 
@@ -49,6 +49,10 @@ We begin by noting that if we have only one measurement, that single measurement
     - by random chance, an astronomer is just as likely to write down a number slightly smaller than the "truth" as they would be to write down a slightly larger number; and,
     - these astronomers are all similarly trained and trying their best, so we expect the mistake distribution to be the same for all astronomers.
 4. Smaller mistakes/deviations/errors are more likely to occur than larger errors.
+
+> "It has been customary to regard as an axiom the hypothesis that if any quantity has been determined by several direct observations, made under the same circumstances and with equal care, the arithmetic mean of the observed values will yield the most probable value...
+>
+> Gauss, *Theoria Motus*, as shown in "Gauss' First Argument for Least Squares", p. 43. <https://www.jstor.org/stable/41133877?seq=3>
 
 We start by assuming that the first measurement is the correct one (which is obviously wrong, but it allows us to understand what's happening, and the assumption will be quickly discarded). If we have $n$ independent attempts to measure the same true value (like the angle of one planet relative to another), denoted $X_1, X_2, \ldots, X_n$, the mistake (error) components of these measures can be defined as
 $$
@@ -70,7 +74,7 @@ $$
 \end{aligned}
 $$
 
-Now we have to take a step back here. We have no idea what $f$ looks like, so we have no idea what $\ell$ looks like, and we *certainly* have no idea to take a derivative with respect to some unknown group of parameters (we don't even know how many there are).
+Now we have to take a step back here. We have no idea what $f$ looks like, so we have no idea what $\ell$ looks like, and we *certainly* have no idea to take a derivative with respect to some unknown group of parameters (we don't even know how many there are), or even if we are taking the derivative with respect to the parameters at all! All we know is that we are taking the derivative of some function $\ell$ with respect to something, and that we are treating the data as fixed so that we can find the functions $\ell$ and $f$ which fit the data best.
 
 To make the notation a touch easier, let $g_E(\varepsilon) = f^{\prime}(\varepsilon_i) / f(\varepsilon_i)$. Now, let's apply some of Gauss' intuition, that the arithmetic mean would be a good approximation of the truth; that is, Gauss assumed that $\bar{X} \approx m$. Thus,
 $$
@@ -132,13 +136,51 @@ $$
 to all be simultaneously true.
 
 
-### A Form for $f_E$
+### A Form for $\ell$
 Finally, these baby steps are starting to add up! We now know that
 $$
-\frac{f^{\prime}(\varepsilon_i|\boldsymbol\theta)}{f(\varepsilon_i|\boldsymbol\theta)} \equiv g_E(\varepsilon_i|\boldsymbol\theta) = C\varepsilon.
+\sum_{i = 1}^n g_E(\varepsilon_i|\boldsymbol\theta) = \sum_{i = 1}^n C\varepsilon_i.
 $$
 This is incredible! We now can see that there is only one parameter in the derivative of our unknown parameter space, and it is some constant $C$.
 
+This allows us to "bend" our thinking again. When we started, we had to treat the data as fixed, and the form of $f$ and $\ell$ as unknown. Well, now we have a form for the derivative of the log of $f$. So, we will pivot, and now treat the form of $f$ as fixed, and treat the data as unknown. This allows us to integrate with respect to the changing data, $\varepsilon$. Thus, for a single unknown data point, we have a differential equation:
+$$
+\begin{aligned}
+C\varepsilon &= g_E(\varepsilon|C) \\
+&= \frac{\frac{d}{d\varepsilon} f_E(\varepsilon|C)}{f_E(\varepsilon|C)} \\
+\Longrightarrow \int C\varepsilon d\varepsilon &= \int \frac{\frac{d}{d\varepsilon} f_E(\varepsilon|C)}{f_E(\varepsilon|C)} d\varepsilon \\
+\Longrightarrow \frac{C_1}{2}\varepsilon^2 + C_2 &= \log\left[ f_E(\varepsilon|C) \right] + C_3 \\
+\Longrightarrow \frac{C_1}{2}\varepsilon^2 + (C_2 - C_3) &= \log\left[ f_E(\varepsilon|C) \right] \\
+\Longrightarrow e^{\frac{C_1}{2}\varepsilon^2 + (C_2 - C_3)} &= f_E(\varepsilon|C).
+\end{aligned}
+$$
+
+Notice that this form of $f_E$ has three unknown constants, so let's clean these up:
+$$
+f_E(\varepsilon|C) = e^{\frac{C_1}{2}\varepsilon^2 + (C_2 - C_3)} = Ae^{\frac{C_1}{2}\varepsilon^2}.
+$$
+
+Now, let's check our original assumptions about $f_E(\varepsilon)$.
+
+1. We assumed that $f_E(\varepsilon) = f_E(-\varepsilon)$. Because we have an $e^{h\varepsilon^2}$, then negative or positive errors of the same magnitude will appear with the same likelihood^[Notice I said likelihood, because we are still dealing with the form of $\ell$, and we haven't gotten to any probabilities yet.].
+2. We assumed that larger errors are less likely than smaller errors. Well, this assumption is only true for $C_1 < 0$, so let's make this explicit and build a negative sign directly into $f_E$. So,
+$$
+f_E(\varepsilon|C) = Ae^{-\frac{C}{2}\varepsilon^2}.
+$$
+Finally, we see that our likelihood function, $\ell$ will be built from this $f$ which has these two properties: 1) that errors are symmetric around 0, and 2) that smaller errors are more likely than larger errors.
+
+
+### From Likelihood to Distribution
+As we can see in the form of $f_E$ above, this function will always be non-negative. So, as we've done before, to transition from likelihood to a probability function, we will **marginalize** this function to find the values of $A$ and $C$ which ensure that the total probability is equal to 1. But, because we have only one equation and two unknowns, we will solve for $A$ as a function of $C$ That is, we need to solve for $A_C$ so that
+$$
+\int_{\mathcal{S}(\varepsilon)} dF(\varepsilon|C) = \int_{-\infty}^{\infty} f_E(\varepsilon|C) d\varepsilon = \int_{-\infty}^{\infty} A_Ce^{-\frac{C}{2}\varepsilon^2} d\varepsilon =  1.
+$$
+
+</br>
+
+
+
+## Deriving the Normal Distribution from the Error Distribution
 
 </br>
 
