@@ -37,6 +37,107 @@ options(dplyr.summarise.inform = FALSE)
 
 
 ## Deriving the Distribution
+The Normal Distribution (also called the Gaussian Distribution after **Carl Friedrich Gauss**^[<https://wikipedia.org/wiki/Carl_Friedrich_Gauss>]) is first and foremost the "mistakes" distribution. Gauss derived this distribution to explain the discrepencies between multiple junior (or even senior) astronomers' reported planetary positions. As a quick note, *this derivation is absolutely monstrous* (Gauss' genius was orders of magnitude beyond my intelligence). We will follow the general premise of Prof. Xi Chen's translation and understanding of Gauss' original notes (and Prof. Chen's comprehensive understanding of the history of mathematics and statistics); he published his thoughts in his blog "Not a Rocket Scientist" in [his 27 January 2023 post](https://notarocketscientist.xyz/posts/2023-01-27-how-gauss-derived-the-normal-distribution/).
+
+
+### Preliminary Notation and Assumptions
+We begin by noting that if we have only one measurement, that single measurement is our best guess for the truth. Let's denote it $m$. Also, we assume that:
+
+1. If we add more independent measurements, we can use the arithmetic mean to "summarize" them well.
+2. If we add more independent measurements from similarly trained astronomers, these new values can be described positive or negative deviations (i.e., mistakes or errors) from the first measurement.
+3. These mistakes/deviations/errors should be independently and symmetrically distributed around 0
+    - by random chance, an astronomer is just as likely to write down a number slightly smaller than the "truth" as they would be to write down a slightly larger number; and,
+    - these astronomers are all similarly trained and trying their best, so we expect the mistake distribution to be the same for all astronomers.
+4. Smaller mistakes/deviations/errors are more likely to occur than larger errors.
+
+We start by assuming that the first measurement is the correct one (which is obviously wrong, but it allows us to understand what's happening, and the assumption will be quickly discarded). If we have $n$ independent attempts to measure the same true value (like the angle of one planet relative to another), denoted $X_1, X_2, \ldots, X_n$, the mistake (error) components of these measures can be defined as
+$$
+[E_1, E_2, \ldots, E_n] = [X_1, X_2, \ldots, X_n] - m.
+$$
+
+
+### Applying Assumptions
+As we assumed above, these mistakes are all independent and identically distributed according to some distribution. We denote this as
+$$
+E_i \overset{iid}{\sim} f_E(\varepsilon).
+$$
+As we already assumed, errors are symmetric around 0. Thus, we know that $f_E(\varepsilon) = f_E(-\varepsilon)$. Further, because we also assume that errors near 0 are **more likely** than errors further away, this leads us to create a likelihood function. While, we do have a vector of observed data (the errors, $E_i$), we don't know what kinds of parameter space we are optimizing over. So, we will present the general form of some likelihood function optimization with an unspecified parameter suite (the empty dot):
+$$
+\begin{aligned}
+\mathcal{L}(\circ|\textbf{E}) &= \prod_{i = 1}^n f(\varepsilon_i|\circ) \\
+\Longrightarrow \ell(\circ|\textbf{E}) &= \sum_{i = 1}^n \log\left[ f(\varepsilon_i|\circ) \right] \\
+\Longrightarrow \frac{\partial}{\partial\circ} \ell(\circ|\textbf{E}) &= \sum_{i = 1}^n \frac{f^{\prime}(\varepsilon_i|\circ)}{f(\varepsilon_i|\circ)}.
+\end{aligned}
+$$
+
+Now we have to take a step back here. We have no idea what $f$ looks like, so we have no idea what $\ell$ looks like, and we *certainly* have no idea to take a derivative with respect to some unknown group of parameters (we don't even know how many there are).
+
+To make the notation a touch easier, let $g_E(\varepsilon) = f^{\prime}(\varepsilon_i) / f(\varepsilon_i)$. Now, let's apply some of Gauss' intuition, that the arithmetic mean would be a good approximation of the truth; that is, Gauss assumed that $\bar{X} \approx m$. Thus,
+$$
+\begin{aligned}
+\frac{\partial}{\partial\circ} \ell(\circ|\textbf{E}) &= \sum_{i = 1}^n \frac{f^{\prime}(\varepsilon_i|\circ)}{f(\varepsilon_i|\circ)} \\
+&\qquad\text{\emph{Easier notation...}} \\
+&= \sum_{i = 1}^n g_E(\varepsilon) \\
+&\qquad\text{\emph{By definition...}} \\
+&= \sum_{i = 1}^n g_E(X_i - m) \\
+&\qquad\text{\emph{Gauss' intuition...}} \\
+&\approx \sum_{i = 1}^n g_E(X_i - \bar{X}) \\
+&\qquad\text{\emph{Assumption that mistakes centre around 0...}} \\
+&= 0.
+\end{aligned}
+$$
+This may look trivial (obviously the sum of mistakes which centre at 0 should be approximately 0), but it allows us to make more clarifying statements about the original error function. Now, we have that we are looking for some $f(\textbf{E}|\boldsymbol\theta) \ni \nabla\ell(\boldsymbol\theta|\textbf{E}) = 0$^[This upside down triangle is called the "Del" or "nabla" symbol, and it denotes the vector of all possible first-order partial derivatives (because we don't know how many dimensions the parameter space has). See <https://en.wikipedia.org/wiki/Del>]. Notice that this relationship will hold for any properly constructed sample $\textbf{X}$, because we are *constructing* $f$ to have this property.
+
+
+### Clues About $g_E$
+We are being good little detectives so far. We know a couple things now:
+$$
+\begin{aligned}
+\nabla \ell(\boldsymbol\theta|\textbf{E}) \approx \sum_{i = 1}^n g_E(X_i - \bar{X}) &= 0 \\
+\sum_{i = 1}^n x_i - n\bar{x} &= 0.
+\end{aligned}
+$$
+The first is what we discovered last section. The second is by definition. So we need a family of functions for $g_E$ so that
+$$
+\sum_{i = 1}^n g_E(X_i - \bar{X}) = \sum_{i = 1}^n X_i - n\bar{X}.
+$$
+So, we need a function $g_E$ that will allow the summation operator to "pass through", so that 
+$$
+\sum_{i = 1}^n g_E(X_i - \bar{X}) = g_E\left( \sum_{i = 1}^n [X_i - \bar{X}]. \right)
+$$
+This means that we need $g_E$ to be a linear transformation^[It's technically a linear function, but that term has too many definitions. We need the "linear function" that means "non-affine". See <https://en.wikipedia.org/wiki/Linear_map>]. Also, we need
+$$
+\begin{align}
+0 &= \sum_{i = 1}^n g_E(X_i - \bar{X}) \\
+&\qquad\text{\emph{We just assumed this...}} \\
+&= g_E\left( \sum_{i = 1}^n [X_i - \bar{X}] \right) \\
+&= g_E\left( \left[\sum_{i = 1}^n X_i\right] - n\bar{X} \right) \\
+&\qquad\text{\emph{Because it's a linear transformation...}} \\
+&= g_E\left( \sum_{i = 1}^n X_i \right) - g_E\left( n\bar{X} \right).
+\end{align}
+$$
+This last requirement is much more restrictive than you might think. We think of linear functions as anything of the form $y = mx + b$, but this is technically an **affine transformation**^[<https://en.wikipedia.org/wiki/Affine_transformation>]. Our function $g_E$, in order to have the properties we need, cannot have a "shift" term. Thus, for some unknown constant $C$,
+$$
+g_E(\varepsilon) = C\varepsilon.
+$$
+Only a function of this form will allow 
+$$
+\begin{aligned}
+0 &= \sum_{i = 1}^n X_i - n\bar{X} \\
+&= g_E\left( \sum_{i = 1}^n X_i \right) - g_E\left( n\bar{X} \right) \\
+&= g_E\left( \sum_{i = 1}^n [X_i - \bar{X}] \right) \\
+&= \sum_{i = 1}^n g_E(X_i - \bar{X})
+\end{aligned}
+$$
+to all be simultaneously true.
+
+
+### A Form for $f_E$
+Finally, these baby steps are starting to add up! We now know that
+$$
+\frac{f^{\prime}(\varepsilon_i|\boldsymbol\theta)}{f(\varepsilon_i|\boldsymbol\theta)} \equiv g_E(\varepsilon_i|\boldsymbol\theta) = C\varepsilon.
+$$
+This is incredible! We now can see that there is only one parameter in the derivative of our unknown parameter space, and it is some constant $C$.
 
 
 </br>

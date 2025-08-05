@@ -57,7 +57,7 @@ Let's draw a triangle within this unit circle (image from [this high school math
 
 ![](../figs/unit_circle_w_triangle.png)
 
-We now have a right triangle from the origin to the edge of the unit circle. The **sine** function takes in the angle, often symbolized by $\theta$, and returns the height of this triangle. Technically speaking, the sine function returns the ratio of the height of the triangle to its hypotenuse, but the hypotenuse of these triangles will be the radius of the unit circle, i.e. 1. The **cosine** function takes in this same angle and returns the width of this triangle. Because of this relationship, we often describe the unit circle relationship on the $\langle x, y \rangle$ plane with $x = \cos(\theta)$ and $y = \sin(\theta)$. Also, applying the standard algebraic formula for a circle, we arrive at the most famous trigonometric identity:
+We now have a right triangle from the origin to the edge of the unit circle. The **sine** function takes in the angle, often symbolized by $\theta$, and returns the height of this triangle. Technically speaking, the sine function returns the ratio of the height of the triangle to its hypotenuse, but the hypotenuse of these triangles will be the radius of the unit circle, i.e. 1. The **cosine** function takes in this same angle and returns the width of this triangle. Because of this relationship, we often describe the unit circle relationship on the $\langle x, y \rangle$ plane with $x = \cos(\theta)$ and $y = \sin(\theta)$. Also, applying the standard algebraic formula for a circle, we arrive at the most famous trigonometric identity^[<https://en.wikipedia.org/wiki/Pythagorean_trigonometric_identity>]:
 $$
 \begin{aligned}
 r^2 &= x^2 + y^2 \\
@@ -325,11 +325,28 @@ $$
 
 
 ## The Saddlepoint Test
-When we find the maximum likelohood estimators, we were careful to also check the **second derivatives** to ensure that those derivatives were negative at our candidate points for the MLEs. As a comment, parts of this "Formal Foundations" section requires a foundational understanding of vectors and linear algebra, which is well beyond the scope of this text. For a primer on linear algebra, I recommend Prof. Gilbert Strang's MIT Linear Algebra course here: <https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/>. It's completely free, but it will take you a few weeks to get through it all.
+> As a comment, parts of this "Formal Foundations" section requires a foundational understanding of vectors and linear algebra, which is well beyond the scope of this text. For a primer on linear algebra, I recommend Prof. Gilbert Strang's MIT Linear Algebra course here: <https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/>. It's completely free, but it will take you a few weeks to get through it all.
+
+
+### Introduction
+When we find the maximum likelohood estimators, we were careful to also check the **second derivatives** to ensure that those derivatives were negative at our candidate points for the MLEs (these candidate values are the solution points to the systems of first order partial derivatives, also known as **critical points**^[<https://tutorial.math.lamar.edu/classes/calci/criticalpoints.aspx>]). In the simple $x,y$ (2-dimensional) plane for introductory calculus, for some critical point $x_0$, checking if $x_0 \ni f^{\prime}(x_0) = 0$ was a minimum or maximum was often quite simple (and we will go over a refresher example below). This is because changes could only ever be in one dimension: along $x$.
+
+However, for a function in higher dimensions, such as $z = f(x,y)$, changes can happen in infinitely many directions, as long as they are some combination of changes in $x$ and $y$. We can't simply check the derivatives along the $x$ axis or the $y$ axis only; we also have to check the infinitely many derivatives across every direction between $x$ and $y$. This already sounds like a problem, and we've only described a simple surface in 3 dimensions!
+
+Instead of trying to walk through uncountably infinitely many partial derivatives in every direction around a critical point, we will use the geometric properties of the likelihood function instead. If we have found a point where the **gradient**^[<https://en.wikipedia.org/wiki/Gradient>] of $f$ equals 0, then there are a few options:
+
+a) $f$ is concave up, and the point is a local minimum,
+b) $f$ is concave down, and the point is a local maximum,
+c) around the point, $f$ is increasing in some directions and decreasing in others, so the point is a **saddlepoint**^[<https://en.wikipedia.org/wiki/Saddle_point>], or
+d) $f$ is not second-order differentiable at the point (which means you're in trouble). We won't really cover this last option for our work in optimizing likelihood functions, but it is theoretically possible.
+
+![](../figs/saddlepoint_concavity.png)
+
+One beneficial heuristic to understanding these shapes is to check for their ability to "hold water". In the figure above, the shapes in (a) and (b) could be rotated around to eventually serve as a bowl of some kind. For part (a), the figure stays the same; for part (b), we would have to flip it over. However, in part (c), we notice that no possible rotation exists for the shape to hold water. Therefore, the figures in parts (a) and (b) have local extrema at their critical points, but the figure in part (c) has a saddlepoint.
 
 
 ### Two-Dimensional Use Case
-Why? Well, let's look at an example:
+Let's take a step back and look at an example on the $x,y$ plane. We have a function $f$, and we will take its first two derivatives:
 $$
 \begin{aligned}
 f(x) &= x^3 - 3x + 2 \\
@@ -337,7 +354,7 @@ f^{\prime}(x) &= 3x^2 - 3 \\
 f^{\prime\prime}(x) &= 6x.
 \end{aligned}
 $$
-We set our first derivative equal to 0 to find the **critical points**^[<https://tutorial.math.lamar.edu/classes/calci/criticalpoints.aspx>]:
+We set our first derivative equal to 0 to find the critical points:
 $$
 \begin{aligned}
 0 &\overset{\text{set}}{=} 3x^2 - 3 \\
@@ -346,7 +363,7 @@ $$
 \Longrightarrow x &= \{-1, 1\}.
 \end{aligned}
 $$
-If we were doing statistics or biostatistics, many students at this point would shout and say "I've found the maximum!" or "I've found the minimum!"--which ever one they were looking for in the first place. Well, let's graph this function to find out:
+If we were doing statistics or biostatistics, many students at this point would shout and say "I've found the maximum!" or "I've found the minimum!"---which ever one they were looking for in the first place. Well, let's graph this function to find out:
 ```{r}
 domain_num <- seq(-3, 3, length.out = 101)
 f_num <- (domain_num)^3 - 3*(domain_num) + 2
@@ -381,7 +398,7 @@ Therefore, $f$ is increasing on the left side and decreasing on the right side o
 
 
 ### The Second Derivative Test
-There is another option to find if a critical point is a minimum/maximum/neither (in case you think that plugging in values all around the critical points is tedious). The second derivative test checks the **concavity** of $f$ around critical values.^[<https://www.khanacademy.org/math/ap-calculus-ab/ab-diff-analytical-applications-new/ab-5-6b/a/concavity-review>] Imaging rain falling on our function $f$; think about concavity as the ability to "hold" the rainwater (concave up, like a bucket) or "shelter" from the rainwater (concave down, like an umbrella).^[This idea of being able to "hold water" is super important for understanding the Saddlepoint Test, which we are leading up to.]
+There is another option to find if a critical point is a minimum/maximum/neither (in case you think that plugging in values all around the critical points is tedious). The second derivative test checks the **concavity**^[<https://www.khanacademy.org/math/ap-calculus-ab/ab-diff-analytical-applications-new/ab-5-6b/a/concavity-review>] of $f$ around critical values. Imaging rain falling on our function $f$; think about concavity as the ability to "hold" the rainwater (concave up, like a bucket) or "shelter" from the rainwater (concave down, like an umbrella).^[This idea of being able to "hold water" is a recurring theme for understanding the Saddlepoint Test, which we are leading up to.]
 
 > The Second Derivative Test
 > 
@@ -400,7 +417,7 @@ For our function $f$ above:
 
 
 ### Extending to Higher Dimensions
-The work that we've done so far is great if we have a our response as a function of a single predictor (like $y = f(x)$). But many of our likelihoods so far have two or more unknown parameters. What happens then?
+The work that we've done so far is great if we have our response as a function of a single predictor (like $y = f(x)$). But many of the likelihoods we've encountered so far have two or more unknown parameters. What happens then?
 
 Let's start with a simple function in 3 dimensions (ChatGPT helped me come up with this):
 $$
@@ -415,8 +432,8 @@ f <- function(x, y) {
 }
 
 # Create a grid of x and y values
-x <- seq(-2, 2, length.out = 50)
-y <- seq(-2, 2, length.out = 50)
+x <- seq(-2, 2, length.out = 20)
+y <- seq(-2, 2, length.out = 20)
 z <- outer(x, y, f)
 
 # Create the perspective plot
@@ -582,6 +599,7 @@ persp(
 
 ```
 It looks like a little puddle could form if some rain fell on this surface.
+
 
 </br>
 
