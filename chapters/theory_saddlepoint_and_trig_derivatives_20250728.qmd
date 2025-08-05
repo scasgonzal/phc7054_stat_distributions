@@ -177,7 +177,7 @@ axis(side = 1, at = seq(-1, 1, length.out = 9))
 axis(side = 2, at = seq(0, 180, by = 30))
 abline(h = 0)
 ```
-Finally, for the arctangent, because this function takes the ratio of triangle heights and widths as its input, the domain of possible values includes the entire Real line. However, the range of the function is only from $(-90^{\circ}, 90^{\circ})$. We now plot the this function (using the `atan()` function):
+Finally, for the arctangent, because this function takes the ratio of triangle heights and widths as its input, the domain of possible values includes the entire Real line. However, the range of the function is only from $(-90^{\circ}, 90^{\circ})$ (or $-\frac{\pi}{2}$ to $-\frac{\pi}{2}$ in radians). We now plot the this function (using the `atan()` function):
 ```{r}
 triangleTan_num <- seq(-4, 4, length.out = 81)
 thetaRads_num <- atan(triangleTan_num)

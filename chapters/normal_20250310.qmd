@@ -167,13 +167,70 @@ Now, let's check our original assumptions about $f_E(\varepsilon)$.
 $$
 f_E(\varepsilon|C) = Ae^{-\frac{C}{2}\varepsilon^2}.
 $$
-Finally, we see that our likelihood function, $\ell$ will be built from this $f$ which has these two properties: 1) that errors are symmetric around 0, and 2) that smaller errors are more likely than larger errors.
+
+Finally, we see that our likelihood function, $\ell$, will be built from this $f$ which has these two properties: 1) that errors are symmetric around 0, and 2) that smaller errors are more likely than larger errors.
 
 
-### From Likelihood to Distribution
-As we can see in the form of $f_E$ above, this function will always be non-negative. So, as we've done before, to transition from likelihood to a probability function, we will **marginalize** this function to find the values of $A$ and $C$ which ensure that the total probability is equal to 1. But, because we have only one equation and two unknowns, we will solve for $A$ as a function of $C$ That is, we need to solve for $A_C$ so that
+### Integrating the Likelihood to Find a Distribution
+As we can see in the form of $f_E$ above, this function will always be non-negative. So, as we've done before, to transition from likelihood to a probability function, we will **marginalize** this function to find the values of $A$ and $C$ which ensure that the total probability for this error distribution is equal to 1. But, because we have only one equation and two unknowns, we will solve for $A$ as a function of $C$ That is, we need to solve for $A_C$ so that
 $$
 \int_{\mathcal{S}(\varepsilon)} dF(\varepsilon|C) = \int_{-\infty}^{\infty} f_E(\varepsilon|C) d\varepsilon = \int_{-\infty}^{\infty} A_Ce^{-\frac{C}{2}\varepsilon^2} d\varepsilon =  1.
+$$
+
+This integral will require quite a few substeps and substitutions to solve. We are solving for $A$ as a function of $C$ that will allow this integral to converge to 1. Let's begin by changing this single integral to a double integral, and then modifying the bounds of the integration.
+$$
+\begin{aligned}
+1 &= \int_{-\infty}^{\infty} A_Ce^{-\frac{C}{2}\varepsilon^2} d\varepsilon \\
+\Longrightarrow 1^2 &= \left[ \int_{-\infty}^{\infty} A_Ce^{-\frac{C}{2}\varepsilon^2} d\varepsilon \right] \times \left[ \int_{-\infty}^{\infty} A_Ce^{-\frac{C}{2}\varepsilon^2} d\varepsilon \right] \\
+&= \left[ \int_{-\infty}^{\infty} A_Ce^{-\frac{C}{2}\varepsilon^2} d\varepsilon \right] \times \left[ \int_{-\infty}^{\infty} A_Ce^{-\frac{C}{2}\varphi^2} d\varphi \right] \\
+&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} A^2_C e^{-\frac{C}{2}\varepsilon^2} e^{-\frac{C}{2}\varphi^2} d\varepsilon d\varphi \\
+&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} A^2_C e^{-\frac{C}{2} \left( \varepsilon^2 + \varphi^2 \right)} d\varepsilon d\varphi \\
+&\qquad\text{\emph{Recall that }} f_E \text{\emph{ is symmetric around 0...}} \\
+&= \int_{\varphi = 0}^{\infty} 2 \int_{\varepsilon = 0}^{\infty} 2A^2_C e^{-\frac{C}{2} \left( \varepsilon^2 + \varphi^2 \right)} d\varepsilon d\varphi \\
+&= 4A^2_C \int_{\varphi = 0}^{\infty} \int_{\varepsilon = 0}^{\infty} e^{-\frac{C}{2} \left( \varepsilon^2 + \varphi^2 \right)} d\varepsilon d\varphi.
+\end{aligned}
+$$
+
+Now, we will make our first substitution. Let $\varphi = t\varepsilon$, so $d\varphi = \varepsilon dt$. Because this is a linear function, the bounds of integration for $t$ will be equivalent to those for $\varphi$.
+$$
+\begin{aligned}
+1^2 &= 4A^2_C \int_{\varphi = 0}^{\infty} \int_{\varepsilon = 0}^{\infty} e^{-\frac{C}{2} \left( \varepsilon^2 + \varphi^2 \right)} d\varepsilon d\varphi \\
+&= 4A^2_C \int_{[t] = 0}^{\infty} \int_{\varepsilon = 0}^{\infty} e^{-\frac{C}{2} \left( \varepsilon^2 + [t\varepsilon]^2 \right)} d\varepsilon [\varepsilon dt] \\
+&= 4A^2_C \int_{t = 0}^{\infty} \int_{\varepsilon = 0}^{\infty} e^{-\frac{C}{2} \varepsilon^2 (1 + t^2)} \varepsilon d\varepsilon dt.
+\end{aligned}
+$$
+
+It took a bit of work, but we finally have an integrand that looks like $ve^{v^2}dv$, which means that we can use $u$-substitution. Hence, we let
+$$ 
+u = -\frac{C}{2} \varepsilon^2 (1 + t^2) \Rightarrow du = -C\varepsilon (1 + t^2) d\varepsilon \Rightarrow -\frac{du}{C(1 + t^2)} = \varepsilon d\varepsilon.
+$$
+Our bounds of integration do change for this transformation: when $\varepsilon = 0, u = 0$, but when $\varepsilon \to \infty, u \to -\infty$. For these steps, we will also flip the bounds of integration, and, at the last integral step, recognize the derivative of the arctangent function (which we covered in the Formal Foundations chapter with the review section on trigonometry):
+$$
+\begin{aligned}
+1^2 &= 4A^2_C \int_{t = 0}^{\infty} \int_{\varepsilon = 0}^{\infty} e^{-\frac{C}{2} \varepsilon^2 (1 + t^2)} \varepsilon d\varepsilon dt \\
+&= 4A^2_C \int_{t = 0}^{\infty} \int_{[u] = 0}^{-\infty} e^{[u]} \left[ -\frac{du}{C(1 + t^2)} \right] dt \\
+&\qquad\text{\emph{Flip bounds of integration...}} \\
+&= 4A^2_C \int_{t = 0}^{\infty} \int_{u = -\infty}^0 -e^{u} \left[ -\frac{du}{C(1 + t^2)} \right] dt \\
+&\qquad\text{\emph{Separable integrals...}} \\
+&= 4A^2_C \int_{t = 0}^{\infty} \left[ \frac{1}{C(1 + t^2)} \right] \left( \int_{u = -\infty}^0 e^{u} du \right) dt \\
+&= 4A^2_C \int_{t = 0}^{\infty} \left[ \frac{1}{C(1 + t^2)} \right] \left( \lim_{k\to -\infty} \left[ e^{u} \right]_{u = k}^0 \right) dt \\
+&= 4A^2_C \int_{t = 0}^{\infty} \left[ \frac{1}{C(1 + t^2)} \right] \left[ e^{[0]} - \lim_{k\to -\infty} e^{[k]} \right] dt \\
+&\qquad\text{\emph{Recognize trigonometric derivative...}} \\
+&= \frac{4}{C} A^2_C \int_{t = 0}^{\infty} \left[ \frac{1}{1 + t^2} \right] [1] dt \\
+&= \frac{4}{C} A^2_C \left[ \lim_{k\to\infty} \arctan(t) \right]_0^k \\
+&= \frac{4}{C} A^2_C \left[ \lim_{k\to\infty} \arctan(k) - \arctan(0) \right] \\
+&\qquad\text{\emph{Horizontal asymptote...}} \\
+&= \frac{4}{C} A^2_C \left[ \frac{\pi}{2} - 0 \right] \\
+\Longrightarrow 1 &= \frac{2\pi}{C} A^2_C \\
+&\qquad\text{\emph{Solve for }} A_C \\
+\Longrightarrow \frac{C}{2\pi} &= A^2_C \\
+\Longrightarrow \sqrt{\frac{C}{2\pi}} &= A_C.
+\end{aligned}
+$$
+
+Therefore, the normalizing constant to make $\ell$ a probability function (in terms of some parameter $C$) is $\sqrt{C/(2\pi)}$. Thus, the error distribution is
+$$
+f_E(\varepsilon|C) = \sqrt{\frac{C}{2\pi}} e^{-\frac{C}{2}\varepsilon^2}.
 $$
 
 </br>
