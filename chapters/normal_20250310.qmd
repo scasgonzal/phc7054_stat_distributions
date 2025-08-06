@@ -238,6 +238,88 @@ $$
 
 
 ## Deriving the Normal Distribution from the Error Distribution
+In the previous gargantuan section, we finally derived the error distribution. However, 1) it is not parametrised using the "variance" parameter we expect, and 2) it does not include a measure of center. For the Normal Distribution,
+$$
+\text{Var}[\varepsilon] = \sigma^2 = \mathbb{E}[\varepsilon^2] - [\mathbb{E}[\varepsilon]]^2.
+$$
+
+
+### Expectation of the Normal Distribution
+For the expectation of $\varepsilon$, by assumption we have that this is 0. We can also show this directly. Because $f_E$ is symmetric around $\varepsilon = 0$, this implies that
+$$
+\begin{aligned}
+\mathbb{E}[\varepsilon] &= \int_{\mathcal{S}(\varepsilon)} \varepsilon dF(\varepsilon|C) \\
+&= \int_{-\infty}^{\infty} \varepsilon \sqrt{\frac{C}{2\pi}} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \\
+&= \int_{-\infty}^0 \varepsilon \sqrt{\frac{C}{2\pi}} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon + \int_0^{\infty} \varepsilon \sqrt{\frac{C}{2\pi}} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \\
+&= -\int_0^{\infty} \varepsilon \sqrt{\frac{C}{2\pi}} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon + \int_0^{\infty} \varepsilon \sqrt{\frac{C}{2\pi}} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \\
+&= 0.
+\end{aligned}
+$$
+
+Therefore,
+$$
+\text{Var}[\varepsilon] = \sigma^2 = \mathbb{E}[\varepsilon^2] - [\mathbb{E}[\varepsilon]]^2 = \mathbb{E}[\varepsilon^2] - [0]^2 = \mathbb{E}[\varepsilon^2],
+$$
+so the second moment is the variance parameter.
+
+
+### The Second Moment
+Because we know that the second theoretical moment must be equal to $\sigma^2$, we can finally solve for $C$ as a function of $\sigma^2$. First, we will use the property that $f_E$ is symmetric to simplify the bounds of integration. So,
+$$
+\begin{aligned}
+\mathbb{E}[\varepsilon^2] &= \int_{\mathcal{S}(\varepsilon)} \varepsilon^2 dF(\varepsilon|C) \\
+&= \int_{-\infty}^{\infty} \varepsilon^2 \sqrt{\frac{C}{2\pi}} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \\
+&= \sqrt{\frac{C}{2\pi}} \int_{-\infty}^{\infty} \varepsilon^2 e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \\
+&= 2\sqrt{\frac{C}{2\pi}} \int_0^{\infty} \varepsilon^2 e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \\
+&= 2\sqrt{\frac{C}{2\pi}} \int_0^{\infty} [\varepsilon] \left[ \varepsilon e^{-\frac{C}{2}\varepsilon^2} \right] d\varepsilon.
+\end{aligned}
+$$
+Now we will use **Integration by Parts** to break the integral into smaller pieces. We will let $u = \varepsilon \Rightarrow du = d\varepsilon$ and $dv = \varepsilon e^{-\frac{C}{2}\varepsilon^2} d\varepsilon$. However we will add the substitution that $w = -\frac{C}{2}\varepsilon^2 \Rightarrow dw = -C\varepsilon d\varepsilon$, so $-\frac{1}{C}dw = \varepsilon d\varepsilon$. Therefore, our sub-integral of the $dv$ term is
+$$
+\begin{aligned}
+dv &= \varepsilon e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \\
+&= e^{-\frac{C}{2}\varepsilon^2} \varepsilon d\varepsilon \\
+&= e^{[w]}\left[ -\frac{1}{C}dw \right] \\
+\Longrightarrow \int dv &= -\frac{1}{C} \int e^wdw \\
+\Longrightarrow v &= -\frac{1}{C} e^w \\
+&= -\frac{1}{C} e^{-\frac{C}{2}\varepsilon^2}.
+\end{aligned}
+$$
+Therefore, we substitute these values: $u = \varepsilon$, $v = -\frac{1}{C} e^{-\frac{C}{2}\varepsilon^2}$, and $du = d\varepsilon$. So we have
+$$
+\begin{aligned}
+\mathbb{E}[\varepsilon^2] &= 2\sqrt{\frac{C}{2\pi}} \left\{ \int_0^{\infty} [\varepsilon] \left[ \varepsilon e^{-\frac{C}{2}\varepsilon^2} \right] d\varepsilon \right\} \\
+&= 2\sqrt{\frac{C}{2\pi}} \left\{ [u][v] - \int_0^{\infty} [v][du] \right\} \\
+&= 2\sqrt{\frac{C}{2\pi}} \left\{ \lim_{k\to\infty} [\varepsilon] \left[ -\frac{1}{C} e^{-\frac{C}{2}\varepsilon^2} \right]_0^k - \int_0^{\infty} \left[ -\frac{1}{C} e^{-\frac{C}{2}\varepsilon^2} \right] [d\varepsilon] \right\} \\
+&= 2\sqrt{\frac{C}{2\pi}} \left\{ \lim_{k\to\infty} -\frac{k}{C} e^{-\frac{C}{2}k^2} - \left( -\frac{0}{C} e^{-\frac{C}{2}0^2} \right) + \int_0^{\infty} \frac{1}{C} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \right\} \\
+&= 2\sqrt{\frac{C}{2\pi}} \left\{ -\lim_{k\to\infty} \frac{k}{Ce^{\frac{C}{2}k^2}} + 0 + \frac{1}{2C} \int_{-\infty}^{\infty} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \right\}.
+\end{aligned}
+$$
+We will evaluate the limit on the left via L'Hospital's Rule (because this limit has the indeterminant form of $\infty/\infty$). The integral on the right is the kernel of the error distribution. Thus,
+$$
+\begin{aligned}
+\mathbb{E}[\varepsilon^2] &= 2\sqrt{\frac{C}{2\pi}} \left\{ -\lim_{k\to\infty} \frac{k}{Ce^{\frac{C}{2}k^2}} + \frac{1}{2C} \int_{-\infty}^{\infty} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \right\} \\
+&= 2\sqrt{\frac{C}{2\pi}} \left\{ -\lim_{k\to\infty} \frac{\frac{d}{dk} k}{\frac{d}{dk} Ce^{\frac{C}{2}k^2}} + \frac{1}{2C} \sqrt{\frac{2\pi}{C}} \int_{-\infty}^{\infty} \sqrt{\frac{C}{2\pi}} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \right\} \\
+&= 2\sqrt{\frac{C}{2\pi}} \left\{ -\lim_{k\to\infty} \frac{1}{ Ce^{\frac{C}{2}k^2}(Ck)} + \frac{1}{2C} \sqrt{\frac{2\pi}{C}} \int_{-\infty}^{\infty} \sqrt{\frac{C}{2\pi}} e^{-\frac{C}{2}\varepsilon^2} d\varepsilon \right\} \\
+&= 2\sqrt{\frac{C}{2\pi}} \left\{ -\frac{1}{ \infty} + \frac{1}{2C} \sqrt{\frac{2\pi}{C}} \int_{-\infty}^{\infty} f_E(\varepsilon|C) d\varepsilon \right\} \\
+&= 2\sqrt{\frac{C}{2\pi}} \left\{ 0 + \frac{1}{2C} \sqrt{\frac{2\pi}{C}} [1] \right\} \\
+&= 2\sqrt{\frac{C}{2\pi}} \left\{\frac{1}{2C} \sqrt{\frac{2\pi}{C}} \right\} \\
+&= \frac{1}{C} \\
+&= \sigma^2.
+\end{aligned}
+$$
+
+
+### The Modern Form of the Normal Distribution
+Thus, because $C = \frac{1}{\sigma^2}$ we can finally parametrise our error distribution in terms of the variance:
+$$
+f_E(\varepsilon|\sigma^2) = \sqrt{\frac{\left[\frac{1}{\sigma^2}\right]}{2\pi}} e^{-\frac{\left[\frac{1}{\sigma^2}\right]}{2}\varepsilon^2} = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{\varepsilon^2}{2\sigma^2}}.
+$$
+The last step is to undo one of the very first substitutions we made, that $\varepsilon = x - m$, where $m$ was the true value to be measured. In modern notation, we use $\mu$ instead of $m$, so
+$$
+f_X(x|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x - \mu)^2}{2\sigma^2}},
+$$
+which is our expected modern form of the Normal Distribution.^[At this point, you deserve a drink or a nap. Your choice.]
 
 </br>
 
@@ -339,6 +421,7 @@ par(mfrow = c(1, 1))
 
 
 ## Show that this is a Distribution
+After the absolutely Herculean task to derive this distribution, we have that it is a proper distribution by definition.
 
 
 </br>
