@@ -535,8 +535,147 @@ In comparison to the MGF section, this one will require *a lot* more work, and w
 $$
 \begin{aligned}
 \mathcal{L}(\mu,\sigma^2|\textbf{x}) &= \prod_{i = 1}^n f(x_i|\mu, \sigma^2) \\
+&= \prod_{i = 1}^n \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x_i - \mu)^2}{2\sigma^2}} \\
+&= \prod_{i = 1}^n (2\pi)^{-1/2} (\sigma^2)^{-1/2} e^{-\frac{1}{2\sigma^2}(x_i - \mu)^2} \\
+&= (2\pi)^{-n/2} (\sigma^2)^{-n/2} \exp\left\{-\frac{1}{2\sigma^2} \sum_{i = 1}^n (x_i - \mu)^2 \right\} \\
+\Longrightarrow \ell(\mu,\sigma^2|\textbf{x}) &= \log\left( (2\pi)^{-n/2} (\sigma^2)^{-n/2} \exp\left\{-\frac{1}{2\sigma^2} \sum_{i = 1}^n (x_i - \mu)^2 \right\} \right) \\
+&= -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i = 1}^n (x_i - \mu)^2.
 \end{aligned}
 $$
+
+Now, we have a function with two parameters, $\mu$ and $\sigma^2$. We will then have two first-order partial derivatives.
+
+
+### Candidate MLE for $\mu$
+Let's first take the derivative with respect to $\mu$:
+$$
+\begin{aligned}
+\ell(\mu,\sigma^2|\textbf{x}) &= -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i = 1}^n (x_i - \mu)^2 \\
+\Longrightarrow \frac{\partial}{\partial\mu} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{\partial}{\partial\mu} \left\{ -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i = 1}^n (x_i - \mu)^2 \right\} \\
+&= 0 - 0 - \frac{1}{2\sigma^2} \frac{\partial}{\partial\mu} \sum_{i = 1}^n (x_i^2 - 2x_i\mu + \mu^2) \\
+&= -\frac{1}{2\sigma^2} \sum_{i = 1}^n \frac{\partial}{\partial\mu} (x_i^2 - 2x_i\mu + \mu^2) \\
+&= -\frac{1}{2\sigma^2} \sum_{i = 1}^n (0 - 2x_i + 2\mu) \\
+&= -\frac{1}{2\sigma^2} (-2n\bar{x} + 2n\mu) \\
+&= \frac{n}{\sigma^2} (\bar{x} - \mu) \\
+\Longrightarrow 0 &\overset{\text{set}}{=} \frac{n}{\sigma^2} (\bar{x} - \hat{\mu}_*) \\
+\Longrightarrow \hat{\mu}_* &= \bar{x}.
+\end{aligned}
+$$
+Notice that I haven't declared that this $\hat{\mu}_*$ to be $\hat{\mu}_{MLE}$. We still have to find our candidate value for $\hat{\sigma}^2_*$ and *then* we have to check the second derivatives. So I'm leaving it as a "candidate" value for now.
+
+
+### Candidate MLE for $\sigma^2$
+Similarly, we take the derivative with respect to $\sigma^2$
+$$
+\begin{aligned}
+\ell(\mu,\sigma^2|\textbf{x}) &= -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i = 1}^n (x_i - \mu)^2 \\
+\Longrightarrow \frac{\partial}{\partial\sigma^2} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{\partial}{\partial\sigma^2} \left\{ -\frac{n}{2}\log(2\pi) - \frac{n}{2}\log(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i = 1}^n (x_i - \mu)^2 \right\} \\
+&= 0 -\frac{n}{2}\frac{1}{\sigma^2} - \frac{1}{2} \left[ \frac{\partial}{\partial\sigma^2} \frac{1}{\sigma^2} \right] \sum_{i = 1}^n (x_i - \mu)^2 \\
+&= -\frac{n}{2\sigma^2} - \frac{1}{2} \left[ -\frac{1}{(\sigma^2)^2} \right] \sum_{i = 1}^n (x_i - \mu)^2 \\
+&= \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^n (x_i - \mu)^2 - \frac{n}{2\sigma^2} \\
+\Longrightarrow 0 &\overset{\text{set}}{=} \frac{1}{2(\hat\sigma^2_*)^2} \sum_{i = 1}^n (x_i - \mu)^2 - \frac{n}{2\hat\sigma^2_*} \\
+\Longrightarrow 2(\hat\sigma^2_*)^2 \times 0 &= 2(\hat\sigma^2_*)^2 \left[ \frac{1}{2(\hat\sigma^2_*)^2} \sum_{i = 1}^n (x_i - \mu)^2 - \frac{n}{2\hat\sigma^2_*} \right] \\
+\Longrightarrow 0 &= \sum_{i = 1}^n (x_i - \mu)^2 - n\hat\sigma^2_* \\
+\Longrightarrow n\hat\sigma^2_* &= \sum_{i = 1}^n (x_i - \mu)^2 \\
+\Longrightarrow \hat\sigma^2_* &= \frac{1}{n}\sum_{i = 1}^n (x_i - \mu)^2.
+\end{aligned}
+$$
+So, we found a candidate MLE for $\sigma^2$, but it depends on the unknown parameter $\mu$. Also, we still don't know that these two candidates actually *maximise* the likelihood function. We need the Hessian (matrix of second-order partial derivatives) for that.
+
+
+### The Hessian Matrix and its Determinant
+As we alluded to previously (and spent an entire "Formal Foundations" section on), we will use the **Saddlepoint Test** to find out under what conditions these candidate values maximise the likelihood. Let's find each of the second-order partial derivatives first. I'm going to start with the second derivative with respect to $\sigma^2$ (and we notice that our candidate MLE for $\sigma^2$ shows up at the end):
+$$
+\begin{aligned}
+\frac{\partial}{\partial\sigma^2} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^n (x_i - \mu)^2 - \frac{n}{2\sigma^2} \\
+\Longrightarrow \frac{\partial^2}{\partial(\sigma^2)^2} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{\partial}{\partial\sigma^2} \left[ \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^n (x_i - \mu)^2 - \frac{n}{2\sigma^2} \right] \\
+&= -\frac{1}{(\sigma^2)^3} \frac{n}{n} \sum_{i = 1}^n (x_i - \mu)^2 + \frac{n}{2(\sigma^2)^2} \\
+&= -\frac{n}{(\sigma^2)^2} \left[ \frac{1}{\sigma^2} \left( \frac{1}{n}\sum_{i = 1}^n (x_i - \mu)^2 \right) - \frac{1}{2} \right] \\
+&= -\frac{n}{(\sigma^2)^2} \left[ \frac{\hat\sigma^2_*}{\sigma^2} - \frac{1}{2} \right].
+\end{aligned}
+$$
+
+Now, we will take the crossing partial derivatives:
+$$
+\begin{aligned}
+\frac{\partial}{\partial\sigma^2} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^n (x_i - \mu)^2 - \frac{n}{2\sigma^2} \\
+\Longrightarrow \frac{\partial^2}{\partial\mu \partial\sigma^2} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{\partial}{\partial\mu} \left[ \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^n (x_i - \mu)^2 - \frac{n}{2\sigma^2} \right] \\
+&= \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^n \frac{\partial}{\partial\mu} (x_i - \mu)^2 - [0] \\
+&= \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^n \frac{\partial}{\partial\mu} (x_i^2 - 2x_i\mu + \mu^2) \\
+&= \frac{1}{2(\sigma^2)^2} \sum_{i = 1}^n (-2x_i + 2\mu) \\
+&= \frac{1}{(\sigma^2)^2} (-n\bar{x} + n\mu) \\
+&= -\frac{n}{(\sigma^2)^2} (\bar{x} - \mu).
+\end{aligned}
+$$
+The other crossing partial should be equal to this one, but let's confirm this: 
+$$
+\begin{aligned}
+\frac{\partial}{\partial\mu} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{n}{\sigma^2} (\bar{x} - \mu) \\
+\Longrightarrow \frac{\partial^2}{\partial\sigma^2 \partial\mu} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{\partial}{\partial\sigma^2} \frac{n}{\sigma^2} (\bar{x} - \mu) \\
+&= -\frac{n}{(\sigma^2)^2} (\bar{x} - \mu).
+\end{aligned}
+$$
+The last partial derivative we need is with respect to $\mu$ a second time:
+$$
+\begin{aligned}
+\frac{\partial}{\partial\mu} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{n}{\sigma^2} (\bar{x} - \mu) \\
+\Longrightarrow \frac{\partial^2}{\partial\mu^2} \ell(\mu,\sigma^2|\textbf{x}) &= \frac{\partial}{\partial\mu} \frac{n}{\sigma^2} (\bar{x} - \mu) \\
+&= \frac{n}{\sigma^2}(-1) \\
+&= -\frac{n}{(\sigma^2)^2} (\sigma^2).
+\end{aligned}
+$$
+This last step might seem counterproductive, but notice that all three of the other second-order partial derivatives had the same leading multiplier.
+
+Now we can make the Hessian Matrix:
+$$
+\textbf{H}[\ell(\mu,\sigma^2|\textbf{x})] = -\frac{n}{(\sigma^2)^2} \begin{bmatrix}
+  \sigma^2 & (\bar{x} - \mu) \\
+  (\bar{x} - \mu) & \left( \frac{\hat\sigma^2_*}{\sigma^2} - \frac{1}{2} \right)
+\end{bmatrix}
+$$
+Let's inspect this matrix quickly. We don't know what the determinant will be (yet), but we do know that the diagonal entries are both conditionally positive. Obviously $\sigma^2 > 0$. Also, as long as $\hat\sigma^2_* > \frac{1}{2}\sigma^2$, then the other diagonal component will be positive as well.^[There is a homework exercise related to this question.] This means that the negative sign outside has the same effect on both diagonal components. Thus, **if** the matrix $\textbf{H}$ has a positive determinant, then we are dealing with a function that is concave down, and we will have found a local maximum. But again, this is a big "if".
+
+So what about this determinant? Before we take the determinant of this matrix, we should recall that for some square matrix $\textbf{A}\in\mathbb{R}_p,\ \det(k\textbf{A}) = k^p\det(\textbf{A})$^[<https://en.wikipedia.org/wiki/Determinant#Properties>]. Thus, the Hessian Determinant for all parameter values is:
+$$
+\begin{aligned}
+\det\left( \textbf{H}[\ell(\mu,\sigma^2|\textbf{x})] \right) &= \det \left( -\frac{n}{(\sigma^2)^2} \begin{bmatrix}
+  \sigma^2 & (\bar{x} - \mu) \\
+  (\bar{x} - \mu) & \left( \frac{\hat\sigma^2_*}{\sigma^2} - \frac{1}{2} \right)
+\end{bmatrix} \right) \\
+&= \left( -\frac{n}{(\sigma^2)^2} \right)^2 \left[ \sigma^2 \left( \frac{\hat\sigma^2_*}{\sigma^2} - \frac{1}{2} \right) - (\bar{x} - \mu)^2 \right] \\
+&= \frac{n^2}{(\sigma^2)^4} \left[ \sigma^2 \left( \frac{\hat\sigma^2_*}{\sigma^2} - \frac{1}{2} \right) - (\bar{x} - \mu)^2 \right].
+\end{aligned}
+$$
+Now, let's substitute in the candidate MLEs, $\hat\mu_* = \bar{x}$ for $\mu$ and $\hat\sigma^2_* = \frac{1}{n}\sum_{i = 1}^n (x_i - \mu)^2$ for $\sigma^2$. Delightfully, this simplifies nicely:
+$$
+\begin{aligned}
+\det\left( \textbf{H}[\ell(\mu = \hat\mu_*,\sigma^2 = \hat\sigma^2_*|\textbf{x})] \right) &= \frac{n^2}{[\hat\sigma^2_*]^4} \left[ [\hat\sigma^2_*] \left( \frac{\hat\sigma^2_*}{[\hat\sigma^2_*]} - \frac{1}{2} \right) - (\bar{x} - [\hat\mu_*])^2 \right] \\
+&= \frac{n^2}{(\hat\sigma^2_*)^4} \left[ \hat\sigma^2_* \left( 1 - \frac{1}{2} \right) - (\bar{x} - \bar{x})^2 \right] \\
+&= \frac{n^2}{(\hat\sigma^2_*)^4} \left[ \frac{1}{2}\hat\sigma^2_* \right] \\
+&= \frac{n^2}{2(\hat\sigma^2_*)^3} \\
+&> 0.
+\end{aligned}
+$$
+
+
+### MLEs Confirmed
+Therefore, we have confirmed that the Hessian Matrix has "volume" at the critical points, and we saw above that the diagonal elements of the Hessian will both be negative (under the assumption that $\hat\sigma^2_*$ isn't a completely awful estimator for $\sigma^2$). Therefore, these critical points we found indeed maximize the likelihood function. Thus,
+$$
+\hat\mu_{MLE} = \bar{x};\ \hat\sigma^2_{MLE} = \frac{1}{n}\sum_{i = 1}^n (x_i - \mu)^2.
+$$
+For our real data, we don't know $\mu$, so these estimates are:
+```{r}
+(muHat <- xBar <- mean(rIQ_num))
+(sigma2Hat <- (1 / 7) * sum((rIQ_num - mean(rIQ_num))^2))
+```
+We generated data with a mean of 100 and a variance of $15^2$ (which is 225). Our sample estimates are a mean of `r round(muHat, 1)` and a variance of `r round(sigma2Hat, 1)` (standard deviation of `r round(sqrt(sigma2Hat), 1)`). Notice that I did **not** use the standard `var()` function. Why? This function calculates the *sample* standard deviation, $s^2$, which is *not the same* as the MLE for $\sigma^2$. In contrast, $s^2$ for this data is
+```{r}
+var(rIQ_num)
+```
+
+
+
+
 
 
 </br>
@@ -545,7 +684,17 @@ $$
 
 ## Exercises
 
-To be determined.
+
+### The Log-Normal Distribution
+If we let $Y\sim\mathcal{N}(\mu, \sigma^2)$, and we let $Y = \log(X)$, then $X = e^Y$ has a Log-Normal distribution.
+
+1. Use a transformation to find the PDF of this distribution. What is its support?
+2. Show that $\mathbb{E}[X] = e^{\mu + \frac{1}{2}\sigma^2}$.
+3. Show that $\text{Var}[X] = e^{2\mu + 2\sigma^2} - e^{2\mu + \sigma^2}$.
+
+
+### Simulating Properties of $\sigma^2_{MLE}$
+While we were inspecting the Hessian Matrix above, we saw that $\frac{\partial^2\ell}{\partial(\sigma^2)^2}$ includes the term $\frac{\hat\sigma^2_*}{\sigma^2} - \frac{1}{2}$. Create a simulation study that increases the sample size and calculates this expression. How large of a sample (from a Normal distribution) would be required to be *reasonably confident* that this expression is positive?
 
 
 ## Footnotes 
