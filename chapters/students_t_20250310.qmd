@@ -37,6 +37,47 @@ options(dplyr.summarise.inform = FALSE)
 
 
 ## Deriving the Distribution
+Before we dive in, I'm going to offer a comment on the structure of this chapter and the related chapter on the Central $\mathcal{F}$ distribution. These two chapters will be shorter. I do not include sections on the Method of Moments or Maximum Likelihood Estimators. These distributions are both parametrised by sample sizes. When independent samples are observed, then the sample sizes are known, and there's no reason to estimate these parameters. When the observed samples are not independent, then we violate the assumptions for data used in the MoM and ML estimators anyway. In short, I haven't found any real examples in my personal work where estimating "unknown parameters" from these distributions has been needed.
+
+
+### Formal Foundations: The $\chi^2$ Distribution
+Deriving the $\chi^2$ Distribution was a homework exercise from the chapter on the Gamma Distribution, as it is a special case of the Gamma Distribution. The probability function for this distribution is:
+$$
+f_{\chi^2}(x|\nu) = \frac{2^{-\nu/2}}{\Gamma(\nu/2)} x^{\nu/2 - 1} e^{-x/2},\ \nu\in\mathbb{N},
+$$
+where $\nu$, the degrees of freedom parameter, is pronounced "new" (the Greek letter "nu").
+
+
+### Formal Foundations: A Special Value of $\Gamma(z)$
+Curiously, the constant $\Gamma(1/2)$ appears periodically in derivations of statistical distributions which include the Gamma and Beta functions. We will find a closed form for this value from the definition of the Gamma Function:
+$$
+\begin{align}
+\Gamma(z) &= \int_0^{\infty} t^{z - 1} e^{-t} dt \\
+\Longrightarrow \Gamma\left(\frac{1}{2}\right) &= \int_0^{\infty} t^{1/2 - 1} e^{-t} dt \\
+&= \int_0^{\infty} \frac{1}{t^{1/2}} e^{-t} dt.
+\end{align}
+$$
+Now we're going to perform a substitution: let $u = t^{1/2}\Rightarrow du = \frac{1}{2}t^{-1/2}dt\Rightarrow 2du = t^{-1/2}dt$ and $t = u^2$. Also, for this substitution, the bounds of integration do not change ($\sqrt{0} = 0$ and $\sqrt\infty \to \infty$). Thus, remembering that $e^{-x^2}$ is symmetric around $x = 0$, we have that
+$$
+\begin{align}
+\Gamma\left(\frac{1}{2}\right) &= \int_0^{\infty} \frac{1}{t^{1/2}} e^{-t} dt \\
+&= \int_{t = 0}^{\infty} e^{-t} \frac{1}{t^{1/2}} dt \\
+&= \int_{u = 0}^{\infty} e^{-[u^2]} [2du] \\
+&= 2\int_{u = 0}^{\infty} e^{-u^2} du \\
+&\qquad\text{\emph{Symmetric function...}} \\
+&= \int_{u = -\infty}^{\infty} e^{-u^2} du \\
+&\qquad\text{\emph{Multiply by well-placed 1...}} \\
+&= \int_{u = -\infty}^{\infty} e^{-\frac{u^2}{2(1/2)}} du \\
+&\qquad\text{\emph{Kernel of a Normal Distribution...}} \\
+&= \sqrt{2\pi\left(\frac{1}{2}\right)} \int_{u = -\infty}^{\infty} \frac{1}{\sqrt{2\pi\left(\frac{1}{2}\right)}} e^{-\frac{1}{2}\frac{(u - 0)^2}{\frac{1}{2}}} du \\
+&= \sqrt{2\pi\left(\frac{1}{2}\right)} [1] \\
+&= \sqrt{\pi}.
+\end{align}
+$$
+
+
+### The Joint Distribution
+The Student's $t$ Distribution is a weighted average of the Normal Distribution and the square root of a $\chi^2$ Distribution, scaled by its degrees of freedom.
 
 
 </br>
@@ -139,37 +180,6 @@ par(mfrow = c(1, 1))
 
 
 ## Show that this is a Distribution
-
-
-</br>
-
-
-
-## Derive the Moment Generating Function
-
-
-</br>
-
-
-
-## Method of Moments Estimates from Observed Data
-Let's generate some random data...
-
-
-### $\mathbb{E}[k]$
-
-
-### $\mathbb{E}[k^2]$ and $\text{Var}[k]$
-
-
-### Solving the System
-
-
-</br>
-
-
-
-## Maximum Likelihood Estimators
 
 
 </br>

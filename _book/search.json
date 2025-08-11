@@ -964,7 +964,17 @@
     "href": "chapters/students_t_20250310.html",
     "title": "11  The Student’s t Distribution",
     "section": "",
-    "text": "11.1 Deriving the Distribution",
+    "text": "11.1 Deriving the Distribution\nBefore we dive in, I’m going to offer a comment on the structure of this chapter and the related chapter on the Central \\(\\mathcal{F}\\) distribution. These two chapters will be shorter. I do not include sections on the Method of Moments or Maximum Likelihood Estimators. These distributions are both parametrised by sample sizes. When independent samples are observed, then the sample sizes are known, and there’s no reason to estimate these parameters. When the observed samples are not independent, then we violate the assumptions for data used in the MoM and ML estimators anyway. In short, I haven’t found any real examples in my personal work where estimating “unknown parameters” from these distributions has been needed.",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/students_t_20250310.html#deriving-the-distribution",
+    "href": "chapters/students_t_20250310.html#deriving-the-distribution",
+    "title": "11  The Student’s t Distribution",
+    "section": "",
+    "text": "11.1.1 Formal Foundations: The \\(\\chi^2\\) Distribution\nDeriving the \\(\\chi^2\\) Distribution was a homework exercise from the chapter on the Gamma Distribution, as it is a special case of the Gamma Distribution. The probability function for this distribution is: \\[\nf_{\\chi^2}(x|\\nu) = \\frac{2^{-\\nu/2}}{\\Gamma(\\nu/2)} x^{\\nu/2 - 1} e^{-x/2},\\ \\nu\\in\\mathbb{N},\n\\] where \\(\\nu\\), the degrees of freedom parameter, is pronounced “new” (the Greek letter “nu”).\n\n\n11.1.2 Formal Foundations: A Special Value of \\(\\Gamma(z)\\)\nCuriously, the constant \\(\\Gamma(1/2)\\) appears periodically in derivations of statistical distributions which include the Gamma and Beta functions. We will find a closed form for this value from the definition of the Gamma Function: \\[\n\\begin{align}\n\\Gamma(z) &= \\int_0^{\\infty} t^{z - 1} e^{-t} dt \\\\\n\\Longrightarrow \\Gamma\\left(\\frac{1}{2}\\right) &= \\int_0^{\\infty} t^{1/2 - 1} e^{-t} dt \\\\\n&= \\int_0^{\\infty} \\frac{1}{t^{1/2}} e^{-t} dt.\n\\end{align}\n\\] Now we’re going to perform a substitution: let \\(u = t^{1/2}\\Rightarrow du = \\frac{1}{2}t^{-1/2}dt\\Rightarrow 2du = t^{-1/2}dt\\) and \\(t = u^2\\). Also, for this substitution, the bounds of integration do not change (\\(\\sqrt{0} = 0\\) and \\(\\sqrt\\infty \\to \\infty\\)). Thus, remembering that \\(e^{-x^2}\\) is symmetric around \\(x = 0\\), we have that \\[\n\\begin{align}\n\\Gamma\\left(\\frac{1}{2}\\right) &= \\int_0^{\\infty} \\frac{1}{t^{1/2}} e^{-t} dt \\\\\n&= \\int_{t = 0}^{\\infty} e^{-t} \\frac{1}{t^{1/2}} dt \\\\\n&= \\int_{u = 0}^{\\infty} e^{-[u^2]} [2du] \\\\\n&= 2\\int_{u = 0}^{\\infty} e^{-u^2} du \\\\\n&\\qquad\\text{\\emph{Symmetric function...}} \\\\\n&= \\int_{u = -\\infty}^{\\infty} e^{-u^2} du \\\\\n&\\qquad\\text{\\emph{Multiply by well-placed 1...}} \\\\\n&= \\int_{u = -\\infty}^{\\infty} e^{-\\frac{u^2}{2(1/2)}} du \\\\\n&\\qquad\\text{\\emph{Kernel of a Normal Distribution...}} \\\\\n&= \\sqrt{2\\pi\\left(\\frac{1}{2}\\right)} \\int_{u = -\\infty}^{\\infty} \\frac{1}{\\sqrt{2\\pi\\left(\\frac{1}{2}\\right)}} e^{-\\frac{1}{2}\\frac{(u - 0)^2}{\\frac{1}{2}}} du \\\\\n&= \\sqrt{2\\pi\\left(\\frac{1}{2}\\right)} [1] \\\\\n&= \\sqrt{\\pi}.\n\\end{align}\n\\]",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
@@ -990,41 +1000,11 @@
     ]
   },
   {
-    "objectID": "chapters/students_t_20250310.html#derive-the-moment-generating-function",
-    "href": "chapters/students_t_20250310.html#derive-the-moment-generating-function",
-    "title": "11  The Student’s t Distribution",
-    "section": "11.4 Derive the Moment Generating Function",
-    "text": "11.4 Derive the Moment Generating Function",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/students_t_20250310.html#method-of-moments-estimates-from-observed-data",
-    "href": "chapters/students_t_20250310.html#method-of-moments-estimates-from-observed-data",
-    "title": "11  The Student’s t Distribution",
-    "section": "11.5 Method of Moments Estimates from Observed Data",
-    "text": "11.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n11.5.1 \\(\\mathbb{E}[k]\\)\n\n\n11.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n11.5.3 Solving the System",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/students_t_20250310.html#maximum-likelihood-estimators",
-    "href": "chapters/students_t_20250310.html#maximum-likelihood-estimators",
-    "title": "11  The Student’s t Distribution",
-    "section": "11.6 Maximum Likelihood Estimators",
-    "text": "11.6 Maximum Likelihood Estimators",
-    "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
-    ]
-  },
-  {
     "objectID": "chapters/students_t_20250310.html#exercises",
     "href": "chapters/students_t_20250310.html#exercises",
     "title": "11  The Student’s t Distribution",
-    "section": "11.7 Exercises",
-    "text": "11.7 Exercises\nTo be determined.",
+    "section": "11.4 Exercises",
+    "text": "11.4 Exercises\nTo be determined.",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
@@ -1033,8 +1013,8 @@
     "objectID": "chapters/students_t_20250310.html#footnotes",
     "href": "chapters/students_t_20250310.html#footnotes",
     "title": "11  The Student’s t Distribution",
-    "section": "11.8 Footnotes",
-    "text": "11.8 Footnotes",
+    "section": "11.5 Footnotes",
+    "text": "11.5 Footnotes",
     "crumbs": [
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>The Student's t Distribution</span>"
     ]
@@ -1070,41 +1050,11 @@
     ]
   },
   {
-    "objectID": "chapters/f_20250310.html#derive-the-moment-generating-function",
-    "href": "chapters/f_20250310.html#derive-the-moment-generating-function",
-    "title": "12  The Central F Distribution",
-    "section": "12.4 Derive the Moment Generating Function",
-    "text": "12.4 Derive the Moment Generating Function",
-    "crumbs": [
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/f_20250310.html#method-of-moments-estimates-from-observed-data",
-    "href": "chapters/f_20250310.html#method-of-moments-estimates-from-observed-data",
-    "title": "12  The Central F Distribution",
-    "section": "12.5 Method of Moments Estimates from Observed Data",
-    "text": "12.5 Method of Moments Estimates from Observed Data\nLet’s generate some random data…\n\n12.5.1 \\(\\mathbb{E}[k]\\)\n\n\n12.5.2 \\(\\mathbb{E}[k^2]\\) and \\(\\text{Var}[k]\\)\n\n\n12.5.3 Solving the System",
-    "crumbs": [
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
-    ]
-  },
-  {
-    "objectID": "chapters/f_20250310.html#maximum-likelihood-estimators",
-    "href": "chapters/f_20250310.html#maximum-likelihood-estimators",
-    "title": "12  The Central F Distribution",
-    "section": "12.6 Maximum Likelihood Estimators",
-    "text": "12.6 Maximum Likelihood Estimators",
-    "crumbs": [
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
-    ]
-  },
-  {
     "objectID": "chapters/f_20250310.html#exercises",
     "href": "chapters/f_20250310.html#exercises",
     "title": "12  The Central F Distribution",
-    "section": "12.7 Exercises",
-    "text": "12.7 Exercises\nTo be determined.",
+    "section": "12.4 Exercises",
+    "text": "12.4 Exercises\nTo be determined.",
     "crumbs": [
       "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
@@ -1113,8 +1063,8 @@
     "objectID": "chapters/f_20250310.html#footnotes",
     "href": "chapters/f_20250310.html#footnotes",
     "title": "12  The Central F Distribution",
-    "section": "12.8 Footnotes",
-    "text": "12.8 Footnotes",
+    "section": "12.5 Footnotes",
+    "text": "12.5 Footnotes",
     "crumbs": [
       "<span class='chapter-number'>12</span>  <span class='chapter-title'>The Central F Distribution</span>"
     ]
