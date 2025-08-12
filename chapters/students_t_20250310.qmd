@@ -77,7 +77,55 @@ $$
 
 
 ### The Joint Distribution
-The Student's $t$ Distribution is a weighted average of the Normal Distribution and the square root of a $\chi^2$ Distribution, scaled by its degrees of freedom.
+The Student's $t$ Distribution is a weighted average of the Normal Distribution and the square root of a $\chi^2$ Distribution, scaled by its degrees of freedom. We begin by considering a random variable with a Standard Normal Distribution, say $X \sim \mathcal{N}(\mu = 0, \sigma^2 = 1)$. Also, we consider $Y \sim \chi^2_{\nu} \ni X \perp Y$. The joint distribution of $X$ and $Y$ is then
+$$
+f(x, y|\mu,\sigma^2,\nu) = \left[ \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} \right] \left[ \frac{2^{-\nu/2}}{\Gamma(\nu/2)} y^{\nu/2 - 1} e^{-y/2} \right].
+$$
+
+We will employ a bivariate transformation, then integrate out one of the parameters as a nuisance parameter. First, let $S = Y$ be the nuisance parameter; $\mathcal{S}(Y) = \mathcal{S}(S) = \mathbb{R}^+$. then let $T = X\sqrt{\frac{\nu}{Y}}$, so $X = T\sqrt{\frac{S}{\nu}}$; $\mathcal{S}(X) = \mathcal{S}(T) = \mathbb{R}$. Therefore, the Jacobian Determinant is found by
+$$
+\begin{aligned}
+\textbf{J} &= \begin{bmatrix}
+  \frac{\partial X}{\partial T} & \frac{\partial Y}{\partial T} \\
+  \frac{\partial X}{\partial S} & \frac{\partial Y}{\partial S} \\
+\end{bmatrix} \\
+&= \begin{bmatrix}
+  \frac{\partial}{\partial T} T\sqrt{\frac{S}{\nu}} & \frac{\partial}{\partial T} S \\
+  \frac{\partial}{\partial S} T\sqrt{\frac{S}{\nu}} & \frac{\partial}{\partial S} S \\
+\end{bmatrix} \\
+&= \begin{bmatrix}
+  \sqrt{\frac{S}{\nu}} & 0 \\
+  \frac{T}{2} \left(\frac{S}{\nu}\right)^{-\frac{1}{2}} \frac{1}{\nu} & 1 \\
+\end{bmatrix} \\
+\Longrightarrow \det(\textbf{J}) &= \sqrt{\frac{S}{\nu}}(1) - (0)\frac{T}{2} \left(\frac{S}{\nu}\right)^{-\frac{1}{2}} \\
+&= \sqrt{\frac{S}{\nu}}.
+\end{aligned}
+$$
+Therefore, the marginal distribution of $T$ requires us to apply this transformation and then integrate out the nuisance parameter $S$. Thus,
+$$
+\begin{aligned}
+f(t, s|\nu) &= \left\{ \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}\left[ t\sqrt{\frac{s}{\nu}} \right]^2} \right\} \left\{ \frac{2^{-\nu/2}}{\Gamma(\nu/2)} [s]^{\nu/2 - 1} e^{-[s]/2} \right\} \left\{ \sqrt{\frac{s}{\nu}} \right\} \\
+\Longrightarrow f(t|\nu) &= \int_{\mathcal{S}(s)} \left\{ \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}\left[ t\sqrt{\frac{s}{\nu}} \right]^2} \right\} \left\{ \frac{2^{-\nu/2}}{\Gamma(\nu/2)} [s]^{\nu/2 - 1} e^{-[s]/2} \right\} \left\{ \sqrt{\frac{s}{\nu}} \right\} ds \\
+&= \frac{1}{\sqrt{2\pi}} \frac{2^{-\nu/2}}{\Gamma(\nu/2)} \frac{1}{\sqrt\nu} \int_0^{\infty} e^{-\frac{1}{2} t^2\frac{s}{\nu}} e^{-\frac{s}{2}} s^{\frac{\nu}{2} - 1} s^{\frac{1}{2}} ds \\
+&\qquad \sqrt\pi \text{\emph{ is a special value of the Gamma Function...}} \\
+&= \frac{1}{\Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right)} \frac{1}{2^{\frac{\nu + 1}{2}}} \frac{1}{\sqrt\nu} \int_0^{\infty} s^{\frac{\nu + 1}{2} - 1} e^{-s\left( \frac{t^2}{2\nu} + \frac{1}{2} \right)} ds.
+\end{aligned}
+$$
+
+Now, we should recognize the "guts" of this integral as a kernel of the Gamma Distribution with $\alpha = \frac{\nu + 1}{2}$ and $\lambda = \frac{t^2}{2\nu} + \frac{1}{2}$. Hence,
+$$
+\begin{aligned}
+f(t|\nu) &= \frac{1}{\Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right)} \frac{1}{2^{\frac{\nu + 1}{2}}} \frac{1}{\sqrt\nu} \int_0^{\infty} s^{\frac{\nu + 1}{2} - 1} e^{-s\left( \frac{t^2}{2\nu} + \frac{1}{2} \right)} ds \\
+&\qquad\text{\emph{Multiply by a well-placed 1...}} \\
+&= \frac{1}{\Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right)} \frac{1}{2^{\frac{\nu + 1}{2}}} \frac{1}{\sqrt\nu} \int_0^{\infty} \left[ \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \left( \frac{t^2}{2\nu} + \frac{1}{2} \right)^{\frac{\nu + 1}{2}} } \right] \left[ \frac{ \left( \frac{t^2}{2\nu} + \frac{1}{2} \right)^{\frac{\nu + 1}{2}} }{ \Gamma\left(\frac{\nu + 1}{2}\right) } \right] s^{\frac{\nu + 1}{2} - 1} e^{-s\left( \frac{t^2}{2\nu} + \frac{1}{2} \right)} ds \\
+&= \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right)} \frac{1}{ 2^{\frac{\nu + 1}{2}} \left( \frac{t^2}{2\nu} + \frac{1}{2} \right)^{\frac{\nu + 1}{2}} } \frac{1}{\sqrt\nu} \int_0^{\infty} \frac{ \left( \frac{t^2}{2\nu} + \frac{1}{2} \right)^{\frac{\nu + 1}{2}} }{ \Gamma\left(\frac{\nu + 1}{2}\right) } s^{\frac{\nu + 1}{2} - 1} e^{-s\left( \frac{t^2}{2\nu} + \frac{1}{2} \right)} ds \\
+&\qquad\text{\emph{Integrate out the Gamma Distribution...}} \\
+&= \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right)} \frac{1}{ 2^{\frac{\nu + 1}{2}} \left( \frac{t^2}{2\nu} + \frac{1}{2} \right)^{\frac{\nu + 1}{2}} } \frac{1}{\sqrt\nu} [1] \\
+&= \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right)} \frac{ \left( 1 + \frac{t^2}{\nu} \right)^{-\frac{\nu + 1}{2}} }{ 2^{\frac{\nu + 1}{2}} \left(\frac{1}{2}\right)^{\frac{\nu + 1}{2}}  } \frac{1}{\sqrt\nu} \\
+&= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) \nu^{-\frac{1}{2}} }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \left( 1 + \frac{t^2}{\nu} \right)^{-\frac{\nu + 1}{2}},
+\end{aligned}
+$$
+which will be very close to the form of the Student's $t$ Distribution presented in most textbooks.
 
 
 </br>
