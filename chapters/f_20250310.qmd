@@ -37,7 +37,69 @@ options(dplyr.summarise.inform = FALSE)
 
 
 ## Deriving the Distribution
+As with the chapter on the Student's $t$ distribution, we will not include sections on the Method of Moments or Maximum Likelihood Estimators. Also, before we move on, please review the definition of the $\chi^2$ Distribution from that chapter. We begin by letting $X \sim \chi^2_{\nu_x}$ and $Y \sim \chi^2_{\nu_y}$ and by assuming that $X \perp Y$. The joint distribution of $X$ and $Y$ is
+$$
+f_{X,Y}(x,y|\nu_x, \nu_y) = \left[ \frac{2^{-\frac{\nu_x}{2}}}{\Gamma\left(\frac{\nu_x}{2}\right)} x^{\frac{\nu_x}{2} - 1} e^{-\frac{x}{2}} \right] \left[ \frac{2^{-\frac{\nu_y}{2}}}{\Gamma\left(\frac{\nu_y}{2}\right)} y^{\frac{\nu_y}{2} - 1} e^{-\frac{y}{2}} \right].
+$$
 
+Similarly to our work on the Student's $t$ Distribution, we will make a creative bivariate substitution. Let $G = Y$ be the nuisance parameter, and let
+$$
+H = \frac{X/\nu_x}{Y/\nu_y} \Rightarrow \frac{Y}{\nu_y}H = \frac{X}{\nu_x} \Rightarrow \frac{\nu_x}{\nu_y}GH = X.
+$$
+For the support of these variables, recall that $X,Y > 0$, so $H,G > 0$. For this substitution, the Jacobian Determinant is found by
+$$
+\begin{aligned}
+\textbf{J} &= \begin{bmatrix}
+  \frac{\partial X}{\partial H} & \frac{\partial Y}{\partial H} \\
+  \frac{\partial X}{\partial G} & \frac{\partial Y}{\partial G} \\
+\end{bmatrix} \\
+&= \begin{bmatrix}
+  \frac{\partial}{\partial H} \frac{\nu_x}{\nu_y}GH & \frac{\partial}{\partial H} G \\
+  \frac{\partial}{\partial G} \frac{\nu_x}{\nu_y}GH & \frac{\partial}{\partial G} G \\
+\end{bmatrix} \\
+&= \begin{bmatrix}
+  \frac{\nu_x}{\nu_y}G & 0 \\
+  \frac{\nu_x}{\nu_y}H & 1 \\
+\end{bmatrix} \\
+\Longrightarrow \det(\textbf{J}) &= \frac{\nu_x}{\nu_y}G(1) - (0)\frac{\nu_x}{\nu_y}H \\
+&= \frac{\nu_x}{\nu_y}G.
+\end{aligned}
+$$
+
+Now let's dive in:
+$$
+f_{X,Y}(x,y|\nu_x, \nu_y) = \left\{ \frac{2^{-\frac{\nu_x}{2}}}{\Gamma\left(\frac{\nu_x}{2}\right)} x^{\frac{\nu_x}{2} - 1} e^{-\frac{x}{2}} \right\} \left\{ \frac{2^{-\frac{\nu_y}{2}}}{\Gamma\left(\frac{\nu_y}{2}\right)} y^{\frac{\nu_y}{2} - 1} e^{-\frac{y}{2}} \right\}
+$$
+implies that
+$$
+\begin{aligned}
+f_{X,Y}(h,g|\nu_x, \nu_y) &= \left\{ \frac{2^{-\frac{\nu_x}{2}}}{\Gamma\left(\frac{\nu_x}{2}\right)} \left[\frac{\nu_x}{\nu_y}gh\right]^{\frac{\nu_x}{2} - 1} e^{-\frac{1}{2}\left[\frac{\nu_x}{\nu_y}gh\right]} \right\} \left\{ \frac{2^{-\frac{\nu_y}{2}}}{\Gamma\left(\frac{\nu_y}{2}\right)} [g]^{\frac{\nu_y}{2} - 1} e^{-\frac{[g]}{2}} \right\} \left[\frac{\nu_x}{\nu_y}g\right] \\
+&= \frac{2^{-\frac{\nu_x}{2}}}{\Gamma\left(\frac{\nu_x}{2}\right)} \frac{2^{-\frac{\nu_y}{2}}}{\Gamma\left(\frac{\nu_y}{2}\right)} \left[\frac{\nu_x}{\nu_y}\right]^{\frac{\nu_x}{2} - 1} \left[\frac{\nu_x}{\nu_y}\right] \left( g^{\frac{\nu_x}{2} - 1} g^{\frac{\nu_y}{2} - 1} g \right) h^{\frac{\nu_x}{2} - 1} e^{-\left( \frac{\nu_x}{2\nu_y}gh + \frac{g}{2} \right)} \\
+&= \frac{ 2^{-\frac{\nu_x + \nu_y}{2}} }{ \Gamma\left(\frac{\nu_x}{2}\right)\Gamma\left(\frac{\nu_y}{2}\right) } \left[\frac{\nu_x}{\nu_y}\right]^{\frac{\nu_x}{2}} h^{\frac{\nu_x}{2} - 1} g^{\frac{\nu_x + \nu_y}{2} - 1} e^{-g\left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)} \\
+\Longrightarrow f_H(h|\nu_x, \nu_y) &= \int_{\mathcal{S}(g)} \frac{ 2^{-\frac{\nu_x + \nu_y}{2}} }{ \Gamma\left(\frac{\nu_x}{2}\right)\Gamma\left(\frac{\nu_y}{2}\right) } \left[\frac{\nu_x}{\nu_y}\right]^{\frac{\nu_x}{2}} h^{\frac{\nu_x}{2} - 1} g^{\frac{\nu_x + \nu_y}{2} - 1} e^{-g\left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)} dg \\
+&= \frac{ 2^{-\frac{\nu_x + \nu_y}{2}} }{ \Gamma\left(\frac{\nu_x}{2}\right) \Gamma\left(\frac{\nu_y}{2}\right) } \left[\frac{\nu_x}{\nu_y}\right]^{\frac{\nu_x}{2}} h^{\frac{\nu_x}{2} - 1}  \int_0^{\infty} g^{\frac{\nu_x + \nu_y}{2} - 1} e^{-g\left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)} dg,
+\end{aligned}
+$$
+which we should recognise as the kernel of a Gamma Distribution with $\alpha = \frac{\nu_x + \nu_y}{2}$ and $\lambda = \frac{\nu_x}{2\nu_y}h - \frac{1}{2}$. This kernel then integrates to
+$$
+\begin{aligned}
+I &= \int_0^{\infty} g^{\frac{\nu_x + \nu_y}{2} - 1} e^{-g\left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)} dg \\
+&= \int_0^{\infty} \left\{ \frac{ \Gamma\left( \frac{\nu_x + \nu_y}{2} \right) }{ \left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)^{\frac{\nu_x + \nu_y}{2}} } \right\} \left\{ \frac{ \left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)^{\frac{\nu_x + \nu_y}{2}} }{ \Gamma\left( \frac{\nu_x + \nu_y}{2} \right) } \right\} g^{\frac{\nu_x + \nu_y}{2} - 1} e^{-g\left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)} dg \\
+&= \left\{ \frac{ \Gamma\left( \frac{\nu_x + \nu_y}{2} \right) }{ \left(\frac{1}{2}\right)^{\frac{\nu_x + \nu_y}{2}} \left( \frac{\nu_x}{\nu_y}h + 1 \right)^{\frac{\nu_x + \nu_y}{2}} } \right\} \int_0^{\infty} \left\{ \frac{ \left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)^{\frac{\nu_x + \nu_y}{2}} }{ \Gamma\left( \frac{\nu_x + \nu_y}{2} \right) } \right\} g^{\frac{\nu_x + \nu_y}{2} - 1} e^{-g\left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)} dg \\
+&= \left\{ \frac{ 2^{\frac{\nu_x + \nu_y}{2}} \Gamma\left( \frac{\nu_x + \nu_y}{2} \right) }{ \left( \frac{\nu_x}{\nu_y}h + 1 \right)^{\frac{\nu_x + \nu_y}{2}} } \right\} [1].
+\end{aligned}
+$$
+
+Therefore, our marginal distribution simplifies to
+$$
+\begin{aligned}
+f_H(h|\nu_x, \nu_y) &= \frac{ 2^{-\frac{\nu_x + \nu_y}{2}} }{ \Gamma\left(\frac{\nu_x}{2}\right) \Gamma\left(\frac{\nu_y}{2}\right) } \left[\frac{\nu_x}{\nu_y}\right]^{\frac{\nu_x}{2}} h^{\frac{\nu_x}{2} - 1}  \int_0^{\infty} g^{\frac{\nu_x + \nu_y}{2} - 1} e^{-g\left( \frac{\nu_x}{2\nu_y}h + \frac{1}{2} \right)} dg \\
+&= \frac{ 2^{-\frac{\nu_x + \nu_y}{2}} }{ \Gamma\left(\frac{\nu_x}{2}\right) \Gamma\left(\frac{\nu_y}{2}\right) } \left[\frac{\nu_x}{\nu_y}\right]^{\frac{\nu_x}{2}} h^{\frac{\nu_x}{2} - 1} \left\{ \frac{ 2^{\frac{\nu_x + \nu_y}{2}} \Gamma\left( \frac{\nu_x + \nu_y}{2} \right) }{ \left( \frac{\nu_x}{\nu_y}h + 1 \right)^{\frac{\nu_x + \nu_y}{2}} } \right\} \\
+&= \frac{ 2^{-\frac{\nu_x + \nu_y}{2}} 2^{\frac{\nu_x + \nu_y}{2}} \Gamma\left( \frac{\nu_x + \nu_y}{2} \right) }{ \Gamma\left(\frac{\nu_x}{2}\right) \Gamma\left(\frac{\nu_y}{2}\right) } \left[\frac{\nu_x}{\nu_y}\right]^{\frac{\nu_x}{2}} \frac{ h^{\frac{\nu_x}{2} - 1} }{ \left( \frac{\nu_x}{\nu_y}h + 1 \right)^{\frac{\nu_x + \nu_y}{2}} } \\
+&= \frac{ \Gamma\left( \frac{\nu_x + \nu_y}{2} \right) }{ \Gamma\left(\frac{\nu_x}{2}\right) \Gamma\left(\frac{\nu_y}{2}\right) } \left[\frac{\nu_x}{\nu_y}\right]^{\frac{\nu_x}{2}} \frac{ h^{\frac{\nu_x}{2} - 1} }{ \left( \frac{\nu_x}{\nu_y}h + 1 \right)^{\frac{\nu_x + \nu_y}{2}} },
+\end{aligned}
+$$
+which is the Central $\mathcal{F}$ Distribution with $\nu_x,\nu_y$ **degrees of freedom**.^[<https://texasgateway.org/resource/132-f-distribution-and-f-ratio>]
 
 </br>
 

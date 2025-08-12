@@ -535,7 +535,15 @@ Unlike in the Binomial Distribution case, where the two estimators were quite cl
 
 ## Exercises
 
-To be determined.
+
+### The Geometric Distribution
+When $1 = m \le n$ (we are repeating trials until we observe the first success), the Negative Binomial Distribution reduces to the Geometric Distribution.
+
+1. Derive this distribution
+2. Find $\mathbb{E}[n]$ and $\text{Var}[n]$.
+3. Find the MGF of this distribution.
+
+Other exercises to be determined.
 
 
 ## Footnotes 

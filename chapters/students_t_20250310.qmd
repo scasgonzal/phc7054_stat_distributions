@@ -230,13 +230,65 @@ par(mfrow = c(1, 1))
 ## Show that this is a Distribution
 
 
+### The Function is Non-Negative
+Let's consider the variable components of the Student's $t$ Distribution shown here:
+$$
+f_T(t|\nu) = \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) \nu^{-\frac{1}{2}} }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \left( 1 + \frac{t^2}{\nu} \right)^{-\frac{\nu + 1}{2}}.
+$$
+Recall that the transformation we defined was $T = X\sqrt{\frac{\nu}{Y}}$. We know that $Y\in\mathbb{R}^+$ and $\nu\in\mathbb{N}$, so $\sqrt{\frac{\nu}{Y}}\in\mathbb{R}^+$. Since $X\in\mathbb{R}$, we then have that $\mathcal{S}(t)\subseteq\mathbb{R}$. Ergo, $t^2\ge 0$. Additionally, for the $\chi^2$ Distribution, we required that $\nu\in\mathbb{N}$, so the entire distribution is then non-negative. However, because we have Gamma Functions, we can extend this distribution to non-integer values of $\nu$ as well.^[Think about what this might mean in practice, as the *degrees of freedom* measure the number of *independent* observations. See <https://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)#Effective_degrees_of_freedom>] Thus, $f_T > 0\ \forall t\in\mathbb{R}$ and $\nu > 0$.
+
+
+### The Function Integrates to 1
+As we argued above, the support of the random variable $t$ is the entire Real line. We will first use the "symmetry trick" as we've seen elsewhere (that $f_T(t) = f_T(-t)$) to change the limits of integration.
+$$
+\begin{aligned}
+\int_{\mathcal{S}(t)} dF(t|\nu) &= \int_{\mathcal{S}(t)} \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) \nu^{-\frac{1}{2}} }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \left( 1 + \frac{t^2}{\nu} \right)^{-\frac{\nu + 1}{2}} dt \\
+&= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \int_{-\infty}^{\infty} \frac{1}{\nu^{\frac{1}{2}} \left( 1 + \frac{t^2}{\nu} \right)^{\frac{\nu + 1}{2}}} dt \\
+&= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } 2 \int_{0}^{\infty} \frac{1}{\sqrt\nu \left( 1 + \frac{t^2}{\nu} \right)^{\frac{\nu + 1}{2}}} dt.
+\end{aligned}
+$$
+Now we perform a substitution. Let $u = t^2/\nu \Rightarrow du = \frac{2}{\nu}tdt$. The problem is that we don't have anything that looks like a $tdt$ in our integrand. But, we do know that if $t > 0$, then we can "solve" $u = t^2/\nu$ for $t$. That is, we see that $t = +\sqrt{u\nu}$, because $t$ is positive. As a welcome side effect, our bounds of integration stay the same. Thus,
+$$
+\begin{aligned}
+du &= \frac{2}{\nu}tdt \\
+&= \frac{2}{\nu}[\sqrt{u\nu}]dt \\
+&= 2\sqrt{u}\frac{\sqrt\nu}{\nu}dt \\
+\Longrightarrow \frac{1}{2\sqrt{u}}du &= \frac{1}{\sqrt\nu}dt,
+\end{aligned}
+$$
+which, thankfully, does show up in our integrand.
+
+Hence, we have 
+$$
+\begin{aligned}
+\int_{\mathcal{S}(t)} dF(t|\nu) &= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } 2 \int_{t = 0}^{\infty} \frac{1}{\left( 1 + \frac{t^2}{\nu} \right)^{\frac{\nu + 1}{2}}} \frac{1}{\sqrt\nu} dt \\
+&= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } 2 \int_{u = 0}^{\infty} \frac{1}{\left( 1 + [u] \right)^{\frac{\nu + 1}{2}}} \left[\frac{1}{2\sqrt{u}}du\right] \\
+&= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \int_{0}^{\infty} \frac{1}{\left( 1 + u \right)^{\frac{\nu + 1}{2}}} \frac{1}{\sqrt{u}}du \\
+&= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \int_{0}^{\infty} \frac{u^{-\frac{1}{2}}}{\left( 1 + u \right)^{\frac{\nu}{2} + \frac{1}{2}}} du \\
+&= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \int_{0}^{\infty} \frac{u^{\frac{1}{2} - 1}}{\left( 1 + u \right)^{\frac{\nu}{2} + \frac{1}{2}}} du.
+\end{aligned}
+$$
+
+We can now recognise this integral as an alternate form of the Beta Function^[For a review, see the corresponding section in the Formal Foundations chapter on the Gamma and Beta Functions.] with $a = \frac{\nu}{2}$ and $b = \frac{1}{2}$. Thus,
+$$
+\begin{aligned}
+\int_{\mathcal{S}(t)} dF(t|\nu) &= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \int_{0}^{\infty} \frac{u^{\frac{1}{2} - 1}}{\left( 1 + u \right)^{\frac{\nu}{2} + \frac{1}{2}}} du \\
+&= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \mathcal{B}\left(a = \frac{\nu}{2}, b = \frac{1}{2}\right) \\
+&= \frac{ \Gamma\left(\frac{\nu + 1}{2}\right) }{ \Gamma\left(\frac{1}{2}\right)\Gamma\left(\frac{\nu}{2}\right) } \frac{ \Gamma\left(\frac{\nu}{2}\right)\Gamma\left(\frac{1}{2}\right) }{  \Gamma\left(\frac{\nu}{2} + \frac{1}{2}\right) } \\
+&= 1.
+\end{aligned}
+$$
+Thus, $f_T(t|\nu)$ is a proper distribution.
+
 </br>
 
 
 
 ## Exercises
 
-To be determined.
+1. Show that as $\nu\to\infty$, $f_T(t|\nu) \to \mathcal{N}(\mu = 0, \sigma^2 = 1)$. *Hint:* you should read about **Stirling's Approximation**: <https://mathworld.wolfram.com/StirlingsApproximation.html>.
+
+Other exercises to be determined.
 
 
 ## Footnotes 
