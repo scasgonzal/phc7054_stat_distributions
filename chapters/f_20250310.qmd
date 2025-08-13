@@ -203,6 +203,42 @@ par(mfrow = c(1, 1))
 
 
 ## Show that this is a Distribution
+We will change the notation a tiny bit (using $x$ as our random variable instead of $h$). Here is our Central $\mathcal{F}$ Distribution with $\nu_1, \nu_2$ degrees of freedom:
+$$
+f_{\mathcal{F}}(x|\nu_1,\nu_2) = \frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } \left[\frac{\nu_1}{\nu_2}\right]^{\frac{\nu_1}{2}} \frac{ x^{\frac{\nu_1}{2} - 1} }{ \left( \frac{\nu_1}{\nu_2}x + 1 \right)^{\frac{\nu_1 + \nu_2}{2}} }.
+$$
+Because these degrees of freedom parameters are counts of independent pieces of information, we have the restriction that $\nu_1,\nu_2 > 0$. Also, based on the change of variables we employed above, $x > 0$. By these two restrictions, 
+$$
+\begin{aligned}
+\frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } &> 0, \\
+\frac{\nu_1}{\nu_2} &> 0,\ \text{and} \\
+\frac{\nu_1}{\nu_2}x + 1 &> 0;\ \text{so} \\
+\frac{ x^{\frac{\nu_1}{2} - 1} }{ \left( \frac{\nu_1}{\nu_2}x + 1 \right)^{\frac{\nu_1 + \nu_2}{2}} } &> 0.
+\end{aligned}
+$$
+Hence $f_{\mathcal{F}} > 0$ for $x,\nu_1,\nu_2 > 0$.
+
+Now, consider
+$$
+\begin{aligned}
+\int_{\mathcal{S}(x)} dF(x|\nu_1,\nu_2) &= \int_{\mathcal{S}(x)} \frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } \left[\frac{\nu_1}{\nu_2}\right]^{\frac{\nu_1}{2}} \frac{ x^{\frac{\nu_1}{2} - 1} }{ \left( \frac{\nu_1}{\nu_2}x + 1 \right)^{\frac{\nu_1 + \nu_2}{2}} } dx \\
+&= \frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } \int_0^{\infty} \left[\frac{\nu_1}{\nu_2}\right]^{\frac{\nu_1}{2}} \frac{ x^{\frac{\nu_1}{2} - 1} }{ \left( \frac{\nu_1}{\nu_2}x + 1 \right)^{\frac{\nu_1 + \nu_2}{2}} } dx.
+\end{aligned}
+$$
+Our plan is to employ the alternate form of the Beta Function^[See the Formal Foundations chapter on the Gamma and Beta Functions.] to clean up this integrand. First, we make the substitution $u = \frac{\nu_1}{\nu_2}x \Rightarrow du = \frac{\nu_1}{\nu_2}dx$, so $x = \frac{\nu_2}{\nu_1}u \Rightarrow dx = \frac{\nu_2}{\nu_1}du$. Our bounds of integration do not change. Thus,
+$$
+\begin{aligned}
+\int_{\mathcal{S}(x)} dF(x|\nu_1,\nu_2) &= \frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } \int_{x = 0}^{\infty} \left[\frac{\nu_1}{\nu_2}\right]^{\frac{\nu_1}{2}} \frac{ x^{\frac{\nu_1}{2} - 1} }{ \left( \frac{\nu_1}{\nu_2}x + 1 \right)^{\frac{\nu_1 + \nu_2}{2}} } dx \\
+&= \frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } \int_{u = 0}^{\infty} \left[\frac{\nu_1}{\nu_2}\right]^{\frac{\nu_1}{2}} \frac{ \left[\frac{\nu_2}{\nu_1}u\right]^{\frac{\nu_1}{2} - 1} }{ \left([u] + 1\right)^{\frac{\nu_1 + \nu_2}{2}} } \left[\frac{\nu_2}{\nu_1}du\right] \\
+&= \frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } \int_0^{\infty} \left[\frac{\nu_1}{\nu_2}\right]^{\frac{\nu_1}{2}} \left[\frac{\nu_2}{\nu_1}\right]^{\frac{\nu_1}{2} - 1} \frac{\nu_2}{\nu_1} \frac{ u^{\frac{\nu_1}{2} - 1} }{ \left(u + 1\right)^{\frac{\nu_1 + \nu_2}{2}} } du \\
+&= \frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } \left[\frac{\nu_1}{\nu_2}\right]^{\frac{\nu_1}{2}} \left[\frac{\nu_2}{\nu_1}\right]^{\frac{\nu_1}{2}} \int_0^{\infty} \frac{ u^{\frac{\nu_1}{2} - 1} }{ \left(u + 1\right)^{\frac{\nu_1}{2} + \frac{\nu_2}{2}} } du \\
+&\qquad\text{\emph{Alternate form of the Beta Function...}} \\
+&= \frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } \left[ \frac{\nu_1}{\nu_2} \frac{\nu_2}{\nu_1} \right]^{\frac{\nu_1}{2}} \left\{ \frac{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) }{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) } \right\} \\
+&= \frac{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) }{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) } [1]^{\frac{\nu_1}{2}} \frac{ \Gamma\left(\frac{\nu_1}{2}\right) \Gamma\left(\frac{\nu_2}{2}\right) }{ \Gamma\left( \frac{\nu_1 + \nu_2}{2} \right) } \\
+&= 1.
+\end{aligned}
+$$
+Therefore, $f_{\mathcal{F}}(x|\nu_1,\nu_2)$ is a proper distribution.
 
 
 </br>
