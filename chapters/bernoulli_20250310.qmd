@@ -102,7 +102,7 @@ par(mfrow = c(1, 1))
 
 
 ### The Riemann-Stieltjes Integral
-Let $f$ be a bounded function on the interval $\mathcal{S} = [a, b] \subset \mathbb{R}$, and let $G$ be a monotone increasing (but not necessarily continuous) function on $\mathcal{S}$. The Riemann-Stieltjes integral of $f$ with respect to $G$ is denoted as
+Let $f$ be a bounded function on the interval $\mathcal{S} = [a, b] \subset \mathbb{R}$, and let $G$ be a monotone non-decreasing^[Some texts will say monotone increasing, which is a more strict requirement. However, the functions we will apply this to are all cumulative density functions, so they are (mostly) well-behaved. Thus, we can have the slightly less restrictive condition of monotone non-decreasing.] (but not necessarily continuous) function on $\mathcal{S}$. The Riemann-Stieltjes integral of $f$ with respect to $G$ is denoted as
 $$
 \text{R-S}(f, G) \equiv \int_{x \in \mathcal{S}} f(x) \text{d}G(x).
 $$
@@ -122,7 +122,7 @@ Let $x$ be an observed value $\in \mathcal{A}$, and let $\boldsymbol\theta$ be a
 1. $\forall x \in \mathcal{S}$, $\forall \boldsymbol\theta \in \boldsymbol\Theta$, $f(x|\boldsymbol\theta) \ge 0$.
 2. $\forall \boldsymbol\theta \in \boldsymbol\Theta$, $\int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = 1$, where $\text{d}F$ is the integrand of a **Riemann-Stieltjes** integral.
 
-As long as (1) holds above, then $F$ will be monotone increasing (because the anti-derivative of a non-negative function will always be flat or increasing). The probability density/mass functions for all statistical distributions share these two properties above. Because of the flexibility of the Riemann-Stieltjes integral, we don't have to make the distinction between probability density functions and probability mass functions any longer. This is because 
+As long as (1) holds above, then $F$ will be monotone non-decreasing (because the anti-derivative of a non-negative function will always be flat or increasing). The probability density/mass functions for all statistical distributions share these two properties above. Because of the flexibility of the Riemann-Stieltjes integral, we don't have to make the distinction between probability density functions and probability mass functions any longer. This is because 
 
 1. If $\mathcal{S}$ is a discrete set with **cardinality** $|\mathcal{S}| = n$, $f$ is commonly referred to as a probability "mass" function. Then, because (1) holds, $\exists$ some ordering of the elements of $\mathcal{S} \ni 0 \le F(x^{(1)}) \le F(x^{(2)}) \le \cdots \le F(x^{(n)}) \le 1$. We know that the total probability of all events is 1, and the total probability of no events is 0, so, by convention, we let $F(x^{(n)}) = 1$ and $F(x^{(0)}) = 0$. Thus, noticing the **Telescoping Series**^[(https://en.wikipedia.org/wiki/Telescoping_series)], 
 $$
@@ -215,7 +215,7 @@ $$
 M_K(t) &= 1 - p + pe^t \\
 \Longrightarrow\qquad \frac{\partial}{\partial t}M_K(t) &= pe^t \\
 \Longrightarrow\qquad \frac{\partial}{\partial t}M_K(0) &= p \\
-&= \mathbb{E}[X].
+&= \mathbb{E}[K].
 \end{aligned}
 $$
 
@@ -226,21 +226,21 @@ $$
 \frac{\partial}{\partial t}M_K(t) &= pe^t \\ \\
 \Longrightarrow\qquad \frac{\partial^2}{\partial t^2}M_K(t) &= pe^t \\
 \Longrightarrow\qquad \frac{\partial^2}{\partial t^2}M_K(0) &= p \\
-&= \mathbb{E}[X^2].
+&= \mathbb{E}[K^2].
 \end{aligned}
 $$
 
 Because this is the non-central moment, we find the second central moment by exploiting the common relationship between variance and moments; that is,
 $$
 \begin{aligned}
-\text{Var}[X] &= \mathbb{E}[X^2] - \mathbb{E}^2[X] \\
+\text{Var}[K] &= \mathbb{E}[K^2] - \mathbb{E}^2[K] \\
 &= p - [p]^2 \\
 &= p(1 - p).
 \end{aligned}
 $$
 
 ### Solving the System
-> For distributions with two parameters, we would now equate these two population moments, $\mathbb{E}[X]$ and $\text{Var}[X]$, the two sample moments, $\bar{x}$ and $s^2$, to yield the Method of Moments estimators for the two parameters of the distribution (which we will represent generically as $\hat\theta_{MoM}$ and $\hat\phi_{MoM}$).
+> For distributions with two parameters, we would now equate these two population moments, $\mathbb{E}[K]$ and $\text{Var}[K]$, the two sample moments, $\bar{x}$ and $s^2$, to yield the Method of Moments estimators for the two parameters of the distribution (which we will represent generically as $\hat\theta_{MoM}$ and $\hat\phi_{MoM}$).
 
 However, the Bernoulli has only one parameter, so our "system" of equations is just
 $$
