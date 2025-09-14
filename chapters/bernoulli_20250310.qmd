@@ -205,7 +205,7 @@ $$
 $$
 2. If $\mathcal{S} = [a,b]$ is a continuous set, then $f$ is a probability "density" function. For this continuous range, $F(a) = 0$ and $F(b) = 1$. Thus,
 $$
-\int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = \int_a^b F^{\prime}(x) = F(b) - F(a) = 1.
+\int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = \int_a^b F^{\prime}(x)dx = F(b) - F(a) = 1.
 $$
 
 Thus, for the remainder of these notes, we will start all integral-based definitions with the Riemann-Stieltjes form, and then reduce this form into traditional sums or integrals, as is appropriate for the distribution at hand.
