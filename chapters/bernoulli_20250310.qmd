@@ -490,7 +490,8 @@ So, for this trivial example, both Method of Moments and Maximum Likelihood Esti
 
 ## Exercises
 
-To be determined.
+1. Calculate $E[X]$ for $X \sim Ber(p)$ using Reimann-Stieltjes notation.
 
+2. Using the dataset found in [Wu et. al.](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-020-00642-6), calculate method of moments estimators for the variables `Obesity` and `Energy` (Go to the [Availability of data and materials](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-020-00642-6#availability-of-data-and-materials)) section to download the data.
 
 ## Footnotes
