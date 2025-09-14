@@ -115,7 +115,7 @@ where $c_i$ is some point in between $x_{i-1}$ and $x_i$, i.e. $c_i \in [x_{i-1}
 
 Let $||P|| = \max_\limits{1\le i\le n}{(x_i-x_{i-1})}$ be the **mesh size**. 
 
-The **Reimann integral**^[(https://en.wikipedia.org/wiki/Riemann_integral)] is the limit of $S(P,f)$ as the mesh size approaches 0:
+The **Reimann integral**^[<https://en.wikipedia.org/wiki/Riemann_integral>] is the limit of $S(P,f)$ as the mesh size approaches 0:
 
 $$
 \begin{split}
@@ -124,7 +124,7 @@ $$
 \end{split}
 $$
 
-The main idea is that as the mesh size $||P||$ gets smaller, the difference $(x_i - x_{i-1}) \rightarrow dx$, and $c_i \rightarrow x$, resulting in the familiar form of the integral, which is defined geometrically as the sum over the area of rectangles with height $f(x)$ and *uniform width* $dx$ - but what if we wanted the width of those rectangles to *vary as a function of x*^[(https://www.youtube.com/watch?v=D5bbIxbsNqE)]?
+The main idea is that as the mesh size $||P||$ gets smaller, the difference $(x_i - x_{i-1}) \rightarrow dx$, and $c_i \rightarrow x$, resulting in the familiar form of the integral, which is defined geometrically as the sum over the area of rectangles with height $f(x)$ and *uniform width* $dx$ - but what if we wanted the width of those rectangles to *vary as a function of x*^[A good [video](https://www.youtube.com/watch?v=D5bbIxbsNqE) on visualizing the RS Integral]?
 
 
 
@@ -158,7 +158,7 @@ $$
 $$
 
 
-By replacing $x_i$ and $x_{i-1}$ with $G(x_i)$ and $G(x_{i-1})$ respectively, we allow the width of the rectangles to vary with $G(x)$, and because the limit is defined as sums of partitions of $\mathcal{S}$, it is not necessary for $G(x)$ to be differentiable everywhere for $x$ (compared to $dx$). This allows statisticians to unify notation regarding discrete and continuous (and mixed) distributions^[(https://www.youtube.com/watch?v=R1FfEIQ9Vr8)], by using a variable's CDF $F(x)$ as $G(x)$:
+By replacing $x_i$ and $x_{i-1}$ with $G(x_i)$ and $G(x_{i-1})$ respectively, we allow the width of the rectangles to vary with $G(x)$, and because the limit is defined as sums of partitions of $\mathcal{S}$, it is not necessary for $G(x)$ to be differentiable everywhere for $x$ (compared to $dx$). This allows statisticians to unify notation regarding discrete and continuous (and mixed) distributions^[Another good [video](https://www.youtube.com/watch?v=R1FfEIQ9Vr8) on the derivation specifically for statisticians], by using a variable's CDF $F(x)$ as $G(x)$:
 
 
 
@@ -184,7 +184,7 @@ Let $x$ be an observed value $\in \mathcal{A}$, and let $\boldsymbol\theta$ be a
 
 As long as (1) holds above, then $F$ will be monotone non-decreasing (because the anti-derivative of a non-negative function will always be flat or increasing). The probability density/mass functions for all statistical distributions share these two properties above. Because of the flexibility of the Riemann-Stieltjes integral, we don't have to make the distinction between probability density functions and probability mass functions any longer. This is because 
 
-1. If $\mathcal{S}$ is a discrete set with **cardinality** $|\mathcal{S}| = n$, $f$ is commonly referred to as a probability "mass" function. Then, because (1) holds, $\exists$ some ordering of the elements of $\mathcal{S} \ni 0 \le F(x^{(1)}) \le F(x^{(2)}) \le \cdots \le F(x^{(n)}) \le 1$. We know that the total probability of all events is 1, and the total probability of no events is 0, so, by convention, we let $F(x^{(n)}) = 1$ and $F(x^{(0)}) = 0$. Thus, noticing the **Telescoping Series**^[(https://en.wikipedia.org/wiki/Telescoping_series)], 
+1. If $\mathcal{S}$ is a discrete set with **cardinality** $|\mathcal{S}| = n$, $f$ is commonly referred to as a probability "mass" function. Then, because (1) holds, $\exists$ some ordering of the elements of $\mathcal{S} \ni 0 \le F(x^{(1)}) \le F(x^{(2)}) \le \cdots \le F(x^{(n)}) \le 1$. We know that the total probability of all events is 1, and the total probability of no events is 0, so, by convention, we let $F(x^{(n)}) = 1$ and $F(x^{(0)}) = 0$. Thus, noticing the **Telescoping Series**^[<https://en.wikipedia.org/wiki/Telescoping_series>], 
 $$
 \int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = \sum\limits_{i = 1}^n F(x^{(i)}) - F(x^{(i - 1)}) = F(x^{(n)}) - F(x^{(0)}) = 1.
 $$
