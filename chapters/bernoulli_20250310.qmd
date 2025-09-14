@@ -34,6 +34,21 @@ suppressPackageStartupMessages(library(tidyverse))
 options(dplyr.summarise.inform = FALSE)
 ```
 
+## Background
+The Bernoulli distribution is one of the simplest yet most fundamental probability distributions in statistics. Named after Jacob Bernoulli, who pioneered probability theory in the 17th century, it describes random experiments that result in only two possible outcomes: success (usually coded as 1) and failure (coded as 0). The probability of success is denoted by p, and the probability of failure is $1 - p$, with $0 < p < 1$.
+
+Despite its simplicity, the Bernoulli distribution forms the cornerstone of many important statistical methods. It is the basis for the binomial distribution (sum of Bernoulli trials), the geometric distribution (number of trials until the first success), and the negative binomial distribution (number of trials until a fixed number of successes). In biostatistics, it is particularly relevant because many biomedical and public health variables are binary in nature, such as presence/absence of disease, treatment success/failure, or survival/death (Johnson et al., 2005).
+
+### Applications in Biostatistics
+
+The Bernoulli distribution is widely used in biostatistical research, particularly when analyzing binary outcomes:
+
+- **Epidemiology**: Disease status (infected vs. not infected), exposure status (exposed vs. not exposed), or vaccination uptake (yes/no).
+- **Clinical Trials**: Treatment response (success vs. failure), adverse event occurrence, or survival within a fixed period.
+- **Public Health Surveys**: Yes/no responses in questionnaires (e.g., smoker vs. non-smoker, exercised vs. not exercised).
+- **Logistic Regression**: Logistic regression assumes the response variable follows a Bernoulli distribution conditional on predictors, making it the theoretical backbone of modeling binary health outcomes (Hosmer et al., 2013).
+- **Survival Analysis**: The censoring indicator in survival studies (event occurred = 1, censored = 0) follows a Bernoulli distribution, forming the basis for event-time modeling (Xue & Brookmeyer, 1997).
+
 
 
 ## Deriving the Distribution
@@ -482,7 +497,16 @@ The second step is to confirm that $\hat{p} = \frac{2}{5}$ is a *maximum* of $\m
 &= -\left( \frac{2}{p^2} + \frac{3}{(1 - p)^2} \right) <0\ \forall p \in (0,1).
 \end{align}
 
-So, for this trivial example, both Method of Moments and Maximum Likelihood Estimation yielded the same estimate for $\hat{p}$.
+So, for this trivial example, both Method of Moments and Maximum Likelihood Estimation yielded the same estimate for $\hat{p}$^[This estimator is unbiased with variance $Var(\hat{p})=\frac{p(1-p)}{n}$ and achieves the Cramér–Rao lower bound, making it efficient under standard MLE conditions (Thompson, 2010).].
+
+## Extensions and Related Distributions
+
+The Bernoulli distribution extends directly to the **Binomial**, which models the number of successes across n trials. The **Multinomial** generalizes this to $k > 2$ categories, and is often used in genetics, survey sampling, and categorical data analysis. The **Geometric** distribution models the number of trials until the first success, while the **Negative Binomial** models trials until the $r^{th}$ success or over-dispersed count data. The Poisson emerges as a limit of the binomial for rare-event incidence rates.
+
+These models fall within the generalized linear model (GLM) framework, encompassing logit and probit models for Bernoulli outcomes and log-linear models for Poisson responses (McCullagh & Nelder, 1989).
+
+In Bayesian inference, the **Beta** distribution serves as a conjugate prior to $p$. Posterior updating yields $\text{Beta}(\alpha+x, \beta+n-x)$, providing a basis for inference with binary data (Gelman et al., 2013).
+
 
 </br>
 
@@ -493,5 +517,46 @@ So, for this trivial example, both Method of Moments and Maximum Likelihood Esti
 1. Calculate $E[X]$ for $X \sim Ber(p)$ using Reimann-Stieltjes notation.
 
 2. Using the dataset found in [Wu et. al.](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-020-00642-6), calculate method of moments estimators for the variables `Obesity` and `Energy` (Go to the [Availability of data and materials](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-020-00642-6#availability-of-data-and-materials)) section to download the data.
+
+## Appendix
+
+
+### Interval Estimation
+
+The **Clopper–Pearson** interval provides exact confidence bounds but is considered conservative. Approximate intervals such as the **Wilson score** and **Agresti–Coull** intervals have been shown to outperform the Wald interval by offering better coverage and shorter length. Exact methods are preferred in cases of small n or extreme counts (near 0 or n), while approximate methods are recommended for moderate-to-large n (Agresti & Coull, 1998).
+
+Below is an example of an Agresti-Coull interval:
+
+```{r agresti-coull-ci}
+# x = number of successes;n = number of trials 
+agrestiCoulliCI <- function(x, n, conf.level = 0.95) { 
+  alpha <- 1 - conf.level 
+  z <- qnorm(1 - alpha/2) 
+  n_adj <- n + z^2 
+  
+  p_tilde <- (x + z^2/2) / n_adj 
+  se <- sqrt(p_tilde * (1 - p_tilde) / n_adj) 
+  
+  lower <- p_tilde - z * se 
+  upper <- p_tilde + z * se
+  
+  return(c(lower = max(0, lower), 
+           estimate = p_tilde, 
+           upper = min(1, upper))) 
+  } 
+
+# Example: 45 successes out of 100 trials agresti_coull_ci(x = 45, n = 100, conf.level = 0.95)
+
+
+agrestiCoulliCI(2, 5)
+
+```
+
+
+### Hypothesis Testing
+One-sample tests for $p$ include the exact binomial test and large-sample normal approximations. Two-sample tests compare proportions using score or chi-square methods, while Fisher’s exact test is appropriate for small samples and sparse tables. These approaches are commonplace in applied biostatistics and epidemiology for treatment/control comparisons and case-control studies.
+
+### Inference Properties
+Sufficient statistic $T = \sum_\limits{i=1}^n{X_i}$ is complete, so by the Lehmann–Scheffe theorem, $\hat{p}$ is the uniformly minimum variance unbiased estimator (UMVUE). Its variance attains the Cramér–Rao lower bound, demonstrating efficiency.
 
 ## Footnotes
