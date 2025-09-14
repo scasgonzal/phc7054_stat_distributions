@@ -102,18 +102,78 @@ par(mfrow = c(1, 1))
 
 
 ### The Riemann-Stieltjes Integral
-Let $f$ be a bounded function on the interval $\mathcal{S} = [a, b] \subset \mathbb{R}$, and let $G$ be a monotone non-decreasing^[Some texts will say monotone increasing, which is a more strict requirement. However, the functions we will apply this to are all cumulative density functions, so they are (mostly) well-behaved. Thus, we can have the slightly less restrictive condition of monotone non-decreasing.] (but not necessarily continuous) function on $\mathcal{S}$. The Riemann-Stieltjes integral of $f$ with respect to $G$ is denoted as
+Let $f$ be a bounded function on the interval $\mathcal{S} = [a, b] \subset \mathbb{R}$
+
+Let $P = \{a = x_0 < x_1 < \ldots x_k < b\}$ be the partition of $\mathcal{S}$, 
+
+Recall the **Reimann sum** $S(P,f)$ is defined as
+
 $$
-\text{R-S}(f, G) \equiv \int_{x \in \mathcal{S}} f(x) \text{d}G(x).
+S(P,f) = \sum_\limits{i=1}^{n}f(c_i)(x_i - x_{i-1})
 $$
+where $c_i$ is some point in between $x_{i-1}$ and $x_i$, i.e. $c_i \in [x_{i-1}, x_{i}]$
+
+Let $||P|| = \max_\limits{1\le i\le n}{(x_i-x_{i-1})}$ be the **mesh size**. 
+
+The **Reimann integral**^[(https://en.wikipedia.org/wiki/Riemann_integral)] is the limit of $S(P,f)$ as the mesh size approaches 0:
+
+$$
+\begin{split}
+\int_{x \in \mathcal{S}}{f(x)dx} &= \lim_{||P|| \rightarrow 0}S(P,f) \\
+&= \lim_{||P|| \rightarrow 0}\sum_\limits{i=1}^{n}f(c_i)(x_i - x_{i-1})
+\end{split}
+$$
+
+The main idea is that as the mesh size $||P||$ gets smaller, the difference $(x_i - x_{i-1}) \rightarrow dx$, and $c_i \rightarrow x$, resulting in the familiar form of the integral, which is defined geometrically as the sum over the area of rectangles with height $f(x)$ and *uniform width* $dx$ - but what if we wanted the width of those rectangles to *vary as a function of x*^[(https://www.youtube.com/watch?v=D5bbIxbsNqE)]?
+
+
+
+Now let $G$ be a monotone increasing (but not necessarily continuous) function on $\mathcal{S}$.
+
+The **Riemann-Stieltjes sum** of $f$ with respect to $G$ is denoted as
+
+$$
+R\text{-}S(P,f,G) = \sum_\limits{i=1}^nf(c_i)[G(x_{i-1}) - G(x_i )]
+$$
+
+And consequently the **Riemann-Stieltjes integral** is defined as:
+
+$$
+\begin{split}
+\int_{x \in \mathcal{S}}{f(x)dG(x)} &= \lim_{||P|| \rightarrow 0}R\text{-}S(P,f, G) \\
+&= \lim_{||P|| \rightarrow 0}\sum_\limits{i=1}^{n}f(c_i)[G(x_i) - G(x_{i-1})]
+\end{split}
+$$
+
 If $G$ is continuous $\forall x \in \mathcal{S}$, then this integral simplifies to 
+
 $$
-\int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \int_{x \in \mathcal{S}} f(x) G^{\prime}(x).
+\int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \int_{x \in \mathcal{S}} f(x) G^{\prime}(x)\text{d}x.
 $$
+
 If, however, there exists $k < m < \infty$ points of discontinuity for $G$ on $\mathcal{S}$, we define an $m$-partition of $\mathcal{S}$ as $\{[y_0, y_1), [y_1, y_2), \ldots, [y_{m - 2}, y_{m - 1}), [y_{m - 1}, y_m]\}$, where $\{a = y_0, b = y_m\}$ and the $k$ points of discontinuity are included in the sequence $\{y_1, y_2, \ldots, y_{m - 1}\}$. Then, this integral simplifies to 
+
 $$
 \int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \sum\limits_{i = 1}^m f(x)\left[ G(y_i) - G(y_{i - 1}) \right].
 $$
+
+
+By replacing $x_i$ and $x_{i-1}$ with $G(x_i)$ and $G(x_{i-1})$ respectively, we allow the width of the rectangles to vary with $G(x)$, and because the limit is defined as sums of partitions of $\mathcal{S}$, it is not necessary for $G(x)$ to be differentiable everywhere for $x$ (compared to $dx$). This allows statisticians to unify notation regarding discrete and continuous (and mixed) distributions^[(https://www.youtube.com/watch?v=R1FfEIQ9Vr8)], by using a variable's CDF $F(x)$ as $G(x)$:
+
+
+
+\begin{split}
+
+\int_{x \in \mathcal{S}} f(x) \text{d}F(x) &= \sum\limits_{i = 1}^n f(x)\left[ F(x_i) - F(x_{i - 1}) \right] \\
+
+&= \sum\limits_{i = 1}^n f(x)\left[ P(x_{i−1} < X \le x_{i}) \right] \\
+
+&=  \begin{cases}
+  \sum_\limits{i}{f(x_i)P(X = x_i)} & \text{if } F(x) \text{ is discrete} \\
+    \int_{x\in\mathcal{S}}{f(x)F'(x)dx} & \text{if } F(x) \text{ is continuous}
+    \end{cases}
+  
+\end{split}
 
 
 ### Properties of Distributions
