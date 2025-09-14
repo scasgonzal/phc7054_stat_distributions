@@ -516,7 +516,13 @@ In Bayesian inference, the **Beta** distribution serves as a conjugate prior to 
 
 1. Calculate $E[X]$ for $X \sim Ber(p)$ using Reimann-Stieltjes notation.
 
-2. Using the dataset found in [Wu et. al.](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-020-00642-6), calculate method of moments estimators for the variables `Obesity` and `Energy` (Go to the [Availability of data and materials](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-020-00642-6#availability-of-data-and-materials)) section to download the data.
+2. Derive the Binomial distribution from the Bernoulli distribution.
+
+3. Derive the Geometric distribution from the Bernoulli distribution.
+
+4. Derive the Negative binomial distribution from the Bernoulli distribution.
+
+5. Using the dataset found in [Wu et. al.](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-020-00642-6), calculate method of moments estimators for the variables `Obesity` and `Energy` (Go to the [Availability of data and materials](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-020-00642-6#availability-of-data-and-materials)) section to download the data.
 
 ## Appendix
 
