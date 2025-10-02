@@ -118,15 +118,15 @@ which can be solved if the integral of the right hand side can be found. We note
 Let's have an example before we move on (we'll work something similar to [this example](https://www.ncl.ac.uk/webtemplate/ask-assets/external/maths-resources/core-mathematics/calculus/homogeneous-first-order-differential-equations.html) from Newcastle University). Consider
 $$
 \begin{aligned}
-(x^2 + y^2) + y^2\frac{dy}{dx} &= 0 \\
-\Longrightarrow \frac{dy}{dx} &= -\frac{x^2 + y^2}{y^2} \\
-\Longrightarrow \frac{dy}{dx} &= -\left(\frac{x}{y}\right)^2 - 1.
+(x^2 + y^2) + x^2\frac{dy}{dx} &= 0 \\
+\Longrightarrow \frac{dy}{dx} &= -\frac{x^2 + y^2}{x^2} \\
+\Longrightarrow \frac{dy}{dx} &= -1 - \left(\frac{y}{x}\right)^2.
 \end{aligned}
 $$
 Now, we let $y = ux$, so $\frac{dy}{dx} = u + x\frac{du}{dx}$. Hence,
 $$
 \begin{aligned}
-\frac{dy}{dx} &= -\left(\frac{x}{y}\right)^2 - 1 \\
+\frac{dy}{dx} &= -\left(\frac{y}{x}\right)^2 - 1 \\
 \Longrightarrow u + x\frac{du}{dx} &= -u^2 - 1 \\
 \Longrightarrow x\frac{du}{dx} &= -u^2 -u - 1 \\
 \Longrightarrow \frac{1}{x}dx &= -\frac{1}{u^2 + u + 1}du \\
@@ -217,7 +217,7 @@ Because events are independent, the probability that the "first" event happens a
 $$
 \begin{aligned}
 \mathbb{P}(0|\Delta t) &\equiv \mathbb{P}(0|t \le T + \Delta t) \\
-&= \mathbb{P}(0|t \le T) \times \mathbb{P}(0|T \le t \le \Delta t) \\
+&= \mathbb{P}(0|t \le T) \times \mathbb{P}(0|T \le t \le T + \Delta t) \\
 &= \mathbb{P}(0|t \le T) \times (1 - \lambda \Delta t) \\
 &= \mathbb{P}(0|t \le T) - \lambda \mathbb{P}(0|t \le T) \Delta t \\
 \Longrightarrow \mathbb{P}(0|t \le T + \Delta t) - \mathbb{P}(0|t \le T) &= - \lambda \mathbb{P}(0|t \le T) \Delta t \\
