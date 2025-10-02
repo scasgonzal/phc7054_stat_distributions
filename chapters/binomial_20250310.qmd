@@ -6,6 +6,8 @@ format:
   html:
     embed-resources: false
     code-fold: true
+bibliography: references.bib
+link-citations: true
 knitr:
   opts_chunk:        ########## set global options ############
     collapse: true   # keep code from blocks together (if shown)
@@ -34,6 +36,33 @@ suppressPackageStartupMessages(library(tidyverse))
 options(dplyr.summarise.inform = FALSE)
 ```
 
+## Background
+
+The binomial distribution extends the Bernoulli distribution to multiple trials. It models the number of successes in $(n)$ independent and identical Bernoulli experiments, each with probability of success $(p)$.
+
+In other words, if we define $Y = \sum\limits_{i=1}^{n}{X_i}$, where $X_i \sim Ber(p)$, then $Y \sim Binom(n,p)$
+
+### Case Study: Binomial Distribution in Modern Policy
+A recent example is **COVID-19 vaccination coverage**, modeled as the number of successes (vaccinated individuals) out of a fixed sample size.  
+For instance, a survey of 50 people in Miami-Dade County found 38 vaccinated. We model this as:
+
+$$
+X \sim Binomial(n=50, p)
+$$
+
+Estimating $(p)$ helps public health policymakers monitor vaccination rates [@cdc2022].
+
+### Current Uses in Biostatistics and Public Health
+
+The binomial distribution is commonly used in biostatistics and public health, including
+
+- Meta-analysis of disesase prevalance (@hamzaBinomialDistributionMetaanalysis2008, @nyagaMetapropStataCommand2014)
+
+- Modeling presence/absence of gene families across microbial genomes (@snipenMicrobialComparativePangenomics2009)
+
+- Combining and estimating event rates (@young-xuPoolingOverdispersedBinomial2008)
+
+- Modeling technical variation in scRNA-seq data (@spartaBinomialModelsUncover2024)
 
 
 ## Deriving the Distribution
@@ -159,6 +188,21 @@ par(mfrow = c(1, 1))
 
 </br>
 
+## Example with Data: Vaccine Trial Outcomes
+Suppose researchers conduct a clinical trial of a new vaccine. Each participant either **develops immunity** (success) or **does not** (failure).  
+If $(n = 20)$ participants are tested, and each has probability $(p = 0.7)$ of developing immunity, then the number of immune participants, $(X)$, follows a binomial distribution:
+
+$$
+X \sim Binomial(n = 20, p = 0.7)
+$$
+
+The probability of observing exactly 15 immune participants is:
+
+$$
+P(X = 15) = \binom{20}{15}(0.7)^{15}(0.3)^5
+$$
+
+This example highlights how the binomial distribution models real-world binary outcomes in **public health and medical research**. It captures the distribution of the number of “successes” across repeated independent trials, which is fundamental for evaluating treatments, surveys, and risk assessments.
 
 
 ## Formal Foundations
@@ -566,5 +610,32 @@ Therefore, $\hat{p}_{MLE} = 0.314$ is the Maximum Likelihood Estimator for $p$.
 
 1. Show that the Binomial distribution can be approximated by the Poisson distribution as $n \rightarrow \infty$
 
+2. Using the dataset below:
+    i) Use the method of moments to estimate $(p)$ for Community A.  
+    ii) Calculate the maximum likelihood estimator (MLE) for $(p)$. 
+    iii) Compare the two estimators.
+
+| Community | Vaccinated | Sample Size |
+|-----------|------------|-------------|
+| A         | 38         | 50          |
+| B         | 42         | 60          |
+| C         | 55         | 70          |
+
+3. `Titanic` survival data is a 4-way contingency table built from the British Board of Trade (1912) inquiry counts and used to model the Binomial distribution. The data is built into base R and also available as a row-level CSV on Kaggle. Each passenger is a unique Bernoulli trial, and fixing a group of n passengers makes the total number of survivors K follow a Binomial(n, p) distribution. The `Titanic` dataset contains 2,201 individual records with 3 binary categorical variables: Sex (male/female), Age (child/adult), and Survived (no/yes). Using this dataset:
+    a) Plot the distributions of the 3 binary variables `Sex`, `Age`, and `Survived`
+    b) Calculate the method of moments estimator for $p$ for the variable `Survived`
+    c) Calculate the maximum likelihood estimator for $p$ for the variable `Survived` 
+    d) Compare the two estimators.
+
+4. Show that the sum of $n$ Bernoulli distributed random variables follows a Binomial(n,p) distribution.
+
+5. Derive the Negative Binomial distribution from the Binomial distribution.
+
+6. Suppose $X\sim~ Binomial(n, p)$ but **both $(n)$ and $p$ are unknown**.
+    a) Derive the method of moments estimator for $p$
+        - *hint:* Recall that for $(X \sim~ Binomial(n, p))$, the mean is $(E[X] = np)$. Using the sample mean $(\bar{X})$, set $(\bar{X} = np)$ and solve for $(p)$.
+    b) Discuss the challenges in estimating $(n)$
+        - *hint:* The variance is $(Var(X) = np(1-p))$.
+        - *hint:* With only $(\bar{X})$ and $(s^2)$, both $(n)$ and $(p)$ appear in the equations. This leads to identifiability issues unless assumptions are made (e.g., fixing one parameter)
 
 ## Footnotes 
