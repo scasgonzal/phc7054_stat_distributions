@@ -392,14 +392,14 @@ Therefore, our observed data is $\textbf{k} = \langle k_1, k_2,\ldots,k_n\rangle
 ```{r}
 set.seed(20150516)
 
-nTrials_int <- 7
+nTrials_int <- 7L
 r_int <- 5L
 p_num <- 0.35
 NBk_int <- rnbinom(n = nTrials_int, size = r_int, prob = p_num)
 NBk_int
 ```
 
-As we can see, in order to achieve 5 wins total in each experiment, we needed `r NBk_int` "games" in those experiments. Now that we have the MGF and a sample of data, we can:
+As we can see, in order to achieve 5 wins total in each experiment, we needed 5 + `r NBk_int` "games" in those experiments. Now that we have the MGF and a sample of data, we can:
 
 1. Find $\mathbb{E}[k]$, $\mathbb{E}[k^2]$, and $\text{Var}[k]$, then
 2. Create (and solve) a system of two equations by setting $\mathbb{E}[k] = \bar{k}$ and $\text{Var}[k] = s^2$.
