@@ -143,7 +143,7 @@ The main idea is that as the mesh size $||P||$ gets smaller, the difference $(x_
 
 
 
-Now let $G$ be a monotone increasing (but not necessarily continuous) function on $\mathcal{S}$.
+Now let $G$ be a monotone non-decreasing^[Some texts will say monotone increasing, which is a more strict requirement. However, the functions we will apply this to are all cumulative density functions, so they are (mostly) well-behaved. Thus, we can have the slightly less restrictive condition of monotone non-decreasing.] (but not necessarily continuous) function on $\mathcal{S}$.
 
 The **Riemann-Stieltjes sum** of $f$ with respect to $G$ is denoted as
 
