@@ -564,7 +564,7 @@ Therefore, $\hat{p}_{MLE} = 0.314$ is the Maximum Likelihood Estimator for $p$.
 
 ## Exercises
 
-To be determined.
+1. Show that the Binomial distribution can be approximated by the Poisson distribution as $n \rightarrow \infty$
 
 
 ## Footnotes 

@@ -34,6 +34,21 @@ suppressPackageStartupMessages(library(tidyverse))
 options(dplyr.summarise.inform = FALSE)
 ```
 
+## Background
+The Bernoulli distribution is one of the simplest yet most fundamental probability distributions in statistics. Named after Jacob Bernoulli, who pioneered probability theory in the 17th century, it describes random experiments that result in only two possible outcomes: success (usually coded as 1) and failure (coded as 0). The probability of success is denoted by p, and the probability of failure is $1 - p$, with $0 < p < 1$.
+
+Despite its simplicity, the Bernoulli distribution forms the cornerstone of many important statistical methods. It is the basis for the binomial distribution (sum of Bernoulli trials), the geometric distribution (number of trials until the first success), and the negative binomial distribution (number of trials until a fixed number of successes). In biostatistics, it is particularly relevant because many biomedical and public health variables are binary in nature, such as presence/absence of disease, treatment success/failure, or survival/death (@johnson_univariate_2005).
+
+### Applications in Biostatistics
+
+The Bernoulli distribution is widely used in biostatistical research, particularly when analyzing binary outcomes:
+
+- **Epidemiology**: Disease status (infected vs. not infected), exposure status (exposed vs. not exposed), or vaccination uptake (yes/no) (@agegnehu_exploring_2021).
+- **Clinical Trials**: Treatment response (success vs. failure), adverse event occurrence, or survival within a fixed period (@branson_randomization-based_2019).
+- **Public Health Surveys**: Yes/no responses in questionnaires (e.g., smoker vs. non-smoker, exercised vs. not exercised) (@abbasi_partial_2022).
+- **Logistic Regression**: Logistic regression assumes the response variable follows a Bernoulli distribution conditional on predictors, making it the theoretical backbone of modeling binary health outcomes (@hosmer_applied_2013).
+- **Survival Analysis**: The censoring indicator in survival studies (event occurred = 1, censored = 0) follows a Bernoulli distribution, forming the basis for event-time modeling (@xue_regression_1997).
+
 
 
 ## Deriving the Distribution
@@ -102,18 +117,78 @@ par(mfrow = c(1, 1))
 
 
 ### The Riemann-Stieltjes Integral
-Let $f$ be a bounded function on the interval $\mathcal{S} = [a, b] \subset \mathbb{R}$, and let $G$ be a monotone non-decreasing^[Some texts will say monotone increasing, which is a more strict requirement. However, the functions we will apply this to are all cumulative density functions, so they are (mostly) well-behaved. Thus, we can have the slightly less restrictive condition of monotone non-decreasing.] (but not necessarily continuous) function on $\mathcal{S}$. The Riemann-Stieltjes integral of $f$ with respect to $G$ is denoted as
+Let $f$ be a bounded function on the interval $\mathcal{S} = [a, b] \subset \mathbb{R}$
+
+Let $P = \{a = x_0 < x_1 < \ldots x_k < b\}$ be the partition of $\mathcal{S}$, 
+
+Recall the **Reimann sum** $S(P,f)$ is defined as
+
 $$
-\text{R-S}(f, G) \equiv \int_{x \in \mathcal{S}} f(x) \text{d}G(x).
+S(P,f) = \sum_\limits{i=1}^{n}f(c_i)(x_i - x_{i-1})
 $$
+where $c_i$ is some point in between $x_{i-1}$ and $x_i$, i.e. $c_i \in [x_{i-1}, x_{i}]$
+
+Let $||P|| = \max_\limits{1\le i\le n}{(x_i-x_{i-1})}$ be the **mesh size**. 
+
+The **Reimann integral**^[<https://en.wikipedia.org/wiki/Riemann_integral>] is the limit of $S(P,f)$ as the mesh size approaches 0:
+
+$$
+\begin{split}
+\int_{x \in \mathcal{S}}{f(x)dx} &= \lim_{||P|| \rightarrow 0}S(P,f) \\
+&= \lim_{||P|| \rightarrow 0}\sum_\limits{i=1}^{n}f(c_i)(x_i - x_{i-1})
+\end{split}
+$$
+
+The main idea is that as the mesh size $||P||$ gets smaller, the difference $(x_i - x_{i-1}) \rightarrow dx$, and $c_i \rightarrow x$, resulting in the familiar form of the integral, which is defined geometrically as the sum over the area of rectangles with height $f(x)$ and *uniform width* $dx$ - but what if we wanted the width of those rectangles to *vary as a function of x*^[A good [video](https://www.youtube.com/watch?v=D5bbIxbsNqE) on visualizing the RS Integral]?
+
+
+
+Now let $G$ be a monotone increasing (but not necessarily continuous) function on $\mathcal{S}$.
+
+The **Riemann-Stieltjes sum** of $f$ with respect to $G$ is denoted as
+
+$$
+R\text{-}S(P,f,G) = \sum_\limits{i=1}^nf(c_i)[G(x_{i-1}) - G(x_i )]
+$$
+
+And consequently the **Riemann-Stieltjes integral** is defined as:
+
+$$
+\begin{split}
+\int_{x \in \mathcal{S}}{f(x)dG(x)} &= \lim_{||P|| \rightarrow 0}R\text{-}S(P,f, G) \\
+&= \lim_{||P|| \rightarrow 0}\sum_\limits{i=1}^{n}f(c_i)[G(x_i) - G(x_{i-1})]
+\end{split}
+$$
+
 If $G$ is continuous $\forall x \in \mathcal{S}$, then this integral simplifies to 
+
 $$
-\int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \int_{x \in \mathcal{S}} f(x) G^{\prime}(x).
+\int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \int_{x \in \mathcal{S}} f(x) G^{\prime}(x)\text{d}x.
 $$
+
 If, however, there exists $k < m < \infty$ points of discontinuity for $G$ on $\mathcal{S}$, we define an $m$-partition of $\mathcal{S}$ as $\{[y_0, y_1), [y_1, y_2), \ldots, [y_{m - 2}, y_{m - 1}), [y_{m - 1}, y_m]\}$, where $\{a = y_0, b = y_m\}$ and the $k$ points of discontinuity are included in the sequence $\{y_1, y_2, \ldots, y_{m - 1}\}$. Then, this integral simplifies to 
+
 $$
 \int_{x \in \mathcal{S}} f(x) \text{d}G(x) = \sum\limits_{i = 1}^m f(x)\left[ G(y_i) - G(y_{i - 1}) \right].
 $$
+
+
+By replacing $x_i$ and $x_{i-1}$ with $G(x_i)$ and $G(x_{i-1})$ respectively, we allow the width of the rectangles to vary with $G(x)$, and because the limit is defined as sums of partitions of $\mathcal{S}$, it is not necessary for $G(x)$ to be differentiable everywhere for $x$ (compared to $dx$). This allows statisticians to unify notation regarding discrete and continuous (and mixed) distributions^[Another good [video](https://www.youtube.com/watch?v=R1FfEIQ9Vr8) on the derivation specifically for statisticians], by using a variable's CDF $F(x)$ as $G(x)$:
+
+
+
+\begin{split}
+
+\int_{x \in \mathcal{S}} f(x) \text{d}F(x) &= \sum\limits_{i = 1}^n f(x)\left[ F(x_i) - F(x_{i - 1}) \right] \\
+
+&= \sum\limits_{i = 1}^n f(x)\left[ P(x_{i−1} < X \le x_{i}) \right] \\
+
+&=  \begin{cases}
+  \sum_\limits{i}{f(x_i)P(X = x_i)} & \text{if } F(x) \text{ is discrete} \\
+    \int_{x\in\mathcal{S}}{f(x)F'(x)dx} & \text{if } F(x) \text{ is continuous}
+    \end{cases}
+  
+\end{split}
 
 
 ### Properties of Distributions
@@ -124,13 +199,13 @@ Let $x$ be an observed value $\in \mathcal{A}$, and let $\boldsymbol\theta$ be a
 
 As long as (1) holds above, then $F$ will be monotone non-decreasing (because the anti-derivative of a non-negative function will always be flat or increasing). The probability density/mass functions for all statistical distributions share these two properties above. Because of the flexibility of the Riemann-Stieltjes integral, we don't have to make the distinction between probability density functions and probability mass functions any longer. This is because 
 
-1. If $\mathcal{S}$ is a discrete set with **cardinality** $|\mathcal{S}| = n$, $f$ is commonly referred to as a probability "mass" function. Then, because (1) holds, $\exists$ some ordering of the elements of $\mathcal{S} \ni 0 \le F(x^{(1)}) \le F(x^{(2)}) \le \cdots \le F(x^{(n)}) \le 1$. We know that the total probability of all events is 1, and the total probability of no events is 0, so, by convention, we let $F(x^{(n)}) = 1$ and $F(x^{(0)}) = 0$. Thus, noticing the **Telescoping Series**^[(https://en.wikipedia.org/wiki/Telescoping_series)], 
+1. If $\mathcal{S}$ is a discrete set with **cardinality** $|\mathcal{S}| = n$, $f$ is commonly referred to as a probability "mass" function. Then, because (1) holds, $\exists$ some ordering of the elements of $\mathcal{S} \ni 0 \le F(x^{(1)}) \le F(x^{(2)}) \le \cdots \le F(x^{(n)}) \le 1$. We know that the total probability of all events is 1, and the total probability of no events is 0, so, by convention, we let $F(x^{(n)}) = 1$ and $F(x^{(0)}) = 0$. Thus, noticing the **Telescoping Series**^[<https://en.wikipedia.org/wiki/Telescoping_series>], 
 $$
 \int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = \sum\limits_{i = 1}^n F(x^{(i)}) - F(x^{(i - 1)}) = F(x^{(n)}) - F(x^{(0)}) = 1.
 $$
 2. If $\mathcal{S} = [a,b]$ is a continuous set, then $f$ is a probability "density" function. For this continuous range, $F(a) = 0$ and $F(b) = 1$. Thus,
 $$
-\int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = \int_a^b F^{\prime}(x) = F(b) - F(a) = 1.
+\int_{x \in \mathcal{S}} \text{d}F(x|\boldsymbol\theta) = \int_a^b F^{\prime}(x)dx = F(b) - F(a) = 1.
 $$
 
 Thus, for the remainder of these notes, we will start all integral-based definitions with the Riemann-Stieltjes form, and then reduce this form into traditional sums or integrals, as is appropriate for the distribution at hand.
@@ -422,7 +497,16 @@ The second step is to confirm that $\hat{p} = \frac{2}{5}$ is a *maximum* of $\m
 &= -\left( \frac{2}{p^2} + \frac{3}{(1 - p)^2} \right) <0\ \forall p \in (0,1).
 \end{align}
 
-So, for this trivial example, both Method of Moments and Maximum Likelihood Estimation yielded the same estimate for $\hat{p}$.
+So, for this trivial example, both Method of Moments and Maximum Likelihood Estimation yielded the same estimate for $\hat{p}$^[This estimator is unbiased with variance $Var(\hat{p})=\frac{p(1-p)}{n}$ and achieves the Cramér–Rao lower bound, making it efficient under standard MLE conditions @thompson_minimum_2010].
+
+## Extensions and Related Distributions
+
+The Bernoulli distribution extends directly to the **Binomial**, which models the number of successes across n trials. The **Multinomial** generalizes this to $k > 2$ categories, and is often used in genetics, survey sampling, and categorical data analysis. The **Geometric** distribution models the number of trials until the first success, while the **Negative Binomial** models trials until the $r^{th}$ success or over-dispersed count data. The Poisson emerges as a limit of the binomial for rare-event incidence rates.
+
+These models fall within the generalized linear model (GLM) framework, encompassing logit and probit models for Bernoulli outcomes and log-linear models for Poisson responses @mccullagh_generalized_2018.
+
+In Bayesian inference, the **Beta** distribution serves as a conjugate prior to $p$. Posterior updating yields $\text{Beta}(\alpha+x, \beta+n-x)$, providing a basis for inference with binary data @gelman_bayesian_2013.
+
 
 </br>
 
@@ -430,7 +514,51 @@ So, for this trivial example, both Method of Moments and Maximum Likelihood Esti
 
 ## Exercises
 
-To be determined.
+1. Calculate $E[X]$ for $X \sim Ber(p)$ using Reimann-Stieltjes notation.
 
+2. Derive the Geometric distribution from the Bernoulli distribution.
+
+3. Using the dataset found in @wu_using_2020, calculate method of moments estimators for the variables `Obesity` and `Energy` (Go to the [Availability of data and materials](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-020-00642-6#availability-of-data-and-materials)) section to download the data.
+
+## Appendix
+
+
+### Interval Estimation
+
+The **Clopper–Pearson** interval provides exact confidence bounds but is considered conservative. Approximate intervals such as the **Wilson score** and **Agresti–Coull** intervals have been shown to outperform the Wald interval by offering better coverage and shorter length. Exact methods are preferred in cases of small n or extreme counts (near 0 or n), while approximate methods are recommended for moderate-to-large n (@agresti_approximate_1998).
+
+Below is an example of an Agresti-Coull interval:
+
+```{r agresti-coull-ci}
+# x = number of successes;n = number of trials 
+agrestiCoulliCI <- function(x, n, conf.level = 0.95) { 
+  alpha <- 1 - conf.level 
+  z <- qnorm(1 - alpha/2) 
+  n_adj <- n + z^2 
+  
+  p_tilde <- (x + z^2/2) / n_adj 
+  se <- sqrt(p_tilde * (1 - p_tilde) / n_adj) 
+  
+  lower <- p_tilde - z * se 
+  upper <- p_tilde + z * se
+  
+  return(c(lower = max(0, lower), 
+           estimate = p_tilde, 
+           upper = min(1, upper))) 
+  } 
+
+# Example: 45 successes out of 100 trials agresti_coull_ci(x = 45, n = 100, conf.level = 0.95)
+
+
+agrestiCoulliCI(2, 5)
+
+```
+
+
+### Hypothesis Testing
+One-sample tests for $p$ include the exact binomial test and large-sample normal approximations. Two-sample tests compare proportions using score or chi-square methods, while Fisher’s exact test is appropriate for small samples and sparse tables. These approaches are commonplace in applied biostatistics and epidemiology for treatment/control comparisons and case-control studies.
+
+### Inference Properties
+Sufficient statistic $T = \sum_\limits{i=1}^n{X_i}$ is complete, so by the Lehmann–Scheffe theorem, $\hat{p}$ is the uniformly minimum variance unbiased estimator (UMVUE). Its variance attains the Cramér–Rao lower bound, demonstrating efficiency.
 
 ## Footnotes
