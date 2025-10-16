@@ -102,7 +102,7 @@ $$
 
 
 ## Integer Form of the Lower Incomplete Gamma Function
-Let $\alpha, x \in \mathbb{R}^+$. Then we define the **lower complete Gamma Function** as
+Let $\alpha, x \in \mathbb{R}^+$. Then we define the **lower incomplete Gamma Function** as
 $$
 \gamma(\alpha,x) \equiv \int_0^x t^{\alpha - 1} e^{-t} dt.
 $$
@@ -122,7 +122,7 @@ The first result has stumped me. I have not been able to figure out how to prove
 ## Product of Gamma Functions
 Let $a,b \in \mathbb{R}^+$. We will show that
 $$
-\Gamma(a) \times \Gamma(b) = \int_0^{\infty} \int_0^1 (uv)^{a - 1} (u - uv)^{b - 1} e^{-u} dvdu.
+\Gamma(a) \times \Gamma(b) = \int_0^{\infty} \int_0^1 (uv)^{a - 1} (u - uv)^{b - 1} e^{-u} u dvdu.
 $$
 
 **Proof**: First, we want to find another way to express the quantity $\Gamma(a) \times \Gamma(b)$, which is a product of single integrals, as a double integral. Notice that all the values with $t$ are constant with respect to $s$, and vice versa, so:
@@ -262,13 +262,13 @@ $$
 &= a\Gamma(a) - \lim_{\psi\to\infty} \frac{\psi^a}{e^{\psi}}.
 \end{aligned}
 $$
-Now, recall L'Hospital's Rule. We see that we are very close to showing the result for $k = 1$. We see that $\psi^a/e^{\psi}$ is an **indeterminant form**; even more interesting, the first derivative of the top divided by the first derivative of the bottom also yields an indeterminant form: $(a\psi^{a-1})/e^{\psi}$. In fact, this ratio will be in indeterminant form for the first $a$ derivatives of $\psi^a$. However, taking repeated derivatives of this polynomial will eventially yield a constant. On the other hand, taking repeated derivatives of $e^{\psi}$ yields $e^{\psi}$. We see that 
+Now, recall L'Hospital's Rule. We see that we are very close to showing the result for $k = 1$. We see that $\psi^a/e^{\psi}$ is an **indeterminant form**; even more interesting, the first derivative of the top divided by the first derivative of the bottom also yields an indeterminant form: $(a\psi^{a-1})/e^{\psi}$. In fact, this ratio will be in indeterminant form for the first $a$ derivatives of $\psi^a$. However, taking repeated derivatives of this polynomial will eventially yield a constant.^[For integer values of $a$, by taking $a$ derivatives, we will eventually get to some constant times $\psi^0$; this means that the numerator is a constant and the denominator $\to\infty$, so the limit of the fraction as $\psi\to\infty = 0$. For non-integer values of $a$, by taking $a$ derivatives, we will eventually get to some constant times $\psi^{-c}$, so that as $\psi\to\infty$, the numerator $\to 0$. So, again, the numerator is a constant (specifically 0) and the denominator $\to\infty$, so the limit of the fraction as $\psi\to\infty = 0$.] On the other hand, taking repeated derivatives of $e^{\psi}$ yields $e^{\psi}$. We see that 
 $$
 \begin{aligned}
 \Gamma(a+1) &= a\Gamma(a) - \lim_{\psi\to\infty} \frac{\psi^a}{e^{\psi}} \\
 &= a\Gamma(a) - \lim_{\psi\to\infty} \frac{ \frac{d^a}{d\psi^a} \psi^a }{ \frac{d^a}{d\psi^a} e^{\psi} } \\
-&= a\Gamma(a) - \lim_{\psi\to\infty} \frac{ a! }{ e^{\psi} } \\
-&= a\Gamma(a) - \frac{ a! }{ \lim_{\psi\to\infty} e^{\psi} } \\
+&= a\Gamma(a) - \lim_{\psi\to\infty} \frac{ \text{Constant} }{ e^{\psi} } \\
+&= a\Gamma(a) - \frac{ \text{Constant} }{ \lim_{\psi\to\infty} e^{\psi} } \\
 &= a\Gamma(a) - 0.
 \end{aligned}
 $$
