@@ -35,6 +35,69 @@ options(dplyr.summarise.inform = FALSE)
 ```
 
 
+## Background
+
+The **Poisson distribution** models the number of independent events that occur within a fixed interval of time or space. It is assumed that these events occur independently and at a constant average rate $\lambda$, and the probability of two or more events occurring in an infinitesimally small interval is negligible.  
+
+A key property of the Poisson distribution is **equidispersion**, meaning $\operatorname{E}[X] = \operatorname{Var}(X) = \lambda$, making the Poisson distribution particularly suitable for count data in which the variance is proportional to the mean. 
+
+This simplicity and mathematical tractability make the Poisson distribution foundational for modeling counts in public health data, especially when events occur randomly and independently in time or space. 
+
+### Connections to Other Distributions
+
+- **Binomial:** The Poisson can be derived as the limiting case of a Binomial($n,p$) when $n$ is large and $p$ is small, such that $\lambda = np$ is fixed. 
+
+- **Exponential:** In a Poisson process, the time between events follows an Exponential distribution with rate $\lambda$. 
+
+### Applications in Public Health
+
+The Poisson distribution is foundational in biostatistics, epidemiology, and other health-related research, particularly when modeling rare and independent event counts, like new infections per surveillance period, number of asthma attacks per patient per month, hospital admissions per day, or equipment failures per unit time. Some examples of the Poisson distribution being used in current published research include:
+
+- **Cancer incidence** - @liAgeStratifiedPoissonModel2008, @zhaoEpidemiologicalAnalysisSecond2022
+
+- **COVID case counts** - @zhaoCOVID19ShortTerm2021
+
+- **Spatial transcriptomics analysis** - @sunStatisticalAnalysisSpatial2020a
+
+
+### Case Study: Prussian Horse Kicks
+
+The Poisson distribution historically gained prominence through an analysis of **Prussian cavalry horse kicks** by Ladislaus von Bortkiewicz (1898), in his book *Das Gesetz der kleinen Zahlen* (“The Law of Small Numbers”; @bortkiewicz1898). His study examined annual deaths from horse kicks across 10 Prussian cavalry corps over 20 years - a quintessential example of rare and independent events occurring during equal exposure intervals (years and corps). Across 200 observations (20 years x 10 corps), the mean rate of deaths per corp per year was $0.61$, and the observed frequencies of deaths per corps per year closely matched a Poisson model with parameter $\lambda = 0.61$, providing one of the earliest empirical validations of the Poisson.  
+
+| Number of deaths (x) | Observed | Expected Poisson $\lambda=0.61$ |
+|:--------------------:|:---------:|:-----------------------:|
+| 0 | 109 | 108.7 |
+| 1 | 65  | 66.0  |
+| 2 | 22  | 20.1  |
+| 3 | 3   | 4.1   |
+| 4 | 1   | 0.6   |
+
+*Relevance:*
+
+- **Model validation**: The Poisson distribution can accurately capture stochastic variation in count data, even when events are infrequent.
+
+- **Conceptual importance**: This result provided early evidence that the Poisson distribution effectively describes *rare and independent events*, validating what Bortkiewicz called the “Law of Small Numbers”, which laid the foundation for modern applications of the Poisson model in public health surveillance, accident modeling, and genetic mutation studies.
+
+### Relation to the Negative Binomial Distribution
+
+While the Poisson distribution serves as the baseline model for independent event counts with variation proportional to the mean, its *overdispersed* extensions (e.g., Negative Binomial) capture extra variation attributable to heterogeneity in population risk.
+
+##### Example with Data: Overdispersed Emergency Visits
+
+To illustrate, consider daily emergency department (ED) visit counts for respiratory complaints during a flu season. If the mean number of visits per day is $\lambda = 10$, the Poisson model predicts:
+
+$$
+P(Y=k)=\frac{e^{-10}10^k}{k!}.
+$$
+
+However, real data often show higher variability—some days with far more visits due to outbreaks or extreme weather events. This extra-Poisson variation can be modeled with a **Negative Binomial** distribution, which includes an additional dispersion parameter $\alpha>0$:
+
+$$
+\operatorname{Var}(Y)=\lambda+\alpha\lambda^2.
+$$
+
+A comparison between the Poisson and Negative Binomial fits reveals how the latter better accounts for clustering and heterogeneity in health demand data, supporting policy decisions about staffing or surge capacity in hospitals.
+
 
 ## Formal Foundations
 We will begin this lesson a little differently. For the previous lessons, we were able to derive the distributions without a tremendous amount of preliminary mathematics. However, while the Poisson distribution will *end up* as a simple distribution to work with, deriving it requires a deep refresh of calculus in addition to some of the other Formal Foundations we have already seen.
@@ -615,7 +678,36 @@ Ergo, $\hat{r}_{\text{MLE}} = \bar{k}$.
 
 ## Exercises
 
-To be determined.
+#### Problem 1. {.unnumbered}
+The Poisson distribution not only arises from differential equations describing a constant-rate counting process, but it also connects discrete and continuous probability models.
+
+Let $X \sim \text{Poisson}(\lambda)$. When $\lambda$ is large, the shape of the Poisson probability mass function increasingly resembles that of a Normal density.
+
+**Prove that, as $\lambda \to \infty$, the standardized Poisson variable**
+$$
+Z = \frac{X - \lambda}{\sqrt{\lambda}}
+$$
+**converges in distribution to a standard Normal random variable,**
+$$
+Z \xrightarrow{d} \mathcal{N}(0,1).
+$$
+
+*Hint:* Begin with the Poisson pmf,
+$$
+\Pr(X=n) = \frac{e^{-\lambda}\lambda^{n}}{n!},
+$$
+apply Stirling's approximation to $n!$, and use a second-order Taylor expansion of $\ln P(X = n)$ around $n = \lambda$. Show that the resulting limiting form satisfies the differential equation of the Normal density, $f'(x) = -x f(x)$.
+
+#### Problem 2. {.unnumbered}
+
+The dataset `epil` from the `MASS` library in R contains seizure counts for epileptics in a treatment-control design across a 2-week period.
+```{r epil-data}
+data(epil, package = "MASS")
+head(epil)
+```
+
+Using this dataset, **calculate the method of moments and MLE estimators** for *incident rate* (i.e. $\lambda$ instead of $\lambda/t$).
+
 
 
 ## Footnotes 
