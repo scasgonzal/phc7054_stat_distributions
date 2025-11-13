@@ -34,7 +34,74 @@ suppressPackageStartupMessages(library(tidyverse))
 options(dplyr.summarise.inform = FALSE)
 ```
 
+## Background
 
+### Case Study: Estimating the True Probability of Success
+
+Consider a **clinical screening program** for a new diagnostic test.  
+Each patient’s test result is **positive** (success) or **negative** (failure).  
+We assume that, for each test, the probability of a positive result is $(p)$, but $(p)$ is *unknown*.  
+
+Before collecting any data, suppose our prior belief is that  $(p)$ could reasonably be anywhere between 0 and 1, but **values near 0.5 are less likely**.  
+This uncertainty can be modeled by a **Beta prior**:
+$[p \sim \mathrm{Beta}(\alpha=2,\beta=5)]$, which represents prior pseudo-counts equivalent to having seen 2 positives and 5 negatives in previous experience.
+
+Now, suppose we test $(n=20)$ patients and observe $(y=8)$ positive results.  
+The **likelihood** is Binomial:
+$[Y\mid p \sim \mathrm{Binomial}(n=20,p),]$ and the **posterior** distribution (by conjugacy) is
+$[p \mid y \sim \mathrm{Beta}(\alpha+y,\ \beta+n-y)=\mathrm{Beta}(10,17)]$
+
+Then:
+
+- Posterior mean: $(\mathbb E[p\mid y] = \dfrac{10}{10+17}=0.37)$
+- Posterior 95% credible interval: $(F^{-1}_{\mathrm{Beta}}(0.025;10,17), F^{-1}_{mathrm{Beta}}(0.975;10,17))$
+- Posterior mode (MAP): $(\dfrac{10-1}{10+17-2}=0.36)$
+
+This model helps **estimate the underlying success probability** while incorporating prior knowledge and quantifying uncertainty around \(p\).
+
+
+### Current Uses in Biostatistics and Public Health
+
+- **Epidemiology:** Estimating disease prevalence (proportion infected).  
+- **Clinical trials:** Modeling treatment response probabilities.  
+- **Diagnostic testing:** Estimating sensitivity/specificity of new assays.  
+- **Survey analysis:** Modeling proportions (e.g., vaccinated individuals).  
+- **Bayesian inference:** Conjugate prior for Bernoulli/Binomial models @gelman2013bayesian.  
+
+The Beta is often used as a **prior** for unknown probabilities or as a **posterior** when combining prior beliefs with observed data @johnson1995continuous. When data are highly dispersed or overdispersed, the **Beta–Binomial** model provides a flexible alternative to the simple Binomial.
+
+
+## Example with Data: Updating the Belief About $(p)$
+
+We simulate 400 “studies,” each testing $(n=20)$ patients, where the true success probability is $(p=0.4)$.  
+For each study, we record the number of successes and then compute the **posterior mean** and **credible interval** under the Beta(2,5) prior @minka2002estimating.
+
+```{r}
+set.seed(20251104)
+
+alpha_prior <- 2
+beta_prior  <- 5
+p_true <- 0.4
+n <- 20
+n_studies <- 400
+
+# Simulate 400 studies
+y <- rbinom(n_studies, size = n, prob = p_true)
+
+# Posterior parameters
+alpha_post <- alpha_prior + y
+beta_post  <- beta_prior + n - y
+
+# Posterior means and intervals
+post_mean <- alpha_post / (alpha_post + beta_post)
+post_low  <- qbeta(0.025, alpha_post, beta_post)
+post_high <- qbeta(0.975, alpha_post, beta_post)
+
+# Summary of first few
+head(data.frame(y, post_mean, post_low, post_high))
+mean(post_mean)
+
+```
 
 ## Formal Foundations
 
@@ -519,8 +586,33 @@ The Continuous Uniform Distribution over $(0,1)$ is a special case of the Beta D
 ### Computational Solution to the MLEs
 Try to write some code that will estimate $\alpha$ and $\beta$ from a vector of known "observed" probabilities, $\textbf{p}$. 
 
-Other exercises to be determined.
+### Posterior Derivation
 
+Suppose $(Y \mid p \sim \mathrm{Binomial}(n,p))$ and $(p \sim \mathrm{Beta}(\alpha_0,\beta_0))$.  
+Show that the posterior distribution is
+
+$[p \mid y \sim \mathrm{Beta}(\alpha_0 + y,\; \beta_0 + n - y),]$
+
+by multiplying the Binomial likelihood and the Beta prior, and then identifying the **kernel** of a Beta distribution.
+
+*Hint:*  
+$[f(p\mid y) \propto p^{y+\alpha_0-1}(1-p)^{n-y+\beta_0-1}.]$
+
+
+## Application to the Swiss Data Set
+The `swiss` dataset from base R reports socioeconomic indicators for 47 Swiss provinces circa 1888. The variable **Catholic** represents the percentage of Catholics, and is naturally constrained to [0, 100]. With this dataset
+
+- Can convert it to a proportion for Beta modeling
+
+- Plot the distribution of the variable `Catholic` and comment on its shape
+
+- Calculate exact method of moments (MoM) estimators for $\alpha, \beta$
+
+- Calculate maximum likelihood estimators (MLEs) for $\alpha, \beta$ using the `fitdistrplus`, which is a package containing an extention of the function `fitdistr` from `MASS`.
+
+- Using the MoM estimators from before, calculate the theoretical mean and variance and compare them to the sample mean and sample variance.
+
+- Plot the distribution using the MoM estimators and comment on its characteristics.
 
 ## Footnotes 
 
